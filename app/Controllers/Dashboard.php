@@ -21,4 +21,5 @@ class Dashboard extends BaseController
             'klasters' => $klasters
         ]);
     }
+    
 }

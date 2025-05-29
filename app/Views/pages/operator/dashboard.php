@@ -7,9 +7,10 @@
         <div>
             <h2 class="text-2xl font-bold mb-2">Selamat Datang, Kabupaten Tasikmalaya!</h2>
             <p class="text-gray-600">
-                Email: tasikmalayakabupaten@evaluasisipandakabulan.id |
-                Tipe User: <span class="font-semibold text-blue-800">Operator</span>
+                Email: <?= esc($user_email) ?> |
+                Tipe User: <span class="font-semibold text-blue-800"><?= esc($user_role) ?></span>
             </p>
+
         </div>
 
         <div class="mt-4 md:mt-0 text-center">
