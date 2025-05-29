@@ -21,7 +21,8 @@ $routes->get('/login', 'Auth::showLogin');
 $routes->post('/login', 'Auth::login');    
 
 // Logout
-$routes->get('/logout', 'Auth::logout');
+$routes->post('/logout', 'Auth::logout');
+
 
 // Dashboard routes
 $routes->group('dashboard', function ($routes) {
