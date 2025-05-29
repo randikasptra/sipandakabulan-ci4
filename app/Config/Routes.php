@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // Redirect root ke /login
+// Redirect root ke /login
 $routes->get('/', function () {
     if (session()->get('logged_in')) {
         return redirect()->to('/dashboard/' . session()->get('role'));
@@ -15,18 +16,16 @@ $routes->get('/', function () {
     }
 });
 
-// Form login dan proses login
+// Login routes
 $routes->get('/login', 'Auth::showLogin'); 
 $routes->post('/login', 'Auth::login');    
 
 // Logout
 $routes->get('/logout', 'Auth::logout');
 
-// Dashboard role
-$routes->get('dashboard', 'Dashboard::admin');
+// Dashboard routes
 $routes->group('dashboard', function ($routes) {
-    $routes->get('admin', 'Dashboard::admin');
-    $routes->get('operator', 'Dashboard::operator');
+    $routes->get('/', 'Dashboard::index');               // /dashboard
+    $routes->get('admin', 'Dashboard::index/admin');     // /dashboard/admin
+    $routes->get('operator', 'Dashboard::index/operator'); // /dashboard/operator
 });
-
-
