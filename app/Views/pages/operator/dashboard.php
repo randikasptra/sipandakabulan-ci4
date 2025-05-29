@@ -23,8 +23,8 @@
 </section>
 
 <!-- Card Klaster Section -->
-<section class="px-6 pb-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<section class="px-6 pb-6 ">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <?php foreach ($klasters as $klaster) : ?>
             <?= view('components/card_klaster', [
                 'klaster' => $klaster['slug'],
@@ -37,5 +37,7 @@
         <?php endforeach; ?>
     </div>
 </section>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 
 <?= $this->include('layouts/footer') ?>

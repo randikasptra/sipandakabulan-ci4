@@ -1,36 +1,46 @@
-<!-- Navbar -->
-<nav class="bg-gradient-to-r from-blue-700 to-blue-900 p-4 flex justify-between items-center text-white shadow-md">
-    <div class="flex items-center space-x-3">
-        <img src="https://via.placeholder.com/40" alt="Logo" class="rounded-full">
-        <h1 class="text-xl font-bold">Evaluasi SIPANDAKABULAN</h1>
-    </div>
+<nav x-data="{ open: false }" class="bg-gradient-to-r from-blue-700 to-blue-900 px-4 py-3 shadow-md text-white sticky top-0">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <img src="<?= base_url('assets/img/LogoKKLA.png') ?>" alt="Logo" class="w-10 h-10">
+            <h1 class="text-lg md:text-xl font-bold tracking-wide">Evaluasi SIPANDAKABULAN</h1>
+        </div>
 
-    <div class="space-x-6 hidden md:flex">
-        <a href="#" class="hover:underline">Info</a>
-        <a href="#" class="hover:underline">Pengumuman</a>
-        <a href="#" class="hover:underline">Tutorial</a>
-        <a href="#" class="hover:underline">Dokumen</a>
-        <a href="#" class="hover:underline">Kontak</a>
-        <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-full">Logout</a>
-    </div>
+        <!-- Menu Desktop -->
+        <div class="hidden md:flex space-x-6 items-center">
+            <a href="#" class="hover:underline hover:text-sky-200 transition">Info</a>
+            <a href="#" class="hover:underline hover:text-sky-200 transition">Pengumuman</a>
+            <a href="#" class="hover:underline hover:text-sky-200 transition">Tutorial</a>
+            <a href="#" class="hover:underline hover:text-sky-200 transition">Dokumen</a>
+            <a href="#" class="hover:underline hover:text-sky-200 transition">Kontak</a>
+            <form method="POST" action="<?= site_url('logout') ?>" class="inline">
+                <?= csrf_field() ?> <!-- ini helper CI4 untuk input token CSRF -->
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded-full text-sm">
+                    Logout
+                </button>
+            </form>
+        </div>
 
-    <div class="md:hidden flex items-center">
-        <button id="menu-toggle" class="text-white focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 6h16M4 12h16M4 18h16" />
+        <!-- Hamburger -->
+        <button class="md:hidden focus:outline-none" @click="open = !open">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
         </button>
     </div>
-</nav>
 
-<!-- Mobile Dropdown -->
-<div id="mobile-menu" class="md:hidden hidden bg-gradient-to-r from-blue-700 to-blue-900 p-4 space-y-4 text-white">
-    <a href="#" class="hover:underline">Info</a>
-    <a href="#" class="hover:underline">Pengumuman</a>
-    <a href="#" class="hover:underline">Tutorial</a>
-    <a href="#" class="hover:underline">Dokumen</a>
-    <a href="#" class="hover:underline">Kontak</a>
-    <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-full">Logout</a>
-</div>
+    <!-- Menu Mobile -->
+    <div x-show="open" x-transition class="md:hidden bg-blue-800 px-4 pt-4 pb-6 space-y-3 text-sm">
+        <a href="#" class="block text-white hover:underline">Info</a>
+        <a href="#" class="block text-white hover:underline">Pengumuman</a>
+        <a href="#" class="block text-white hover:underline">Tutorial</a>
+        <a href="#" class="block text-white hover:underline">Dokumen</a>
+        <a href="#" class="block text-white hover:underline">Kontak</a>
+        <form method="POST" action="<?= site_url('logout') ?>" class="inline">
+            <?= csrf_field() ?>
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded-full text-sm">
+                Logout
+            </button>
+        </form>
+    </div>
+</nav>

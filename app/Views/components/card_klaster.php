@@ -1,4 +1,4 @@
-<a href="<?= site_url('form/show/' . $klaster . '/' . $id) ?>"
+<a href="<?= site_url('form/show/' . urlencode($klaster) . '/' . intval($id)) ?>"
     class="flex flex-col h-full bg-white border border-blue-200 rounded-2xl shadow hover:shadow-lg transition-all duration-300 hover:ring-2 hover:ring-sky-400 group">
 
     <!-- Header -->
