@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\KlasterFormModel;
+
 class Dashboard extends BaseController
 {
     public function admin()
@@ -11,7 +13,12 @@ class Dashboard extends BaseController
 
     public function operator()
     {
-        return view('pages/operator/dashboard', ['title' => 'Dashboard Operator']);
+        $klasterModel = new KlasterFormModel();
+        $klasters = $klasterModel->findAll();
+
+        return view('pages/operator/dashboard', [
+            'title' => 'Dashboard Operator',
+            'klasters' => $klasters
+        ]);
     }
 }
- 

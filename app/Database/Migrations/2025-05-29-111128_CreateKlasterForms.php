@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateKlasterForms extends Migration
+class CreateKlasters extends Migration
 {
     public function up()
     {
@@ -19,11 +19,11 @@ class CreateKlasterForms extends Migration
             'updated_at'      => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('klaster_forms');
+        $this->forge->createTable('klasters');  // <-- ubah nama tabel di sini
     }
 
     public function down()
     {
-        $this->forge->dropTable('klaster_forms');
+        $this->forge->dropTable('klasters');  // <-- ubah nama tabel di sini
     }
 }

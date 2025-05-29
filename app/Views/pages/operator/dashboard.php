@@ -1,8 +1,7 @@
-<h1>Selamat Datang Operator SIPANDA</h1>
-<a href="<?= base_url('logout') ?>">Logout</a>
 <?= $this->include('layouts/header') ?>
 <?= $this->include('layouts/navbar') ?>
 
+<!-- Hero Section -->
 <section class="p-6">
     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center mb-8">
         <div>
@@ -21,8 +20,22 @@
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Tambahkan section lain jika ada -->
+<!-- Card Klaster Section -->
+<section class="px-6 pb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <?php foreach ($klasters as $klaster) : ?>
+            <?= view('components/card_klaster', [
+                'klaster' => $klaster['slug'],
+                'id' => $klaster['id'],
+                'title' => $klaster['title'],
+                'nilaiEm' => $klaster['nilai_em'],
+                'nilaiMaksimal' => $klaster['nilai_maksimal'],
+                'progres' => $klaster['progres'],
+            ]) ?>
+        <?php endforeach; ?>
+    </div>
 </section>
 
 <?= $this->include('layouts/footer') ?>
