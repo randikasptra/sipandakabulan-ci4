@@ -30,3 +30,8 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('admin', 'Dashboard::index/admin');     // /dashboard/admin
     $routes->get('operator', 'Dashboard::index/operator'); // /dashboard/operator
 });
+
+
+
+$routes->get('/dashboard/kelembagaan', 'Dashboard::kelembagaan');
+$routes->get('/dashboard/klaster1', 'Dashboard::klaster1');

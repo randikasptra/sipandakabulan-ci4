@@ -6,6 +6,24 @@ use App\Models\KlasterFormModel;
 
 class Dashboard extends BaseController
 {
+
+    public function kelembagaan()
+    {
+        // Misal data dummy untuk view
+        $data = [
+            'title' => 'Halaman Kelembagaan'
+        ];
+        return view('pages/kelembagaan', $data);
+    }
+
+    public function klaster1()
+    {
+        $data = [
+            'title' => 'Halaman Klaster 1'
+        ];
+        return view('pages/klaster1', $data);
+    }
+
     public function index($role = null)
     {
         $session = session();
@@ -30,6 +48,7 @@ class Dashboard extends BaseController
             'username'   => $session->get('username'),
             'klasters'   => $klasters,  // ini yang nanti di foreach di view
         ];
+
 
         if ($role === 'operator') {
             return view('pages/operator/dashboard', $data);
