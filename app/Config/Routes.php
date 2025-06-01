@@ -33,5 +33,5 @@ $routes->group('dashboard', function ($routes) {
 
 
 
-$routes->get('/dashboard/kelembagaan', 'Dashboard::kelembagaan');
-$routes->get('/dashboard/klaster1', 'Dashboard::klaster1');
+$routes->get('dashboard/kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
+$routes->get('dashboard/klaster1/(:num)', 'Dashboard::klaster1/$1');

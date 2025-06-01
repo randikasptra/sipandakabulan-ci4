@@ -7,25 +7,34 @@ use App\Models\KlasterFormModel;
 class Dashboard extends BaseController
 {
 
-    public function kelembagaan()
+    public function kelembagaan($id = null)
     {
-        // Misal data dummy untuk view
-        $data = [
-            'title' => 'Halaman Kelembagaan'
-        ];
-        return view('pages/kelembagaan', $data);
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        // Kirim data ke view, misal id saja dulu
+        return view('pages/operator/kelembagaan', ['id' => $id]);
     }
 
-    public function klaster1()
+    public function klaster1($id = null)
     {
-        $data = [
-            'title' => 'Halaman Klaster 1'
-        ];
-        return view('pages/klaster1', $data);
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        // Kirim data ke view
+        return view('pages/operator/klaster1', ['id' => $id]);
     }
 
     public function index($role = null)
     {
+        
+helper('Klaster');
+
+
         $session = session();
 
         if (!$session->get('logged_in')) {
