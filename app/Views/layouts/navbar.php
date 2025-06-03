@@ -7,11 +7,11 @@
 
         <!-- Menu Desktop -->
         <div class="hidden md:flex space-x-6 items-center">
-            <a href="#" class="hover:underline hover:text-sky-200 transition">Dashboard</a>
-            <a href="#" class="hover:underline hover:text-sky-200 transition">Pengumuman</a>
-            <a href="#" class="hover:underline hover:text-sky-200 transition">Tutorial</a>
-            <a href="#" class="hover:underline hover:text-sky-200 transition">Dokumen</a>
-            <a href="#" class="hover:underline hover:text-sky-200 transition">Kontak</a>
+            <a href="<?= site_url('dashboard') ?>" class="hover:underline hover:text-sky-200 transition">Dashboard</a>
+            <a href="#" class="cursor-not-allowed opacity-60">Pengumuman</a>
+            <a href="#" class="cursor-not-allowed opacity-60">Tutorial</a>
+            <a href="#" class="cursor-not-allowed opacity-60">Dokumen</a>
+            <a href="#" class="cursor-not-allowed opacity-60">Kontak</a>
             <form method="POST" action="<?= site_url('logout') ?>" class="inline">
                 <?= csrf_field() ?> <!-- ini helper CI4 untuk input token CSRF -->
                 <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded-full text-sm">
@@ -31,12 +31,13 @@
 
     <!-- Menu Mobile -->
     <div x-show="open" x-transition class="md:hidden bg-blue-800 px-4 pt-4 pb-6 space-y-3 text-sm">
-        <a href="#" class="block text-white hover:underline">Info</a>
-        <a href="#" class="block text-white hover:underline">Pengumuman</a>
-        <a href="#" class="block text-white hover:underline">Tutorial</a>
-        <a href="#" class="block text-white hover:underline">Dokumen</a>
-        <a href="#" class="block text-white hover:underline">Kontak</a>
-        <form method="POST" action="<?= site_url('logout') ?>" class="inline">
+        <a href="<?= site_url('dashboard') ?>" class="hover:underline hover:text-sky-200 transition">Dashboard</a>
+        <a href="#" class="cursor-not-allowed opacity-60">Pengumuman</a>
+        <a href="#" class="cursor-not-allowed opacity-60">Tutorial</a>
+        <a href="#" class="cursor-not-allowed opacity-60">Dokumen</a>
+        <a href="#" class="cursor-not-allowed opacity-60">Kontak</a>
+
+        <form method="POST" action="<?= site_url('logout') ?>" class="inline my-auto">
             <?= csrf_field() ?>
             <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded-full text-sm">
                 Logout

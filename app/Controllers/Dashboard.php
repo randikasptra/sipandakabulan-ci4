@@ -31,8 +31,8 @@ class Dashboard extends BaseController
 
     public function index($role = null)
     {
-        
-helper('Klaster');
+
+        helper('Klaster');
 
 
         $session = session();

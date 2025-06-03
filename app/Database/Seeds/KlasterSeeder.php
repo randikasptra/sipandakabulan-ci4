@@ -18,7 +18,7 @@ class KlasterSeeder extends Seeder
             ],
             [
                 'title' => 'Klaster I: Hak Sipil dan Kebebasan',
-                'slug' => 'klaster-i-hak-sipil-dan-kebebasan',
+                'slug' => 'klaster1',
                 'nilai_em' => 0,
                 'nilai_maksimal' => 100,
                 'progres' => 0
