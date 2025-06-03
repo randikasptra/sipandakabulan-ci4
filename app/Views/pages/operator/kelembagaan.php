@@ -149,10 +149,13 @@
                     </div>
 
 
-                    <a href="<?= site_url('download-excel?klaster=' . $k['nama'] . '&poin=' . $k['nilai']) ?>" class="text-[color:var(--primary-light)] text-sm underline flex items-center gap-1 mt-1">
-                        <i class="ph ph-download-simple"></i> Download Template Excel
-                    </a>
+                    <?php if (!empty($k['file'])) : ?>
+                       <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download
 
+                            class="text-[color:var(--primary-light)] text-sm underline flex items-center gap-1 mt-1">
+                            <i class="ph ph-download-simple"></i> Download Template Excel
+                        </a>
+                    <?php endif; ?>
 
 
                     <input type="file" name="<?= $k['nama'] ?>_file"

@@ -7,7 +7,7 @@
 
         <!-- Menu Desktop -->
         <div class="hidden md:flex space-x-6 items-center">
-            <a href="#" class="hover:underline hover:text-sky-200 transition">Info</a>
+            <a href="#" class="hover:underline hover:text-sky-200 transition">Dashboard</a>
             <a href="#" class="hover:underline hover:text-sky-200 transition">Pengumuman</a>
             <a href="#" class="hover:underline hover:text-sky-200 transition">Tutorial</a>
             <a href="#" class="hover:underline hover:text-sky-200 transition">Dokumen</a>

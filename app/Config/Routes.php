@@ -35,4 +35,5 @@ $routes->group('dashboard', function ($routes) {
 
 $routes->get('dashboard/kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
 $routes->get('dashboard/klaster1/(:num)', 'Dashboard::klaster1/$1');
-$routes->get('download-excel', 'DownloadController::generateExcel');
+// $routes->get('download-excel', 'DownloadController::generateExcel');
+$routes->get('download', 'DownloadController::generateExcel');

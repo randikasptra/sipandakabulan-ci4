@@ -2,43 +2,25 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use CodeIgniter\Controller;
 
-
-class DownloadController extends BaseController
+class DownloadController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
     public function generateExcel()
     {
-        $klaster = $this->request->getGet('klaster');
-        $poin = $this->request->getGet('poin');
+        $file = $this->request->getGet('file');
 
-        $cleanKlaster = preg_replace('/[^a-zA-Z0-9_]/', '_', $klaster);
-        $cleanPoin = preg_replace('/[^a-zA-Z0-9_]/', '_', $poin);
+        // Validasi nama file
+        if (!preg_match('/^[\w,\s-]+\.(xlsx|xls)$/', $file)) {
+            return $this->response->setStatusCode(400)->setBody("Invalid file name.");
+        }
 
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $filePath = FCPATH . 'template_excel/' . $file;
 
-        $sheet->setCellValue('A1', 'Nama');
-        $sheet->setCellValue('B1', 'NIM');
-        $sheet->setCellValue('C1', 'Nilai');
+        if (!file_exists($filePath)) {
+            return $this->response->setStatusCode(404)->setBody("File not found: $file");
+        }
 
-        $sheet->setCellValue('A2', 'Klaster: ' . $klaster);
-        $sheet->setCellValue('B2', 'Poin: ' . $poin);
-
-        $filename = "Template_{$cleanKlaster}_{$cleanPoin}.xlsx";
-        $filepath = WRITEPATH . 'downloads/' . $filename;
-
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $writer->save($filepath);
-
-        return $this->response->download($filepath, null)->setFileName($filename);
+        return $this->response->download($filePath, null)->setFileName($file);
     }
 }
