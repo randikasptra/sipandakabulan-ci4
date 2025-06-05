@@ -6,8 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// Redirect root ke /login
-// Redirect root ke /login
+// Redirect root ke /login atau /dashboard/role
 $routes->get('/', function () {
     if (session()->get('logged_in')) {
         return redirect()->to('/dashboard/' . session()->get('role'));
@@ -16,24 +15,30 @@ $routes->get('/', function () {
     }
 });
 
-// Login routes
-$routes->get('/login', 'Auth::showLogin'); 
-$routes->post('/login', 'Auth::login');    
-
-// Logout
+// Login & Logout
+$routes->get('/login', 'Auth::showLogin');
+$routes->post('/login', 'Auth::login');
 $routes->post('/logout', 'Auth::logout');
 
-
-// Dashboard routes
+// DASHBOARD GROUP
 $routes->group('dashboard', function ($routes) {
-    $routes->get('/', 'Dashboard::index');               // /dashboard
-    $routes->get('admin', 'Dashboard::index/admin');     // /dashboard/admin
-    $routes->get('operator', 'Dashboard::index/operator'); // /dashboard/operator
+    // ADMIN ROUTES - menggunakan controller AdminDashboard
+    $routes->group('admin', function ($routes) {
+        $routes->get('/', 'AdminDashboard::index'); // /dashboard/admin
+    });
+
+    $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
+    $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
+    $routes->get('klaster', 'AdminDashboard::klaster');   // /dashboard/klaster
+    $routes->get('approval', 'AdminDashboard::approval'); // /dashboard/approval
+    $routes->get('laporan', 'AdminDashboard::laporan');   // /dashboard/laporan
+    $routes->get('settings', 'AdminDashboard::settings'); // /dashboard/settings
+
+    // OPERATOR ROUTES - tetap di controller Dashboard
+    $routes->get('operator', 'Dashboard::index/operator'); 
+    $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
+    $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
 });
 
-
-
-$routes->get('dashboard/kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
-$routes->get('dashboard/klaster1/(:num)', 'Dashboard::klaster1/$1');
-// $routes->get('download-excel', 'DownloadController::generateExcel');
+// Download
 $routes->get('download', 'DownloadController::generateExcel');

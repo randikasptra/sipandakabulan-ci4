@@ -10,7 +10,7 @@ class UserModel extends Model
     protected $primaryKey = 'id';
 
     // Tambahkan kolom yang sesuai dengan database kamu
-    protected $allowedFields = ['username', 'email', 'password', 'role'];
+    protected $allowedFields = ['username', 'email', 'password', 'role','desa'];
 
     protected $useTimestamps = true; // Kalau kamu pakai created_at / updated_at
     protected $createdField  = 'created_at';

@@ -33,6 +33,11 @@ class CreateUsers extends Migration
                 'constraint'     => ['operator', 'admin'],
                 'default'        => 'operator',
             ],
+            'desa'       => [
+                'type'           => 'VARCHAR',
+                'constraint'     => '100',
+                'null' => 'true'
+            ],
             'created_at' => [
                 'type'           => 'DATETIME',
                 'null'           => true,
