@@ -1,6 +1,9 @@
 <?php
 
 use CodeIgniter\Router\RouteCollection;
+use App\Controllers\KelembagaanController;
+
+
 
 /**
  * @var RouteCollection $routes
@@ -30,9 +33,10 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
     $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
     $routes->get('klaster', 'AdminDashboard::klaster');   // /dashboard/klaster
-    $routes->get('approval', 'AdminDashboard::approval');
-$routes->post('approval/approve/(:num)', 'AdminDashboard::approveDesa/$1');
-$routes->post('approval/reject/(:num)', 'AdminDashboard::rejectDesa/$1');
+ $routes->get('approval', 'ApprovalController::index');
+$routes->post('approval/approve/(:num)', 'ApprovalController::approve/$1');
+$routes->post('approval/reject/(:num)', 'ApprovalController::reject/$1');
+$routes->get('approval/data', 'ApprovalController::getData');
 
     $routes->get('laporan', 'AdminDashboard::laporan');   // /dashboard/laporan
     $routes->get('settings', 'AdminDashboard::settings'); // /dashboard/settings
@@ -43,6 +47,11 @@ $routes->post('approval/reject/(:num)', 'AdminDashboard::rejectDesa/$1');
     $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
 });
 
+
+
+
+$routes->get('/kelembagaan/form', 'KelembagaanController::formKelembagaan');
+$routes->post('/submit-kelembagaan', 'KelembagaanController::submitKelembagaan');
 
 
 // Download

@@ -7,7 +7,7 @@
 
         <!-- Menu Desktop -->
         <div class="hidden md:flex space-x-6 items-center">
-            <a href="<?= site_url('dashboard') ?>" class="hover:underline hover:text-sky-200 transition">Dashboard</a>
+            <a href="<?= site_url('dashboard/operator') ?>" class="hover:underline hover:text-sky-200 transition">Dashboard</a>
             <a href="#" class="cursor-not-allowed opacity-60">Pengumuman</a>
             <a href="#" class="cursor-not-allowed opacity-60">Tutorial</a>
             <a href="#" class="cursor-not-allowed opacity-60">Dokumen</a>

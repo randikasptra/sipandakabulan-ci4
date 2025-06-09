@@ -39,52 +39,59 @@
                 <!-- Tabel Approval Desa -->
                 <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
                     <table class="min-w-full table-auto">
-                        <thead class="bg-blue-800 text-white">
-                            <tr>
-                                <th class="px-4 py-2 text-left">No</th>
-                                <th class="px-4 py-2 text-left">Nama Desa</th>
-                                <th class="px-4 py-2 text-left">Email Operator</th>
-                                <th class="px-4 py-2 text-left">Status Input</th>
-                                <th class="px-4 py-2 text-left">Status Approval</th>
-                                <th class="px-4 py-2 text-left">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($desas)) : ?>
-                                <?php foreach ($desas as $index => $desa) : ?>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="px-4 py-2"><?= $index + 1 ?></td>
-                                        <td class="px-4 py-2"><?= esc($desa['username']) ?></td>
-                                        <td class="px-4 py-2"><?= esc($desa['email']) ?></td>
-                                        <td class="px-4 py-2 capitalize"><?= esc($desa['status_input']) ?></td>
-                                        <td class="px-4 py-2">
-                                            <?php if ($desa['status_approve'] === 'pending') : ?>
-                                                <span class="text-yellow-600 font-semibold capitalize">Pending</span>
-                                            <?php elseif ($desa['status_approve'] === 'approved') : ?>
-                                                <span class="text-green-600 font-semibold capitalize">Approved</span>
-                                            <?php elseif ($desa['status_approve'] === 'rejected') : ?>
-                                                <span class="text-red-600 font-semibold capitalize">Rejected</span>
-                                            <?php else : ?>
-                                                <span class="text-gray-600 capitalize"><?= esc($desa['status_approve']) ?></span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td class="px-4 py-2 space-x-2">
-                                            <form action="<?= site_url('/admin/approval/approve/' . $desa['id']) ?>" method="post" class="inline" onsubmit="return confirm('Approve data desa <?= esc($desa['username']) ?>?')">
-                                                <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">Approve</button>
-                                            </form>
-                                            <form action="<?= site_url('/admin/approval/reject/' . $desa['id']) ?>" method="post" class="inline" onsubmit="return confirm('Tolak data desa <?= esc($desa['username']) ?>?')">
-                                                <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Reject</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else : ?>
-                                <tr>
-                                    <td colspan="6" class="text-center text-gray-500 py-4">Tidak ada data desa yang perlu di-approve.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+    <thead class="bg-blue-800 text-white">
+        <tr>
+            <th class="px-4 py-2 text-left">No</th>
+            <th class="px-4 py-2 text-left">Nama Desa</th>
+            <th class="px-4 py-2 text-left">Email Operator</th>
+            <th class="px-4 py-2 text-left">Status Input</th>
+            <th class="px-4 py-2 text-left">Status Approval</th>
+            <th class="px-4 py-2 text-left">Tanggal Submit</th>
+            <th class="px-4 py-2 text-left">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($desas)) : ?>
+            <?php foreach ($desas as $index => $desa) : ?>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-2"><?= $index + 1 ?></td>
+                    <td class="px-4 py-2"><?= esc($desa['username']) ?></td>
+                    <td class="px-4 py-2"><?= esc($desa['email']) ?></td>
+                    <td class="px-4 py-2 capitalize"><?= esc($desa['status_input']) ?></td>
+                    <td class="px-4 py-2">
+                        <?php if ($desa['status_approve'] === 'pending') : ?>
+                            <span class="text-yellow-600 font-semibold capitalize">Pending</span>
+                        <?php elseif ($desa['status_approve'] === 'approved') : ?>
+                            <span class="text-green-600 font-semibold capitalize">Approved</span>
+                        <?php elseif ($desa['status_approve'] === 'rejected') : ?>
+                            <span class="text-red-600 font-semibold capitalize">Rejected</span>
+                        <?php else : ?>
+                            <span class="text-gray-600 capitalize"><?= esc($desa['status_approve']) ?></span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="px-4 py-2"><?= date('d M Y', strtotime($desa['submit_date'] ?? '')) ?></td>
+                    <td class="px-4 py-2 space-x-2">
+                        <?php if ($desa['status_approve'] === 'pending') : ?>
+                            <form action="<?= site_url('/admin/approval/approve/' . $desa['id']) ?>" method="post" class="inline" onsubmit="return confirm('Approve data desa <?= esc($desa['username']) ?>?')">
+                                <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">Approve</button>
+                            </form>
+                            <form action="<?= site_url('/admin/approval/reject/' . $desa['id']) ?>" method="post" class="inline" onsubmit="return confirm('Tolak data desa <?= esc($desa['username']) ?>?')">
+                                <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Reject</button>
+                            </form>
+                        <?php else : ?>
+                            <span class="text-gray-500 italic">No action</span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <tr>
+                <td colspan="7" class="text-center text-gray-500 py-4">Tidak ada data desa yang perlu di-approve.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+
                 </div>
 
             </main>
