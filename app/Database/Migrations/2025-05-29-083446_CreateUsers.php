@@ -36,7 +36,17 @@ class CreateUsers extends Migration
             'desa'       => [
                 'type'           => 'VARCHAR',
                 'constraint'     => '100',
-                'null' => 'true'
+                'null'           => true
+            ],
+            'status_input' => [
+                'type'       => 'ENUM',
+                'constraint' => ['belum', 'sudah'],
+                'default'    => 'belum',
+            ],
+            'status_approve' => [
+                'type'       => 'ENUM',
+                'constraint' => ['pending', 'approved'],
+                'default'    => 'pending',
             ],
             'created_at' => [
                 'type'           => 'DATETIME',
@@ -56,3 +66,4 @@ class CreateUsers extends Migration
         $this->forge->dropTable('users');
     }
 }
+

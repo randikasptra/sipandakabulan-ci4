@@ -2,30 +2,28 @@
 
 namespace App\Controllers;
 
-use App\Models\KlasterFormModel;
 use App\Models\UserModel;
 
 class AdminDashboard extends BaseController
 {
     public function index()
     {
-        $session = session();
-        if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
-            return redirect()->to('/login')->with('errors', ['Akses tidak diizinkan']);
-        }
+        $userModel = new UserModel();
 
-        $klasterModel = new KlasterFormModel();
-        $klasters = $klasterModel->findAll();
+        $totalDesa    = $userModel->where('role', 'operator')->countAllResults();
+        $sudahInput   = $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults();
+        $belumInput   = $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults();
+        $perluApprove = $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults();
 
         $data = [
-            'user_email' => $session->get('email'),
-            'user_role'  => $session->get('role'),
-            'username'   => $session->get('username'),
-            'klasters'   => $klasters,
-            'title'      => 'Dashboard Admin',
+            'title'        => 'Dashboard Admin',
+            'totalDesa'    => $totalDesa,
+            'sudahInput'   => $sudahInput,
+            'belumInput'   => $belumInput,
+            'perluApprove' => $perluApprove,
         ];
 
-        return view('pages/admin/dashboard', $data); // pastikan file ini ada
+        return view('pages/admin/dashboard', $data);
     }
 
     public function users()
@@ -43,7 +41,7 @@ class AdminDashboard extends BaseController
             'title' => 'Kelola User',
         ];
 
-        return view('pages/admin/users', $data); 
+        return view('pages/admin/users', $data);
     }
 
     public function desa()

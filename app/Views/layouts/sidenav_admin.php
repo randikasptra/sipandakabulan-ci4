@@ -23,12 +23,12 @@
 
 
     <!-- Klaster -->
-    <a href="/dashboard/klaster" class="flex items-center py-2 px-4 rounded hover:bg-blue-700">
+    <!-- <a href="/dashboard/klaster" class="flex items-center py-2 px-4 rounded hover:bg-blue-700">
       <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10" />
       </svg>
       Klaster
-    </a>
+    </a> -->
 
     <!-- Approve Data -->
     <a href="/dashboard/approval" class="flex items-center py-2 px-4 rounded hover:bg-blue-700">
