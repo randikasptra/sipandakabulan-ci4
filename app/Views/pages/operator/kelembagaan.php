@@ -61,7 +61,7 @@
             <p class="text-sm text-gray-500 mt-1">Isi sesuai kondisi lapangan dan unggah dokumen pendukung (jika ada).</p>
         </div>
 
-        <form action="/submit-kelembagaan" method="POST" enctype="multipart/form-data" class="space-y-10">
+        <form action="/submit-kelembagaan" method="POST" enctype="multipart/form-data" class="space-y-10" id="formKelembagaan">
 
             <?php
             $klaster = [
@@ -131,43 +131,79 @@
             ];
 
             foreach ($klaster as $k) :
+                $first_key = array_key_first($k['opsi']);
             ?>
-                <div class="space-y-4 bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <label class="block text-lg font-semibold text-gray-800">
-                        <?= $k['judul'] ?>
+                <fieldset class="space-y-4 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <legend class="block text-lg font-semibold text-gray-800 flex justify-between items-center">
+                        <span><?= $k['judul'] ?></span>
                         <span class="text-sm text-gray-500">(Total Nilai: <?= $k['nilai'] ?>)</span>
-                    </label>
+                    </legend>
 
                     <div class="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
                         <?php foreach ($k['opsi'] as $val => $label) : ?>
                             <label class="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-4 py-2 hover:border-[color:var(--primary-light)] cursor-pointer transition">
-                                <input type="radio" name="<?= $k['nama'] ?>" value="<?= $val ?>" class="accent-[color:var(--primary)]" />
+                                <input type="radio" name="<?= $k['nama'] ?>" value="<?= $val ?>" class="accent-[color:var(--primary)]"
+                                    <?php if ($val === $first_key) echo 'required'; ?> />
                                 <span class="text-sm"><?= $label ?></span>
                             </label>
                         <?php endforeach; ?>
                     </div>
 
-                    <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download
-                        class="inline-flex items-center gap-2 mt-3 px-4 py-2 border border-[color:var(--primary-light)] text-[color:var(--primary-light)] text-sm font-medium rounded-full transition duration-200 hover:bg-[color:var(--primary-light)] hover:text-white">
-                        <i class="ph ph-download-simple text-lg"></i>
-                        Download Template Excel
-                    </a>
+                    <p class="text-sm mt-1 font-medium text-[color:var(--primary)]" id="<?= $k['nama'] ?>_selected">Belum memilih nilai</p>
 
+                    <?php if ($k['file']) : ?>
+                        <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download
+                            class="inline-flex items-center gap-2 mt-3 px-4 py-2 border border-[color:var(--primary-light)] text-[color:var(--primary-light)] text-sm font-medium rounded-full transition duration-200 hover:bg-[color:var(--primary-light)] hover:text-white">
+                            <i class="ph ph-download-simple text-lg"></i>
+                            Download Template Excel
+                        </a>
+                    <?php endif; ?>
 
                     <label class="flex flex-col gap-2 mt-2">
                         <span class="text-sm font-medium text-gray-600 flex items-center gap-1"><i class="ph ph-upload-simple"></i> Unggah File</span>
                         <input type="file" name="<?= $k['nama'] ?>_file" accept="<?= str_contains($k['file'], '.xlsx') ? '.xlsx' : '.pdf,.docx,.jpg,.png' ?>" class="w-full border border-gray-300 rounded-lg px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-[color:var(--primary)] file:text-white file:cursor-pointer" />
+                        <p class="text-xs mt-1 text-gray-600 file-name-preview"></p>
                     </label>
-                </div>
+                </fieldset>
             <?php endforeach; ?>
 
-            <div class="text-center pt-6">
-                <button type="submit" class="bg-[color:var(--primary)] hover:bg-[color:var(--primary-light)] text-white px-8 py-4 rounded-xl font-semibold shadow transition-all duration-300 flex items-center gap-2 justify-center">
-                    <i class="ph ph-paper-plane-right"></i> Submit Data
+            <div class="text-center flex justify-center gap-4 pt-6">
+                <button type="submit" class="bg-[color:var(--primary)] hover:bg-[color:var(--primary-light)] text-white px-8 py-3 rounded-xl font-semibold text-lg transition duration-300">
+                    Submit
+                </button>
+                <button type="reset" class="bg-gray-400 hover:bg-gray-500 text-white px-8 py-3 rounded-xl font-semibold text-lg transition duration-300">
+                    Reset
                 </button>
             </div>
         </form>
     </div>
+
+    <script>
+        // Update selected value text on radio change
+        document.querySelectorAll('form#formKelembagaan fieldset').forEach(fieldset => {
+            const name = fieldset.querySelector('input[type="radio"]').name;
+            const display = fieldset.querySelector(`#${name}_selected`);
+            fieldset.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                radio.addEventListener('change', e => {
+                    const val = e.target.value;
+                    const label = e.target.nextElementSibling.textContent;
+                    display.textContent = `Nilai terpilih: ${val} (${label})`;
+                });
+            });
+        });
+
+        // Show uploaded file name
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', e => {
+                const p = input.parentElement.querySelector('.file-name-preview');
+                if (input.files.length > 0) {
+                    p.textContent = `File dipilih: ${input.files[0].name}`;
+                } else {
+                    p.textContent = '';
+                }
+            });
+        });
+    </script>
 
 </body>
 

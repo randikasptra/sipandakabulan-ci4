@@ -30,7 +30,10 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
     $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
     $routes->get('klaster', 'AdminDashboard::klaster');   // /dashboard/klaster
-    $routes->get('approval', 'AdminDashboard::approval'); // /dashboard/approval
+    $routes->get('approval', 'AdminDashboard::approval');
+$routes->post('approval/approve/(:num)', 'AdminDashboard::approveDesa/$1');
+$routes->post('approval/reject/(:num)', 'AdminDashboard::rejectDesa/$1');
+
     $routes->get('laporan', 'AdminDashboard::laporan');   // /dashboard/laporan
     $routes->get('settings', 'AdminDashboard::settings'); // /dashboard/settings
 
@@ -39,6 +42,8 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
     $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
 });
+
+
 
 // Download
 $routes->get('download', 'DownloadController::generateExcel');
