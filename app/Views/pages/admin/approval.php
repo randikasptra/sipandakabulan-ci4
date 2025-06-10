@@ -70,18 +70,13 @@
                         <?php endif; ?>
                     </td>
                     <td class="px-4 py-2"><?= date('d M Y', strtotime($desa['submit_date'] ?? '')) ?></td>
-                    <td class="px-4 py-2 space-x-2">
-                        <?php if ($desa['status_approve'] === 'pending') : ?>
-                            <form action="<?= site_url('/admin/approval/approve/' . $desa['id']) ?>" method="post" class="inline" onsubmit="return confirm('Approve data desa <?= esc($desa['username']) ?>?')">
-                                <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">Approve</button>
-                            </form>
-                            <form action="<?= site_url('/admin/approval/reject/' . $desa['id']) ?>" method="post" class="inline" onsubmit="return confirm('Tolak data desa <?= esc($desa['username']) ?>?')">
-                                <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Reject</button>
-                            </form>
-                        <?php else : ?>
-                            <span class="text-gray-500 italic">No action</span>
-                        <?php endif; ?>
-                    </td>
+                   <td class="px-4 py-2 space-x-2">
+    <a href="<?= site_url('/admin/approval/proses/' . $desa['id']) ?>" 
+       class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Proses
+    </a>
+</td>
+
                 </tr>
             <?php endforeach; ?>
         <?php else : ?>

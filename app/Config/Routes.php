@@ -28,6 +28,7 @@ $routes->group('dashboard', function ($routes) {
     // ADMIN ROUTES - menggunakan controller AdminDashboard
     $routes->group('admin', function ($routes) {
         $routes->get('/', 'AdminDashboard::index'); // /dashboard/admin
+        $routes->post('users/create', 'AdminDashboard::storeUser');
     });
 
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
@@ -37,6 +38,7 @@ $routes->group('dashboard', function ($routes) {
 $routes->post('approval/approve/(:num)', 'ApprovalController::approve/$1');
 $routes->post('approval/reject/(:num)', 'ApprovalController::reject/$1');
 $routes->get('approval/data', 'ApprovalController::getData');
+$routes->get('approval/proses/(:num)', 'ApprovalController::proses/$1');
 
     $routes->get('laporan', 'AdminDashboard::laporan');   // /dashboard/laporan
     $routes->get('settings', 'AdminDashboard::settings'); // /dashboard/settings

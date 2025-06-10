@@ -43,6 +43,33 @@ public function approve($id)
     return redirect()->back()->with('success', 'Data desa berhasil di-approve.');
 }
 
+public function proses($id)
+{
+    $model = new KelembagaanModel();
+
+    // Ambil data lengkap kelembagaan termasuk klaster (misalnya simpan di 1 tabel atau relasi)
+    $dataDesa = $model->find($id);
+
+    if (!$dataDesa) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Data tidak ditemukan');
+    }
+
+    // Misal file klaster disimpan dalam kolom: klaster1_file, klaster2_file, dst
+    $klasterFiles = [
+        'Klaster 1' => $dataDesa['klaster1_file'] ?? null,
+        'Klaster 2' => $dataDesa['klaster2_file'] ?? null,
+        'Klaster 3' => $dataDesa['klaster3_file'] ?? null,
+        'Klaster 4' => $dataDesa['klaster4_file'] ?? null,
+        'Klaster 5' => $dataDesa['klaster5_file'] ?? null,
+    ];
+
+    return view('admin/approval_proses', [
+        'title' => 'Detail Data Klaster',
+        'desa' => $dataDesa,
+        'klasterFiles' => $klasterFiles,
+    ]);
+}
+
 public function reject($id)
 {
     $model = new KelembagaanModel();

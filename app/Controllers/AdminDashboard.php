@@ -44,6 +44,26 @@ class AdminDashboard extends BaseController
         return view('pages/admin/users', $data);
     }
 
+    // ⬇ Tambahkan ini
+  public function storeUser()
+{
+    $userModel = new \App\Models\UserModel();
+
+    $data = [
+        'username'       => $this->request->getPost('username'),
+        'email'          => $this->request->getPost('email'),
+        'password'       => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+        'role'           => $this->request->getPost('role'),
+        'desa'           => $this->request->getPost('desa'), // <- TAMBAHKAN INI
+        'status_input'   => 'belum',
+        'status_approve' => 'pending',
+    ];
+
+    $userModel->save($data);
+
+    return redirect()->to('/dashboard/users')->with('success', 'User berhasil ditambahkan.');
+}
+
     public function desa()
     {
         return view('pages/admin/desa');
@@ -58,7 +78,6 @@ class AdminDashboard extends BaseController
 
         $userModel = new UserModel();
 
-        // Ambil operator yang sudah submit dan status approve masih pending
         $desasPendingApproval = $userModel->where('role', 'operator')
             ->where('status_input', 'sudah')
             ->where('status_approve', 'pending')
@@ -80,8 +99,6 @@ class AdminDashboard extends BaseController
         }
 
         $userModel = new UserModel();
-
-        // Update status approve jadi 'approved'
         $userModel->update($userId, ['status_approve' => 'approved']);
 
         return redirect()->to('/admin/approval')->with('success', 'Data desa berhasil di-approve.');
@@ -95,12 +112,11 @@ class AdminDashboard extends BaseController
         }
 
         $userModel = new UserModel();
-
-        // Update status approve jadi 'rejected'
         $userModel->update($userId, ['status_approve' => 'rejected']);
 
         return redirect()->to('/admin/approval')->with('success', 'Data desa berhasil ditolak.');
     }
+
     public function laporan()
     {
         return view('pages/admin/laporan');
