@@ -34,17 +34,17 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
     $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
     $routes->get('klaster', 'AdminDashboard::klaster');   // /dashboard/klaster
- $routes->get('approval', 'ApprovalController::index');
-$routes->post('approval/approve/(:num)', 'ApprovalController::approve/$1');
-$routes->post('approval/reject/(:num)', 'ApprovalController::reject/$1');
-$routes->get('approval/data', 'ApprovalController::getData');
-$routes->get('approval/proses/(:num)', 'ApprovalController::proses/$1');
+    $routes->get('approval', 'ApprovalController::index');
+    $routes->post('approval/approve/(:num)', 'ApprovalController::approve/$1');
+    $routes->post('approval/reject/(:num)', 'ApprovalController::reject/$1');
+    $routes->get('approval/data', 'ApprovalController::getData');
+    $routes->get('approval/proses/(:num)', 'ApprovalController::proses/$1');
 
     $routes->get('laporan', 'AdminDashboard::laporan');   // /dashboard/laporan
     $routes->get('settings', 'AdminDashboard::settings'); // /dashboard/settings
 
     // OPERATOR ROUTES - tetap di controller Dashboard
-    $routes->get('operator', 'Dashboard::index/operator'); 
+    $routes->get('operator', 'Dashboard::index/operator');
     $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
     $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
 });

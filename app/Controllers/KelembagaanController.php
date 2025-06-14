@@ -83,18 +83,20 @@ class KelembagaanController extends BaseController
         }
 
         $rules = [
-            'peraturan'         => 'required|numeric',
-            'anggaran'          => 'required|numeric',
-            'forum_anak'        => 'required|numeric',
-            'data_terpilah'     => 'required|numeric',
-            'dunia_usaha'       => 'required|numeric',
+            'peraturan' => 'required|numeric',
+            'anggaran' => 'required|numeric',
+            'forum_anak' => 'required|numeric',
+            'data_terpilah' => 'required|numeric',
+            'dunia_usaha' => 'required|numeric',
 
-            'peraturan_file'    => 'if_exist|ext_in[peraturan_file,xlsx]',
-            'anggaran_file'     => 'if_exist|ext_in[anggaran_file,xlsx]',
-            'forum_anak_file'   => 'if_exist|ext_in[forum_anak_file,xlsx]',
-            'data_terpilah_file'=> 'if_exist|ext_in[data_terpilah_file,xlsx]',
-            'dunia_usaha_file'  => 'if_exist|ext_in[dunia_usaha_file,xlsx]',
+            'peraturan_file' => 'if_exist|ext_in[zip]',
+            'anggaran_file' => 'if_exist|ext_in[zip]',
+            'forum_anak_file' => 'if_exist|ext_in[zip]',
+            'data_terpilah_file' => 'if_exist|ext_in[zip]',
+            'dunia_usaha_file' => 'if_exist|ext_in[zip]',
+
         ];
+
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('error', 'Validasi gagal. Pastikan nilai angka dan file valid.');
@@ -103,21 +105,21 @@ class KelembagaanController extends BaseController
         $model = new KelembagaanModel();
 
         $data = [
-            'user_id'              => session('user_id'),
-            'tahun'                => date('Y'),
-            'peraturan_value'      => $this->request->getPost('peraturan') ?? 0,
-            'anggaran_value'       => $this->request->getPost('anggaran') ?? 0,
-            'forum_anak_value'     => $this->request->getPost('forum_anak') ?? 0,
-            'data_terpilah_value'  => $this->request->getPost('data_terpilah') ?? 0,
-            'dunia_usaha_value'    => $this->request->getPost('dunia_usaha') ?? 0,
-            'status'               => 'pending',
-            'created_at'           => date('Y-m-d H:i:s'),
-            'updated_at'           => date('Y-m-d H:i:s'),
+            'user_id' => session('user_id'),
+            'tahun' => date('Y'),
+            'peraturan_value' => $this->request->getPost('peraturan') ?? 0,
+            'anggaran_value' => $this->request->getPost('anggaran') ?? 0,
+            'forum_anak_value' => $this->request->getPost('forum_anak') ?? 0,
+            'data_terpilah_value' => $this->request->getPost('data_terpilah') ?? 0,
+            'dunia_usaha_value' => $this->request->getPost('dunia_usaha') ?? 0,
+            'status' => 'pending',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         $data['total_nilai'] = $data['peraturan_value'] + $data['anggaran_value'] +
-                               $data['forum_anak_value'] + $data['data_terpilah_value'] +
-                               $data['dunia_usaha_value'];
+            $data['forum_anak_value'] + $data['data_terpilah_value'] +
+            $data['dunia_usaha_value'];
 
         // Buat folder upload jika belum ada
         $uploadPath = WRITEPATH . 'uploads/kelembagaan/';

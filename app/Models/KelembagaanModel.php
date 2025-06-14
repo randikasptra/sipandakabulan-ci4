@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class KelembagaanModel extends Model
 {
-    protected $table = 'kelembagaan_forms';
+    protected $table = 'kelembagaan';
     protected $primaryKey = 'id';
 
     protected $allowedFields = [

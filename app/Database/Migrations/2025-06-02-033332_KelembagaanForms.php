@@ -29,11 +29,11 @@ class KelembagaanForms extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('kelembagaan_forms');
+        $this->forge->createTable('kelembagaan');
     }
 
     public function down()
     {
-        $this->forge->dropTable('kelembagaan_forms');
+        $this->forge->dropTable('kelembagaan');
     }
 }
