@@ -21,7 +21,7 @@
                 <span
                     class="absolute bottom-0 left-0 w-0 h-0.5 bg-sky-300 transition-all duration-300 group-hover:w-full"></span>
             </a>
-            <a href="<?= site_url('dashboard/operator') ?>"
+            <a href="<?= site_url('dashboard/pengumuman_user') ?>"
                 class="relative px-2 py-1 text-blue-100 hover:text-white transition-colors duration-200 group">
                 Pengumuman
                 <span
@@ -49,9 +49,9 @@
                     x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
                     class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <div class="px-4 py-2 text-sm text-gray-700 border-b">
-                       <?php $session = session(); ?>
-<p class="font-medium"><?= esc($session->get('email')) ?></p>
-<p class="text-xs text-blue-600"><?= esc($session->get('role')) ?></p>
+                        <?php $session = session(); ?>
+                        <p class="font-medium"><?= esc($session->get('email')) ?></p>
+                        <p class="text-xs text-blue-600"><?= esc($session->get('role')) ?></p>
                     </div>
                     <form method="POST" action="<?= site_url('logout') ?>">
                         <?= csrf_field() ?>

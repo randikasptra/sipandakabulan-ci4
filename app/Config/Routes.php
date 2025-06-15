@@ -46,6 +46,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('pengumuman_list', 'PengumumanController::index');
     $routes->get('/pengumuman/create', 'PengumumanController::create');
     $routes->get('/pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
+    $routes->get('pengumuman_user', 'Dashboard::pengumuman_user');
     // $routes->post('/pengumuman_list/store', 'PengumumanController::store');
 
     // OPERATOR ROUTES - tetap di controller Dashboard
