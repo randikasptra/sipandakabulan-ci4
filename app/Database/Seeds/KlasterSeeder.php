@@ -25,7 +25,7 @@ class KlasterSeeder extends Seeder
             ],
             [
                 'title' => 'Klaster II: Lingkungan Keluarga',
-                'slug' => 'klaster-ii-lingkungan-keluarga',
+                'slug' => 'klaster2',
                 'nilai_em' => 0,
                 'nilai_maksimal' => 100,
                 'progres' => 0

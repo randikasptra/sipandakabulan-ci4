@@ -62,6 +62,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('operator', 'Dashboard::index/operator');
     $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
     $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
+    $routes->get('klaster2/(:num)', 'Dashboard::klaster2/$1');
 });
 
 

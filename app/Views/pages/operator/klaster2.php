@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Form Klaster - 1</title>
+    <title>Form Klaster - 2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -23,82 +23,60 @@
     <div
         class="bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center mb-8 mx-6 mt-6">
         <div>
-            <h2 class="text-2xl font-bold mb-2">Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!</h2>
-            <p class="text-gray-600 flex flex-wrap gap-2 items-center text-sm">
-                <i class="ph ph-envelope-simple text-gray-500"></i> <?= esc($user_email ?? 'email@example.com'); ?> |
-                <i class="ph ph-user text-gray-500"></i> Tipe: <span
-                    class="font-semibold text-blue-800"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
-            </p>
-        </div>
-        <div class="mt-4 md:mt-0 text-center">
-            <?php if (($status ?? '') === 'approved'): ?>
-                <p class="text-green-600 font-bold text-lg flex items-center gap-1 justify-center"><i
-                        class="ph ph-check-circle"></i> Evaluasi Sudah Disetujui</p>
-            <?php else: ?>
-                <p class="text-yellow-600 font-bold text-lg flex items-center gap-1 justify-center"><i
-                        class="ph ph-clock"></i> Evaluasi Belum Disetujui</p>
-            <?php endif; ?>
-
-            <p class="text-gray-700 mt-1 text-sm">
-                Nilai EM: <span class="font-bold"><?= esc($nilai_em ?? '0'); ?></span> |
-                Maks: <?= esc($nilai_maksimal ?? '1000'); ?>
-            </p>
-
-            <?php
-            $presentase = 0;
-            if (!empty($nilai_em) && !empty($nilai_maksimal) && $nilai_maksimal != 0) {
-                $presentase = min(100, round(($nilai_em / $nilai_maksimal) * 100));
-            }
-            ?>
-            <div class="w-48 bg-gray-300 rounded-full h-3 mt-2">
-                <div class="bg-green-500 h-3 rounded-full transition-all duration-500"
-                    style="width: <?= $presentase ?>%"></div>
-            </div>
+            <h2 class="text-2xl font-bold mb-2">Form Klaster II</h2>
+            <p class="text-gray-600">Silakan isi data berikut sesuai kondisi di lapangan.</p>
         </div>
     </div>
 
-    <!-- Form Container -->
     <div class="max-w-5xl mx-auto px-6 py-10 mt-6 bg-white shadow-xl rounded-3xl space-y-12">
         <div class="border-b pb-6 mb-6">
             <h1 class="text-3xl font-bold text-[color:var(--primary)] flex items-center gap-2">
-                <i class="ph ph-list-check"></i> Form Penilaian Klaster 1
+                <i class="ph ph-list-check"></i> Penilaian Klaster II
             </h1>
-            <p class="text-sm text-gray-500 mt-1">Isi sesuai kondisi lapangan dan unggah dokumen pendukung (jika ada).
-            </p>
+            <p class="text-sm text-gray-500 mt-1">Silakan pilih opsi dan unggah file pendukung jika ada.</p>
         </div>
 
-        <form action="/submit-klaster1" method="POST" enctype="multipart/form-data" class="space-y-10">
+        <form action="/submit-klaster2" method="POST" enctype="multipart/form-data" class="space-y-10">
 
             <?php
-            $klaster = [
+            $klaster2 = [
                 [
-                    'judul' => '1. Anak Yang Memiliki Akta Kelahiran (Total Nilai 60)',
-                    'nama' => 'AnakAktaKelahiran',
-                    'nilai' => 60,
+                    'judul' => '1. Apakah Ada Perkawinan Anak (Total Nilai 25)',
+                    'nama' => 'perkawinanAnak',
+                    'nilai' => 25,
                     'opsi' => [
-                        0 => '≤ 10%',
-                        20 => '10% – 20%',
-                        40 => '20% – 80%',
-                        60 => '80% – 100%',
+                        0 => 'Tidak Ada',
+                        10 => '≤ 10%',
+                        15 => '10% – 20%',
+                        25 => '50%',
                     ],
-                    'file' => 'AnakAktaKelahiran.xlsx'
+                    'file' => 'PerkawinanAnak.xlsx'
                 ],
                 [
-                    'judul' => '2. Anak Yang Memiliki Kartu Identitas Anak (Jumlah Total 60)',
-                    'nama' => 'anggaran',
-                    'nilai' => 60,
+                    'judul' => '2. Upaya Yang Dilakukan Untuk Pencegahan Pernikahan Anak (Total Nilai 45)',
+                    'nama' => 'pencegahanPernikahan',
+                    'nilai' => 45,
                     'opsi' => [
-                        0 => '≤ 10%',
-                        20 => '10% – 20%',
-                        40 => '20% – 80%',
-                        60 => '80% – 100%',
+                        0 => 'Tidak Ada',
+                        15 => '1 – 3 Program',
+                        45 => '≥ 4 Program',
                     ],
-                    'file' => ''
+                    'file' => '' // tidak ada template excel
                 ],
-
+                [
+                    'judul' => '3. Tersedia Lembaga Konsultasi Bagi Keluarga (Total Nilai 30)',
+                    'nama' => 'lembagaKonsultasi',
+                    'nilai' => 30,
+                    'opsi' => [
+                        15 => 'Tersedia 1 Lembaga',
+                        25 => '> 3 Lembaga',
+                        30 => '≤ 5 Lembaga',
+                    ],
+                    'file' => 'LembagaKonsultasi.xlsx'
+                ],
             ];
 
-            foreach ($klaster as $k):
+            foreach ($klaster2 as $k):
                 ?>
                 <div class="space-y-4 bg-gray-50 p-6 rounded-xl border border-gray-200">
                     <label class="block text-lg font-semibold text-gray-800">
@@ -125,12 +103,10 @@
                         </a>
                     <?php endif; ?>
 
-
                     <label class="flex flex-col gap-2 mt-2">
                         <span class="text-sm font-medium text-gray-600 flex items-center gap-1"><i
                                 class="ph ph-upload-simple"></i> Unggah File</span>
-                        <input type="file" name="<?= $k['nama'] ?>_file"
-                            accept="<?= str_contains($k['file'], '.xlsx') ? '.xlsx' : '.pdf,.docx,.jpg,.png' ?>"
+                        <input type="file" name="<?= $k['nama'] ?>_file" accept=".pdf,.docx,.xlsx,.jpg,.png"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-[color:var(--primary)] file:text-white file:cursor-pointer" />
                     </label>
                 </div>
@@ -139,12 +115,11 @@
             <div class="text-center pt-6">
                 <button type="submit"
                     class="bg-[color:var(--primary)] hover:bg-[color:var(--primary-light)] text-white px-8 py-4 rounded-xl font-semibold shadow transition-all duration-300 flex items-center gap-2 justify-center">
-                    <i class="ph ph-paper-plane-right"></i> Submit Data
+                    <i class="ph ph-paper-plane-right"></i> Submit Klaster II
                 </button>
             </div>
         </form>
     </div>
-
 </body>
 
 </html>
