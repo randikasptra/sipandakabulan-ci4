@@ -28,7 +28,9 @@ $routes->group('dashboard', function ($routes) {
     $routes->group('admin', function ($routes) {
         $routes->get('/', 'AdminDashboard::index'); // /dashboard/admin
         $routes->post('users/create', 'AdminDashboard::storeUser');
+        $routes->post('users/(:num)/delete', 'AdminDashboard::delete/$1');
     });
+    
 
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
     $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa

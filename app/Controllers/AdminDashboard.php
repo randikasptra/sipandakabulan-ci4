@@ -39,22 +39,22 @@ class AdminDashboard extends BaseController
         $data = [
             'users' => $users,
             'title' => 'Kelola User',
+            'status' => 'status_input',
         ];
 
         return view('pages/admin/users', $data);
     }
 
-    // ⬇ Tambahkan ini
     public function storeUser()
     {
-        $userModel = new \App\Models\UserModel();
+        $userModel = new UserModel();
 
         $data = [
             'username' => $this->request->getPost('username'),
             'email' => $this->request->getPost('email'),
             'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
             'role' => $this->request->getPost('role'),
-            'desa' => $this->request->getPost('desa'), // <- TAMBAHKAN INI
+            'desa' => $this->request->getPost('desa'),
             'status_input' => 'belum',
             'status_approve' => 'pending',
         ];
@@ -63,6 +63,20 @@ class AdminDashboard extends BaseController
 
         return redirect()->to('/dashboard/users')->with('success', 'User berhasil ditambahkan.');
     }
+
+    public function delete($id)
+{
+    $userModel = new \App\Models\UserModel();
+
+    $user = $userModel->find($id);
+    if (!$user) {
+        return redirect()->back()->with('error', 'Pengguna tidak ditemukan.');
+    }
+
+    $userModel->delete($id);
+    
+    return redirect()->to('/dashboard/users')->with('success', 'Pengguna berhasil dihapus.');
+}
 
     public function desa()
     {
@@ -77,7 +91,6 @@ class AdminDashboard extends BaseController
         }
 
         $userModel = new UserModel();
-
         $desasPendingApproval = $userModel->where('role', 'operator')
             ->where('status_input', 'sudah')
             ->where('status_approve', 'pending')
@@ -124,8 +137,9 @@ class AdminDashboard extends BaseController
 
     public function approveList()
     {
-        $userModel = new \App\Models\UserModel(); // Ganti dengan model sesuai struktur kamu
-        $data['users'] = $userModel->findAll();   // Atau filter sesuai kebutuhan
+        $userModel = new UserModel();
+        $data['users'] = $userModel->findAll();
+
         return view('pages/admin/approve_list', $data);
     }
 
