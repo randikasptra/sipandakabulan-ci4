@@ -1,95 +1,168 @@
 <?= $this->include('layouts/header') ?>
 <?= $this->include('layouts/navbar') ?>
 
-<section class="p-8 max-w-5xl mx-auto">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">Tutorial Pengisian Data Klaster</h1>
+<!-- AOS CSS -->
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
 
-    <!-- Langkah 1 -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">1. Pilih Klaster yang Belum Diisi</h2>
-        <p class="text-gray-700 mb-4">
-            Setelah login, Anda akan diarahkan ke dashboard. Pilih klaster yang masih berstatus <span
-                class="font-medium text-red-500">belum diisi</span> untuk memulai pengisian data.
-        </p>
-        <div class="bg-white border rounded-lg shadow p-4">
-            <img src="<?= base_url('assets/tutorial/tutorial1.png') ?>" alt="Pilih Klaster" class="mx-auto">
+<section class="py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div class="text-center mb-12" data-aos="zoom-in">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-50 rounded-full mb-6">
+            <i class="ph ph-graduation-cap text-blue-600 text-3xl"></i>
         </div>
-    </div>
-
-    <!-- Langkah 2 -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">2. Isi Sub-Index Klaster</h2>
-        <p class="text-gray-700 mb-4">
-            Setelah masuk ke halaman klaster, operator akan diminta mengisi semua sub-point indikator sesuai data desa.
+        <h1 class="text-4xl font-bold text-gray-900 mb-3">Panduan Pengisian Data Klaster</h1>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+            Langkah demi langkah tutorial untuk mengisi data klaster desa dengan mudah
         </p>
-        <div class="bg-white border rounded-lg shadow p-4">
-            <img src="<?= base_url('assets/tutorial/tutorial2.png') ?>" alt="Isi Sub Index" class="mx-auto">
-        </div>
     </div>
 
-    <!-- Langkah 3 -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">3. Unduh Template Excel</h2>
-        <p class="text-gray-700 mb-4">
-            Untuk membantu proses input, Anda dapat mengunduh file Excel berisi daftar data yang perlu disiapkan.
-            Pastikan semua data lengkap sebelum mengisi form online.
-        </p>
-        <div class="bg-white border rounded-lg shadow p-4">
-            <img src="<?= base_url('assets/tutorial/tutorial3.png') ?>" alt="Download Excel" class="mx-auto">
+    <div class="space-y-12">
+        <!-- Langkah 1 -->
+        <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
+            <div class="md:w-1/3 sticky top-24">
+                <div class="flex items-center mb-2">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold mr-3">1</div>
+                    <h2 class="text-xl font-semibold text-gray-900">Pilih Klaster yang Belum Diisi</h2>
+                </div>
+                <p class="text-gray-600 pl-13">
+                    Setelah login, pilih klaster berstatus <span class="font-medium text-red-500">belum diisi</span> untuk memulai.
+                </p>
+            </div>
+            <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <img src="<?= base_url('assets/tutorial/tutorial1.png') ?>" alt="Pilih Klaster" class="w-full h-auto object-cover">
+            </div>
+        </div>
+
+        <!-- Langkah 2 -->
+        <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
+            <div class="md:w-1/3 sticky top-24">
+                <div class="flex items-center mb-2">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold mr-3">2</div>
+                    <h2 class="text-xl font-semibold text-gray-900">Isi Sub-Index Klaster</h2>
+                </div>
+                <p class="text-gray-600 pl-13">
+                    Isi semua sub-point indikator sesuai data desa Anda.
+                </p>
+            </div>
+            <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <img src="<?= base_url('assets/tutorial/tutorial2.png') ?>" alt="Isi Sub Index" class="w-full h-auto object-cover">
+            </div>
+        </div>
+
+        <!-- Langkah 3 -->
+        <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
+            <div class="md:w-1/3 sticky top-24">
+                <div class="flex items-center mb-2">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold mr-3">3</div>
+                    <h2 class="text-xl font-semibold text-gray-900">Unduh Template Excel</h2>
+                </div>
+                <p class="text-gray-600 pl-13">
+                    Unduh file Excel berisi daftar data yang perlu disiapkan.
+                </p>
+                <div class="mt-4 pl-13">
+                    <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                        <i class="ph ph-download mr-2"></i> Download Template
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <img src="<?= base_url('assets/tutorial/tutorial3.png') ?>" alt="Download Excel" class="w-full h-auto object-cover">
+            </div>
+        </div>
+
+        <!-- Langkah 4 -->
+        <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
+            <div class="md:w-1/3 sticky top-24">
+                <div class="flex items-center mb-2">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold mr-3">4</div>
+                    <h2 class="text-xl font-semibold text-gray-900">Pengumpulan Berkas</h2>
+                </div>
+                <p class="text-gray-600 pl-13">
+                    Kumpulkan setiap SK yang diperlukan sesuai data desa.
+                </p>
+            </div>
+            <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <img src="<?= base_url('assets/tutorial/tutorial4.png') ?>" alt="Submit Data" class="w-full h-auto object-cover">
+            </div>
+        </div>
+
+        <!-- Langkah 5 -->
+        <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
+            <div class="md:w-1/3 sticky top-24">
+                <div class="flex items-center mb-2">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold mr-3">5</div>
+                    <h2 class="text-xl font-semibold text-gray-900">Kelompokkan Berkas</h2>
+                </div>
+                <p class="text-gray-600 pl-13">
+                    Kelompokkan semua data dalam format ZIP file.
+                </p>
+            </div>
+            <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <img src="<?= base_url('assets/tutorial/tutorial5.png') ?>" alt="Submit Data" class="w-full h-auto object-cover">
+            </div>
+        </div>
+
+        <!-- Langkah 6 -->
+        <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
+            <div class="md:w-1/3 sticky top-24">
+                <div class="flex items-center mb-2">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold mr-3">6</div>
+                    <h2 class="text-xl font-semibold text-gray-900">Upload ZIP File</h2>
+                </div>
+                <p class="text-gray-600 pl-13">
+                    Pilih file ZIP yang sudah disiapkan dengan tombol <span class="font-medium text-green-600">Choose File</span>.
+                </p>
+            </div>
+            <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <img src="<?= base_url('assets/tutorial/tutorial6.png') ?>" alt="Submit Data" class="w-full h-auto object-cover">
+            </div>
+        </div>
+
+        <!-- Langkah 7 -->
+        <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
+            <div class="md:w-1/3 sticky top-24">
+                <div class="flex items-center mb-2">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold mr-3">7</div>
+                    <h2 class="text-xl font-semibold text-gray-900">Submit Data</h2>
+                </div>
+                <p class="text-gray-600 pl-13">
+                    Tekan tombol <span class="font-medium text-green-600">Submit</span> untuk mengirim data ke Admin.
+                </p>
+            </div>
+            <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                <img src="<?= base_url('assets/tutorial/tutorial7.png') ?>" alt="Submit Data" class="w-full h-auto object-cover">
+            </div>
         </div>
     </div>
 
-    <!-- Langkah 4 -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">4. Pengumpulan dan Pengisian Berkas</h2>
-        <p class="text-gray-700 mb-4">
-            Setelah Download data excel operator disuruh untuk mengumpulkan setiap SK yang di perlukan dan di isi sesuai
-            data
-            yang ada di desa</p>
-        <div class="bg-white border rounded-lg shadow p-4">
-            <img src="<?= base_url('assets/tutorial/tutorial4.png') ?>" alt="Submit Data" class="mx-auto">
-        </div>
-    </div>
-    <!-- Langkah 5 -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">5. Kelompokan Setiap Berkas Dengan ZIP</h2>
-        <p class="text-gray-700 mb-4">
-            Setelah semua data dikumpulkan dengan lengkap dan benar (yang ada didesa jika hanya ada 3 berkas tidak
-            apa-apa),
-        </p>
-        <div class="bg-white border rounded-lg shadow p-4">
-            <img src="<?= base_url('assets/tutorial/tutorial5.png') ?>" alt="Submit Data" class="mx-auto">
-        </div>
-    </div>
-    <!-- Langkah 6 -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">6.Upload ZIP</h2>
-        <p class="text-gray-700 mb-4">
-            Setelah pengelompokan data selesai ,selanjutnya pilih ZIP yang sudah siap dengan tekan tombol<span
-                class="font-medium text-green-600"> Choose File</span> dan pilih berkas ZIP nya
-        </p>
-        <div class="bg-white border rounded-lg shadow p-4">
-            <img src="<?= base_url('assets/tutorial/tutorial6.png') ?>" alt="Submit Data" class="mx-auto">
-        </div>
-    </div>
-    <!-- Langkah 6 -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-blue-700 mb-2">6. Submit Setelah Lengkap</h2>
-        <p class="text-gray-700 mb-4">
-            Setelah semua data diisi dengan lengkap dan benar, tekan tombol <span
-                class="font-medium text-green-600">Submit</span> untuk mengirimkan data ke Admin.
-            Status akan berubah menjadi <span class="font-medium text-green-500">Terverifikasi</span> jika sudah
-            di-approve.
-        </p>
-        <div class="bg-white border rounded-lg shadow p-4">
-            <img src="<?= base_url('assets/tutorial/tutorial7.png') ?>" alt="Submit Data" class="mx-auto">
-        </div>
-    </div>
-
-    <div class="text-right mt-10">
-        <a href="<?= base_url('/dashboard') ?>"
-            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-            Kembali ke Dashboard
+    <div class="mt-16 text-center" data-aos="fade-up">
+        <a href="<?= base_url('dashboard/operator') ?>" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-200 shadow-lg">
+            <i class="ph ph-arrow-left mr-2"></i> Kembali ke Dashboard
         </a>
     </div>
 </section>
+
+<!-- Tombol Kembali ke Atas -->
+<button id="backToTopBtn" class="fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 hidden z-50">
+    <i class="ph ph-arrow-up"></i>
+</button>
+
+<!-- AOS JS & BackToTop Script -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init({
+        once: true,
+        duration: 800,
+        easing: 'ease-in-out',
+    });
+
+    // Tombol scroll ke atas
+    const btn = document.getElementById("backToTopBtn");
+    window.onscroll = () => {
+        btn.style.display = (document.documentElement.scrollTop > 300) ? "block" : "none";
+    };
+    btn.onclick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+</script>
+
+<?= $this->include('layouts/footer') ?>

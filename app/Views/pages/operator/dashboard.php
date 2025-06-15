@@ -2,17 +2,16 @@
 <?= $this->include('layouts/navbar') ?>
 
 <!-- Hero Section -->
-<section class="p-6">
+<section class="p-6 pt-24">
     
     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center mb-8">
-        <div>
-            <h2 class="text-2xl font-bold mb-2">Selamat Datang, Kabupaten Tasikmalaya!</h2>
-            <p class="text-gray-600">
-                Email: <?= esc($user_email) ?> |
-                Tipe User: <span class="font-semibold text-blue-800"><?= esc($user_role) ?></span>
-            </p>
-
-        </div>
+      <div>
+    <h2 class="text-2xl font-bold mb-2">Selamat Datang,<?= esc(session()->get('desa')) ?>!</h2>
+    <p class="text-gray-600">
+        Email: <?= esc($user_email) ?> |
+        Tipe User: <span class="font-semibold text-blue-800"><?= esc($user_role) ?></span>
+    </p>
+</div>
 
         <div class="mt-4 md:mt-0 text-center">
             <p class="text-green-600 font-bold text-lg">Evaluasi SIPANDAKABULAN sudah di Approve</p>
