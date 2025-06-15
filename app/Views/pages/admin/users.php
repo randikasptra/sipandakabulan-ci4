@@ -95,112 +95,122 @@
                 <!-- User Table Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <!-- Table Header -->
-                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <!-- ... head tetap seperti yang kamu punya ... -->
+
+                    <!-- Tambahkan ini di bagian table header -->
+                    <div
+                        class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                         <div class="flex items-center gap-2">
                             <i class="fas fa-users text-primary-600"></i>
                             <h2 class="font-semibold text-gray-800">Daftar Pengguna</h2>
                         </div>
-                        <div class="relative">
-                            <input type="text" placeholder="Cari pengguna..."
-                                class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+
+                        <div class="flex flex-col md:flex-row gap-3 items-center">
+                            <select id="filterRole"
+                                class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <option value="">Semua Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="operator">Operator</option>
+                            </select>
+
+                            <div class="relative">
+                                <input type="text" id="searchInput" placeholder="Cari pengguna..."
+                                    class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                                <i class="fas fa-search absolute left-2.5 top-3 text-gray-400"></i>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Table -->
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200" id="userTable">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col"
+                                    <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         No</th>
-                                    <th scope="col"
+                                    <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Username</th>
-                                    <th scope="col"
+                                    <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Email</th>
-                                    <th scope="col"
+                                    <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Role</th>
-                                    <th scope="col"
+                                    <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Desa</th>
-                                    <th scope="col"
+                                    <th
                                         class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <?php if (!empty($users)): ?>
-                                    <?php foreach ($users as $index => $user): ?>
-                                        <tr class="table-row-hover transition-all">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $index + 1 ?></td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    <div
-                                                        class="flex-shrink-0 h-10 w-10 bg-primary-100 rounded-full flex items-center justify-center">
-                                                        <i class="fas fa-user text-primary-600"></i>
-                                                    </div>
-                                                    <div class="ml-4">
-                                                        <div class="text-sm font-medium text-gray-900">
-                                                            <?= esc($user['username']) ?>
-                                                        </div>
+                            <tbody class="bg-white divide-y divide-gray-200" id="userTableBody">
+                                <?php foreach ($users as $index => $user): ?>
+                                    <tr class="table-row-hover transition-all"
+                                        data-username="<?= strtolower($user['username']) ?>"
+                                        data-email="<?= strtolower($user['email']) ?>"
+                                        data-role="<?= strtolower($user['role']) ?>"
+                                        data-desa="<?= strtolower($user['desa'] ?? '') ?>">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= $index + 1 ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div
+                                                    class="flex-shrink-0 h-10 w-10 bg-primary-100 rounded-full flex items-center justify-center">
+                                                    <i class="fas fa-user text-primary-600"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                        <?= esc($user['username']) ?>
                                                     </div>
                                                 </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <?= esc($user['email']) ?>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                    <?= $user['role'] === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' ?>">
-                                                    <?= esc(ucfirst($user['role'])) ?>
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <?= esc($user['desa'] ?? '-') ?>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <div class="flex justify-end items-center gap-3">
-                                                    <a href="#"
-                                                        onclick="showDetail('<?= esc($user['username']) ?>', '<?= esc($user['email']) ?>', '<?= esc($user['role']) ?>', '<?= esc($user['desa']) ?>')"
-                                                        class="action-btn text-blue-500 hover:text-blue-700"
-                                                        title="Lihat Detail">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="/dashboard/admin/users/<?= $user['id'] ?>/edit"
-                                                        class="text-yellow-500 hover:underline mr-2">
-                                                        <i class="fas fa-edit"></i> Edit
-                                                    </a>
-                                                    <form action="/dashboard/admin/users/<?= $user['id'] ?>/delete"
-                                                        method="post" class="inline">
-                                                        <?= csrf_field() ?>
-                                                        <button type="submit" class="action-btn text-red-500 hover:text-red-700"
-                                                            title="Hapus"
-                                                            onclick="return confirm('Yakin ingin menghapus user ini?')">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
-                                            <div class="flex flex-col items-center justify-center py-8">
-                                                <i class="fas fa-user-slash text-4xl text-gray-300 mb-2"></i>
-                                                <p class="text-gray-500">Belum ada data pengguna</p>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <?= esc($user['email']) ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span
+                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        <?= $user['role'] === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' ?>">
+                                                <?= esc(ucfirst($user['role'])) ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <?= esc($user['desa'] ?? '-') ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div class="flex justify-end items-center gap-3">
+                                                <a href="#"
+                                                    onclick="showDetail('<?= esc($user['username']) ?>', '<?= esc($user['email']) ?>', '<?= esc($user['role']) ?>', '<?= esc($user['desa']) ?>')"
+                                                    class="action-btn text-blue-500 hover:text-blue-700"
+                                                    title="Lihat Detail">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="/dashboard/admin/users/<?= $user['id'] ?>/edit"
+                                                    class="text-yellow-500 hover:underline mr-2">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form action="/dashboard/admin/users/<?= $user['id'] ?>/delete"
+                                                    method="post" class="inline">
+                                                    <?= csrf_field() ?>
+                                                    <button type="submit" class="action-btn text-red-500 hover:text-red-700"
+                                                        onclick="return confirm('Yakin ingin menghapus user ini?')">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
-                                <?php endif; ?>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
+
+
+
+                  
 
                     <!-- Table Footer -->
                     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
@@ -428,6 +438,42 @@
                 }
             });
         });
+    </script>
+
+    <!-- Script untuk Search dan Filter -->
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const filterRole = document.getElementById('filterRole');
+        const rows = document.querySelectorAll('#userTableBody tr');
+
+        function filterTable() {
+            const keyword = searchInput.value.toLowerCase();
+            const selectedRole = filterRole.value.toLowerCase();
+
+            rows.forEach(row => {
+                const username = row.dataset.username;
+                const email = row.dataset.email;
+                const role = row.dataset.role;
+                const desa = row.dataset.desa;
+
+                const matchKeyword =
+                    username.includes(keyword) ||
+                    email.includes(keyword) ||
+                    role.includes(keyword) ||
+                    desa.includes(keyword);
+
+                const matchRole = selectedRole === "" || role === selectedRole;
+
+                if (matchKeyword && matchRole) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', filterTable);
+        filterRole.addEventListener('change', filterTable);
     </script>
 </body>
 
