@@ -3,15 +3,15 @@
 
 <!-- Hero Section -->
 <section class="p-6 pt-24">
-    
+
     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center mb-8">
-      <div>
-    <h2 class="text-2xl font-bold mb-2">Selamat Datang,<?= esc(session()->get('desa')) ?>!</h2>
-    <p class="text-gray-600">
-        Email: <?= esc($user_email) ?> |
-        Tipe User: <span class="font-semibold text-blue-800"><?= esc($user_role) ?></span>
-    </p>
-</div>
+        <div>
+            <h2 class="text-2xl font-bold mb-2">Selamat Datang,<?= esc(session()->get('desa')) ?>!</h2>
+            <p class="text-gray-600">
+                Email: <?= esc($user_email) ?> |
+                Tipe User: <span class="font-semibold text-blue-800"><?= esc($user_role) ?></span>
+            </p>
+        </div>
 
         <div class="mt-4 md:mt-0 text-center">
             <p class="text-green-600 font-bold text-lg">Evaluasi SIPANDAKABULAN sudah di Approve</p>
@@ -25,9 +25,9 @@
 
 <!-- Card Klaster Section -->
 <section class="px-6 pb-6 ">
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <?php foreach ($klasters as $klaster) : ?>
+        <?php foreach ($klasters as $klaster): ?>
             <?= view('components/card_klaster', [
                 'klaster' => $klaster['slug'],
                 'id' => $klaster['id'],
