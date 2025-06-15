@@ -34,7 +34,7 @@
 
 
     <!-- 🔔 Pengumuman -->
-    <a href="/dashboard/pengumuman" class="flex items-center py-2 px-4 rounded hover:bg-blue-700">
+    <a href="/dashboard/pengumuman_list" class="flex items-center py-2 px-4 rounded hover:bg-blue-700">
       <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round"
           d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11c0-3.07-1.64-5.64-4.5-6.32V4a1.5 1.5 0 00-3 0v.68C7.64 5.36 6 7.92 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1h6z" />

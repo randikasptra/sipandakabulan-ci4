@@ -44,11 +44,17 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('laporan', 'AdminDashboard::laporan');   // /dashboard/laporan
     $routes->get('settings', 'AdminDashboard::settings'); // /dashboard/settings
 
+    $routes->get('pengumuman_list', 'PengumumanController::index');
+    $routes->get('/pengumuman/create', 'PengumumanController::create');
+    $routes->post('/pengumuman/store', 'PengumumanController::store');
+    $routes->get('/pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
+
     // OPERATOR ROUTES - tetap di controller Dashboard
     $routes->get('operator', 'Dashboard::index/operator');
     $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
     $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
 });
+
 
 
 
