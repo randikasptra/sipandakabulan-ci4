@@ -31,9 +31,11 @@ $routes->group('dashboard', function ($routes) {
         $routes->post('users/(:num)/delete', 'AdminDashboard::delete/$1');
         $routes->get('users/(:num)/edit', 'AdminDashboard::editUser/$1');
         $routes->post('users/(:num)/update', 'AdminDashboard::updateUser/$1');
+
     });
 
 
+    $routes->get('pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
     $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
     $routes->get('klaster', 'AdminDashboard::klaster');   // /dashboard/klaster
@@ -50,6 +52,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('pengumuman_list', 'PengumumanController::index');
     $routes->get('/pengumuman/create', 'PengumumanController::create');
     $routes->get('/pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
+    $routes->post('pengumuman/update', 'PengumumanController::update');
     $routes->get('pengumuman_user', 'Dashboard::pengumuman_user');
 
     // $routes->post('/pengumuman_list/store', 'PengumumanController::store');

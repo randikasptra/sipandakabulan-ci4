@@ -21,7 +21,7 @@
 
     <!-- Header Card -->
     <div
-        class="bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center mb-8 mx-6 mt-6">
+        class="pt-24 bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center mb-8 mx-6 mt-6">
         <div>
             <h2 class="text-2xl font-bold mb-2">Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!</h2>
             <p class="text-gray-600 flex flex-wrap gap-2 items-center text-sm">

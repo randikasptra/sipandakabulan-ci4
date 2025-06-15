@@ -31,6 +31,21 @@ class PengumumanController extends BaseController
         return view('pages/admin/pengumuman_list', $data);
     }
 
+    public function update()
+    {
+        $id = $this->request->getPost('id');
+
+        $data = [
+            'judul' => $this->request->getPost('judul'),
+            'isi' => $this->request->getPost('isi'),
+            'tujuan_desa' => $this->request->getPost('tujuan_desa') ?: null,
+        ];
+
+        $this->announcementModel->update($id, $data);
+
+        return redirect()->to('/dashboard/pengumuman_list')->with('success', 'Pengumuman berhasil diupdate!');
+    }
+
     public function create()
     {
         $data['desa_list'] = $this->userModel
@@ -45,9 +60,9 @@ class PengumumanController extends BaseController
     public function store()
     {
         $data = [
-            'judul'        => $this->request->getPost('judul'),
-            'isi'          => $this->request->getPost('isi'),
-            'tujuan_desa'  => $this->request->getPost('tujuan_desa') ?: null, // null = semua desa
+            'judul' => $this->request->getPost('judul'),
+            'isi' => $this->request->getPost('isi'),
+            'tujuan_desa' => $this->request->getPost('tujuan_desa') ?: null, // null = semua desa
         ];
 
         if ($this->announcementModel->save($data)) {
@@ -59,7 +74,16 @@ class PengumumanController extends BaseController
 
     public function delete($id)
     {
-        $this->announcementModel->delete($id);
+        $AnnouncementModel = new AnnouncementModel();
+
+        $pengumuman = $AnnouncementModel->find($id);
+
+        if (!$pengumuman) {
+            return redirect()->back()->with('error', 'Pengumuman tidak ditemukan.');
+        }
+
+        $AnnouncementModel->delete($id);
+
         return redirect()->to('/dashboard/pengumuman_list')->with('success', 'Pengumuman berhasil dihapus.');
     }
 }
