@@ -101,6 +101,22 @@ class Dashboard extends BaseController
 
         return view('pages/operator/klaster2', $data);
     }
+    public function klaster3($id = null)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $data = [
+            'user_email' => $session->get('email'),
+            'user_role' => $session->get('role'),
+            'username' => $session->get('username'),
+            'id' => $id,
+        ];
+
+        return view('pages/operator/klaster3', $data);
+    }
 
     public function tutorial()
     {

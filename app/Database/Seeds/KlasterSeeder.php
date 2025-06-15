@@ -32,21 +32,21 @@ class KlasterSeeder extends Seeder
             ],
             [
                 'title' => 'Klaster III: Kesehatan Dasar dan Kesejahteraan',
-                'slug' => 'klaster-iii-kesehatan-dasar-dan-kesejahteraan',
+                'slug' => 'klaster3',
                 'nilai_em' => 0,
                 'nilai_maksimal' => 100,
                 'progres' => 0
             ],
             [
                 'title' => 'Klaster IV: Pendidikan, Waktu Luang, Budaya',
-                'slug' => 'klaster-iv-pendidikan-waktu-luang-budaya',
+                'slug' => 'klaster4',
                 'nilai_em' => 0,
                 'nilai_maksimal' => 100,
                 'progres' => 0
             ],
             [
                 'title' => 'Klaster V: Perlindungan Khusus',
-                'slug' => 'klaster-v-perlindungan-khusus',
+                'slug' => 'klaster5',
                 'nilai_em' => 0,
                 'nilai_maksimal' => 100,
                 'progres' => 0
