@@ -8,32 +8,32 @@ use App\Models\UserModel;
 class Dashboard extends BaseController
 {
 
-   public function kelembagaan($id = null)
-{
-    $session = session();
-    if (!$session->get('logged_in')) {
-        return redirect()->to('/login');
+    public function kelembagaan($id = null)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $userModel = new UserModel();
+
+        // Query data statistik
+        $totalDesa = $userModel->where('role', 'operator')->countAllResults();
+        $sudahInput = $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults();
+        $belumInput = $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults();
+        $perluApprove = $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults();
+
+        // Kirim data ke view
+        $data = [
+            'id' => $id,
+            'totalDesa' => $totalDesa,
+            'sudahInput' => $sudahInput,
+            'belumInput' => $belumInput,
+            'perluApprove' => $perluApprove,
+        ];
+
+        return view('pages/operator/kelembagaan', $data);
     }
-
-    $userModel = new UserModel();
-
-    // Query data statistik
-    $totalDesa    = $userModel->where('role', 'operator')->countAllResults();
-    $sudahInput   = $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults();
-    $belumInput   = $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults();
-    $perluApprove = $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults();
-
-    // Kirim data ke view
-    $data = [
-        'id'           => $id,
-        'totalDesa'    => $totalDesa,
-        'sudahInput'   => $sudahInput,
-        'belumInput'   => $belumInput,
-        'perluApprove' => $perluApprove,
-    ];
-
-    return view('pages/operator/kelembagaan', $data);
-}
 
 
     public function klaster1($id = null)
@@ -45,6 +45,21 @@ class Dashboard extends BaseController
 
         // Kirim data ke view
         return view('pages/operator/klaster1', ['id' => $id]);
+    }
+    public function tutorial()
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $data = [
+            'user_email' => $session->get('email'),
+            'user_role' => $session->get('role'),
+            'username' => $session->get('username'),
+        ];
+
+        return view('pages/operator/tutorial', $data);
     }
 
     public function index($role = null)
@@ -71,9 +86,9 @@ class Dashboard extends BaseController
 
         $data = [
             'user_email' => $session->get('email'),
-            'user_role'  => $session->get('role'),
-            'username'   => $session->get('username'),
-            'klasters'   => $klasters,  // ini yang nanti di foreach di view
+            'user_role' => $session->get('role'),
+            'username' => $session->get('username'),
+            'klasters' => $klasters,  // ini yang nanti di foreach di view
         ];
 
 

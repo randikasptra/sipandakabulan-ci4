@@ -49,6 +49,7 @@ $routes->group('dashboard', function ($routes) {
     // $routes->post('/pengumuman_list/store', 'PengumumanController::store');
 
     // OPERATOR ROUTES - tetap di controller Dashboard
+    $routes->get('tutorial', 'Dashboard::tutorial');
     $routes->get('operator', 'Dashboard::index/operator');
     $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
     $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
