@@ -64,19 +64,55 @@ class AdminDashboard extends BaseController
         return redirect()->to('/dashboard/users')->with('success', 'User berhasil ditambahkan.');
     }
 
-    public function delete($id)
-{
-    $userModel = new \App\Models\UserModel();
+    public function editUser($id)
+    {
+        $userModel = new UserModel();
+        $user = $userModel->find($id);
 
-    $user = $userModel->find($id);
-    if (!$user) {
-        return redirect()->back()->with('error', 'Pengguna tidak ditemukan.');
+        if (!$user) {
+            return redirect()->to('/dashboard/users')->with('error', 'User tidak ditemukan.');
+        }
+
+        return view('pages/admin/edit_user', ['user' => $user, 'title' => 'Edit User']);
     }
 
-    $userModel->delete($id);
-    
-    return redirect()->to('/dashboard/users')->with('success', 'Pengguna berhasil dihapus.');
-}
+    public function updateUser($id)
+    {
+        $userModel = new UserModel();
+
+        $data = [
+            'username' => $this->request->getPost('username'),
+            'email' => $this->request->getPost('email'),
+            'role' => $this->request->getPost('role'),
+            'desa' => $this->request->getPost('desa'),
+            'status_input' => $this->request->getPost('status_input'),
+            'status_approve' => $this->request->getPost('status_approve'),
+        ];
+
+        // Optional: jika password diisi, update juga password
+        $password = $this->request->getPost('password');
+        if (!empty($password)) {
+            $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        $userModel->update($id, $data);
+
+        return redirect()->to('/dashboard/users')->with('success', 'User berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        $userModel = new \App\Models\UserModel();
+
+        $user = $userModel->find($id);
+        if (!$user) {
+            return redirect()->back()->with('error', 'Pengguna tidak ditemukan.');
+        }
+
+        $userModel->delete($id);
+
+        return redirect()->to('/dashboard/users')->with('success', 'Pengguna berhasil dihapus.');
+    }
 
     public function desa()
     {

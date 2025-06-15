@@ -171,9 +171,9 @@
                                                         title="Lihat Detail">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="/admin/users/<?= $user['id'] ?>/edit"
-                                                        class="action-btn text-yellow-500 hover:text-yellow-700" title="Edit">
-                                                        <i class="fas fa-edit"></i>
+                                                    <a href="/dashboard/admin/users/<?= $user['id'] ?>/edit"
+                                                        class="text-yellow-500 hover:underline mr-2">
+                                                        <i class="fas fa-edit"></i> Edit
                                                     </a>
                                                     <form action="/dashboard/admin/users/<?= $user['id'] ?>/delete"
                                                         method="post" class="inline">

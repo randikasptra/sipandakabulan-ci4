@@ -29,8 +29,10 @@ $routes->group('dashboard', function ($routes) {
         $routes->get('/', 'AdminDashboard::index'); // /dashboard/admin
         $routes->post('users/create', 'AdminDashboard::storeUser');
         $routes->post('users/(:num)/delete', 'AdminDashboard::delete/$1');
+        $routes->get('users/(:num)/edit', 'AdminDashboard::editUser/$1');
+        $routes->post('users/(:num)/update', 'AdminDashboard::updateUser/$1');
     });
-    
+
 
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
     $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
@@ -49,6 +51,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('/pengumuman/create', 'PengumumanController::create');
     $routes->get('/pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
     $routes->get('pengumuman_user', 'Dashboard::pengumuman_user');
+
     // $routes->post('/pengumuman_list/store', 'PengumumanController::store');
 
     // OPERATOR ROUTES - tetap di controller Dashboard

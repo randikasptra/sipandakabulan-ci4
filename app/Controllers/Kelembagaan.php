@@ -13,12 +13,12 @@ class Kelembagaan extends Controller
         // dd($_FILES); // Dump semua file
 
         $model = new KelembagaanModel();
-        $user_id = session()->get('user_id');
+        $id = session()->get('id');
         $tahun = date('Y');
 
         // Ambil nilai inputan radio (value numerik)
         $data = [
-            'user_id' => $user_id,
+            'id' => $id,
             'tahun' => $tahun,
             'peraturan_value' => (int) $this->request->getPost('peraturan'),
             'anggaran_value' => (int) $this->request->getPost('anggaran'),
