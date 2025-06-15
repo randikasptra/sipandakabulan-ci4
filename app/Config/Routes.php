@@ -1,7 +1,6 @@
 <?php
 
 use CodeIgniter\Router\RouteCollection;
-use App\Controllers\Kelembagaan;
 
 
 
@@ -46,14 +45,18 @@ $routes->group('dashboard', function ($routes) {
 
     $routes->get('pengumuman_list', 'PengumumanController::index');
     $routes->get('/pengumuman/create', 'PengumumanController::create');
-    $routes->post('/pengumuman/store', 'PengumumanController::store');
     $routes->get('/pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
+    // $routes->post('/pengumuman_list/store', 'PengumumanController::store');
 
     // OPERATOR ROUTES - tetap di controller Dashboard
     $routes->get('operator', 'Dashboard::index/operator');
     $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
     $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
 });
+
+
+$routes->post('/dashboard/pengumuman_list/store', 'PengumumanController::store');
+
 
 
 

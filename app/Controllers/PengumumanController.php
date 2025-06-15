@@ -14,35 +14,53 @@ class PengumumanController extends BaseController
     public function __construct()
     {
         $this->announcementModel = new AnnouncementModel();
-        $this->userModel = new \App\Models\UserModel(); // untuk ambil data desa
+        $this->userModel = new UserModel();
     }
 
     public function index()
     {
         $data['announcements'] = $this->announcementModel->orderBy('created_at', 'DESC')->findAll();
+
+        // Kirim desa_list juga ke view
+        $data['desa_list'] = $this->userModel
+            ->select('desa')
+            ->where('desa IS NOT NULL')
+            ->groupBy('desa')
+            ->findAll();
+
         return view('pages/admin/pengumuman_list', $data);
     }
 
     public function create()
     {
-        $data['desa_list'] = $this->userModel->distinct()->select('desa')->whereNotIn('desa', [null])->findAll();
-        return view('admin/pengumuman_create', $data);
+        // Ambil desa unik dari user
+        $data['desa_list'] = $this->userModel
+            ->select('desa')
+            ->where('desa IS NOT NULL')
+            ->groupBy('desa')
+            ->findAll();
+
+        return view('pages/admin/pengumuman_list', $data);
     }
 
     public function store()
-    {
-        $this->announcementModel->save([
-            'judul'        => $this->request->getPost('judul'),
-            'isi'          => $this->request->getPost('isi'),
-            'tujuan_desa'  => $this->request->getPost('tujuan_desa') ?: null, // null artinya untuk semua desa
-        ]);
+{
+    $data = [
+        'judul'        => $this->request->getPost('judul'),
+        'isi'          => $this->request->getPost('isi'),
+        'tujuan_desa'  => $this->request->getPost('tujuan_desa') ?: null,
+    ];
 
-        return redirect()->to('/pengumuman')->with('success', 'Pengumuman berhasil dikirim.');
+    if ($this->announcementModel->save($data)) {
+        return redirect()->to('/dashboard/pengumuman_list')->with('success', 'Pengumuman berhasil dikirim.');
+    } else {
+        return redirect()->back()->with('error', 'Gagal menyimpan pengumuman.');
     }
+}
 
     public function delete($id)
     {
         $this->announcementModel->delete($id);
-        return redirect()->to('/pengumuman')->with('success', 'Pengumuman berhasil dihapus.');
+        return redirect()->to('/dashboard/pengumuman_list')->with('success', 'Pengumuman berhasil dihapus.');
     }
 }
