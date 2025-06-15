@@ -17,37 +17,39 @@ class Auth extends BaseController
         return view('auth/login');
     }
 
+   public function login()
+{
+    $session = session();
+    $userModel = new \App\Models\UserModel();
 
-    public function login()
-    {
-        $userModel = new UserModel();
-        $identifier = $this->request->getPost('email') ?? $this->request->getPost('username');
-        $password = $this->request->getPost('password');
-        $role = $this->request->getPost('role');
+    $email = $this->request->getPost('email');
+    $password = $this->request->getPost('password');
 
-        // Coba cari user berdasarkan email dulu, kalau tidak ada pakai username
-        $user = $userModel->where('email', $identifier)->orWhere('username', $identifier)->first();
+    $user = $userModel->where('email', $email)->first();
 
-        if ($user && password_verify($password, $user['password'])) {
-            if ($role && $user['role'] !== $role) {
-                return redirect()->back()->withInput()->with('errors', ['Role tidak sesuai.']);
-            }
-
-            session()->set([
-                'user_id'   => $user['id'],
-                'username'  => $user['username'],
-                'email'     => $user['email'],
-                'role'      => $user['role'],
-                'logged_in' => true
-            ]);
+    if ($user) {
+        if (password_verify($password, $user['password'])) {
+            // Simpan semua data penting ke session termasuk 'desa'
+            $sessionData = [
+                'id'       => $user['id'],
+                'username' => $user['username'],
+                'email'    => $user['email'],
+                'role'     => $user['role'],
+                'desa'     => $user['desa'], // ✅ ini bagian penting
+                'logged_in'=> true
+            ];
+            $session->set($sessionData);
 
             return redirect()->to('/dashboard/' . $user['role']);
+        } else {
+            return redirect()->back()->with('error', 'Password salah');
         }
-
-        return redirect()->back()->withInput()->with('errors', ['Email/Username, password, atau hak akses salah.']);
+    } else {
+        return redirect()->back()->with('error', 'Email tidak ditemukan');
     }
+}
 
-    
+
     public function logout()
     {
         session()->destroy();

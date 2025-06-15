@@ -45,12 +45,15 @@ class Dashboard extends BaseController
             return redirect()->to('/login');
         }
 
-        $desa_operator = $session->get('desa');
+        $desa_operator = $session->get('desa'); // ✅ Pastikan saat login, 'desa' disimpan ke session
+
+        // Debug sementara
+        // dd($desa_operator, $session->get());
 
         $pengumuman = $this->announcementModel
             ->groupStart()
             ->where('tujuan_desa', $desa_operator)
-            ->orWhere('tujuan_desa', 'semua')
+            ->orWhere('tujuan_desa IS NULL', null, false) // ✅ Untuk pengumuman ke semua desa
             ->groupEnd()
             ->orderBy('created_at', 'DESC')
             ->findAll();
@@ -64,6 +67,7 @@ class Dashboard extends BaseController
 
         return view('pages/operator/pengumuman_user', $data);
     }
+
 
     public function klaster1($id = null)
     {

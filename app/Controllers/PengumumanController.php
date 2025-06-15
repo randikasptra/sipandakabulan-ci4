@@ -21,7 +21,7 @@ class PengumumanController extends BaseController
     {
         $data['announcements'] = $this->announcementModel->orderBy('created_at', 'DESC')->findAll();
 
-        // Kirim desa_list juga ke view
+        // Kirim desa_list ke view
         $data['desa_list'] = $this->userModel
             ->select('desa')
             ->where('desa IS NOT NULL')
@@ -33,7 +33,6 @@ class PengumumanController extends BaseController
 
     public function create()
     {
-        // Ambil desa unik dari user
         $data['desa_list'] = $this->userModel
             ->select('desa')
             ->where('desa IS NOT NULL')
@@ -44,19 +43,19 @@ class PengumumanController extends BaseController
     }
 
     public function store()
-{
-    $data = [
-        'judul'        => $this->request->getPost('judul'),
-        'isi'          => $this->request->getPost('isi'),
-        'tujuan_desa'  => $this->request->getPost('tujuan_desa') ?: null,
-    ];
+    {
+        $data = [
+            'judul'        => $this->request->getPost('judul'),
+            'isi'          => $this->request->getPost('isi'),
+            'tujuan_desa'  => $this->request->getPost('tujuan_desa') ?: null, // null = semua desa
+        ];
 
-    if ($this->announcementModel->save($data)) {
-        return redirect()->to('/dashboard/pengumuman_list')->with('success', 'Pengumuman berhasil dikirim.');
-    } else {
-        return redirect()->back()->with('error', 'Gagal menyimpan pengumuman.');
+        if ($this->announcementModel->save($data)) {
+            return redirect()->to('/dashboard/pengumuman_list')->with('success', 'Pengumuman berhasil dikirim.');
+        } else {
+            return redirect()->back()->with('error', 'Gagal menyimpan pengumuman.');
+        }
     }
-}
 
     public function delete($id)
     {

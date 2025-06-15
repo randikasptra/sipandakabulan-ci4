@@ -3,6 +3,7 @@
 
 <!-- Hero Section -->
 <section class="p-6">
+    
     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center mb-8">
         <div>
             <h2 class="text-2xl font-bold mb-2">Selamat Datang, Kabupaten Tasikmalaya!</h2>
