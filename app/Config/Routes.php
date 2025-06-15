@@ -65,6 +65,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('klaster2/(:num)', 'Dashboard::klaster2/$1');
     $routes->get('klaster3/(:num)', 'Dashboard::klaster3/$1');
     $routes->get('klaster4/(:num)', 'Dashboard::klaster4/$1');
+    $routes->get('klaster5/(:num)', 'Dashboard::klaster5/$1');
 });
 
 
