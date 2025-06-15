@@ -15,6 +15,12 @@ class Dashboard extends BaseController
             return redirect()->to('/login');
         }
 
+        $data = [
+            'user_email' => $session->get('email'),
+            'user_role' => $session->get('role'),
+            'username' => $session->get('username'),
+        ];
+
         $userModel = new UserModel();
 
         // Query data statistik

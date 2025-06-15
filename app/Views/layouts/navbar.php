@@ -49,8 +49,9 @@
                     x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
                     class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <div class="px-4 py-2 text-sm text-gray-700 border-b">
-                        <p class="font-medium"><?= esc($user_email) ?></p>
-                        <p class="text-xs text-blue-600"><?= esc($user_role) ?></p>
+                       <?php $session = session(); ?>
+<p class="font-medium"><?= esc($session->get('email')) ?></p>
+<p class="text-xs text-blue-600"><?= esc($session->get('role')) ?></p>
                     </div>
                     <form method="POST" action="<?= site_url('logout') ?>">
                         <?= csrf_field() ?>
@@ -100,8 +101,9 @@
 
         <div class="pt-2 border-t border-blue-700 mt-2">
             <div class="px-3 py-2 text-sm text-blue-200">
-                <p><?= esc($user_email) ?></p>
-                <p class="text-xs text-blue-300"><?= esc($user_role) ?></p>
+                <?php $session = session(); ?>
+                <p class="font-medium"><?= esc($session->get('email')) ?></p>
+                <p class="text-xs text-blue-600"><?= esc($session->get('role')) ?></p>
             </div>
             <form method="POST" action="<?= site_url('logout') ?>">
                 <?= csrf_field() ?>
