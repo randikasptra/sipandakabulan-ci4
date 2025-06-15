@@ -169,14 +169,17 @@
                         </a>
                     <?php endif; ?>
 
-                    <label class="flex flex-col gap-2 mt-2">
-                        <span class="text-sm font-medium text-gray-600 flex items-center gap-1"><i
-                                class="ph ph-upload-simple"></i> Unggah File</span>
-                        <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" ...
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-[color:var(--primary)] file:text-white file:cursor-pointer" />
+                  <!-- Input File -->
+<label class="flex flex-col gap-2 mt-2">
+    <span class="text-sm font-medium text-gray-600 flex items-center gap-1">
+        <i class="ph ph-upload-simple"></i> Unggah File
+    </span>
+    <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-[color:var(--primary)] file:text-white file:cursor-pointer" />
 
-                        <p class="text-xs mt-1 text-gray-600 file-name-preview"></p>
-                    </label>
+    <p class="text-xs mt-1 text-gray-600 file-name-preview"></p>
+</label>
+
                 </fieldset>
             <?php endforeach; ?>
 

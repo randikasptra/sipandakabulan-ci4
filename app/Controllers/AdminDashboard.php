@@ -10,16 +10,16 @@ class AdminDashboard extends BaseController
     {
         $userModel = new UserModel();
 
-        $totalDesa    = $userModel->where('role', 'operator')->countAllResults();
-        $sudahInput   = $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults();
-        $belumInput   = $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults();
+        $totalDesa = $userModel->where('role', 'operator')->countAllResults();
+        $sudahInput = $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults();
+        $belumInput = $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults();
         $perluApprove = $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults();
 
         $data = [
-            'title'        => 'Dashboard Admin',
-            'totalDesa'    => $totalDesa,
-            'sudahInput'   => $sudahInput,
-            'belumInput'   => $belumInput,
+            'title' => 'Dashboard Admin',
+            'totalDesa' => $totalDesa,
+            'sudahInput' => $sudahInput,
+            'belumInput' => $belumInput,
             'perluApprove' => $perluApprove,
         ];
 
@@ -45,24 +45,24 @@ class AdminDashboard extends BaseController
     }
 
     // ⬇ Tambahkan ini
-  public function storeUser()
-{
-    $userModel = new \App\Models\UserModel();
+    public function storeUser()
+    {
+        $userModel = new \App\Models\UserModel();
 
-    $data = [
-        'username'       => $this->request->getPost('username'),
-        'email'          => $this->request->getPost('email'),
-        'password'       => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-        'role'           => $this->request->getPost('role'),
-        'desa'           => $this->request->getPost('desa'), // <- TAMBAHKAN INI
-        'status_input'   => 'belum',
-        'status_approve' => 'pending',
-    ];
+        $data = [
+            'username' => $this->request->getPost('username'),
+            'email' => $this->request->getPost('email'),
+            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role' => $this->request->getPost('role'),
+            'desa' => $this->request->getPost('desa'), // <- TAMBAHKAN INI
+            'status_input' => 'belum',
+            'status_approve' => 'pending',
+        ];
 
-    $userModel->save($data);
+        $userModel->save($data);
 
-    return redirect()->to('/dashboard/users')->with('success', 'User berhasil ditambahkan.');
-}
+        return redirect()->to('/dashboard/users')->with('success', 'User berhasil ditambahkan.');
+    }
 
     public function desa()
     {
@@ -120,6 +120,13 @@ class AdminDashboard extends BaseController
     public function laporan()
     {
         return view('pages/admin/laporan');
+    }
+
+    public function approveList()
+    {
+        $userModel = new \App\Models\UserModel(); // Ganti dengan model sesuai struktur kamu
+        $data['users'] = $userModel->findAll();   // Atau filter sesuai kebutuhan
+        return view('pages/admin/approve_list', $data);
     }
 
     public function settings()

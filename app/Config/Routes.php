@@ -1,7 +1,7 @@
 <?php
 
 use CodeIgniter\Router\RouteCollection;
-use App\Controllers\KelembagaanController;
+use App\Controllers\Kelembagaan;
 
 
 
@@ -34,6 +34,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
     $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
     $routes->get('klaster', 'AdminDashboard::klaster');   // /dashboard/klaster
+    $routes->get('approve_list', 'AdminDashboard::approveList');
     $routes->get('approval', 'ApprovalController::index');
     $routes->post('approval/approve/(:num)', 'ApprovalController::approve/$1');
     $routes->post('approval/reject/(:num)', 'ApprovalController::reject/$1');
@@ -52,9 +53,8 @@ $routes->group('dashboard', function ($routes) {
 
 
 
-$routes->get('/kelembagaan/form', 'KelembagaanController::formKelembagaan');
-$routes->post('/submit-kelembagaan', 'KelembagaanController::submitKelembagaan');
-
+$routes->get('/kelembagaan/form', 'Kelembagaan::form');
+$routes->post('/submit-kelembagaan', 'Kelembagaan::submit');
 
 // Download
 $routes->get('download', 'DownloadController::generateExcel');
