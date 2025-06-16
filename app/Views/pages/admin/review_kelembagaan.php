@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= esc($title ?? 'Kelola User') ?></title>
+    <title><?= esc($title ?? 'Review Kelembagaan') ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -18,7 +18,23 @@
                             600: '#0284c7',
                             700: '#0369a1',
                             800: '#075985',
+                        },
+                        success: {
+                            500: '#10b981',
+                            600: '#059669',
+                        },
+                        warning: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        danger: {
+                            500: '#ef4444',
+                            600: '#dc2626',
                         }
+                    },
+                    boxShadow: {
+                        'card': '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)',
+                        'card-hover': '0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1)'
                     }
                 }
             }
@@ -29,20 +45,28 @@
 
         body {
             font-family: 'Inter', sans-serif;
-        }
-
-        .table-row-hover:hover {
             background-color: #f8fafc;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
-        .action-btn {
-            transition: all 0.2s ease;
+        .card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .action-btn:hover {
-            transform: scale(1.1);
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            border-radius: 0.375rem;
         }
 
         .modal-enter {
@@ -54,7 +78,6 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -63,7 +86,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 antialiased">
 
     <div class="flex min-h-screen">
 
@@ -78,77 +101,118 @@
 
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto p-6">
-                <div class="max-w-4xl mx-auto p-6">
-                    <h1 class="text-2xl font-bold mb-6 text-blue-700">Review Data Kelembagaan</h1>
+                <div class="max-w-4xl mx-auto">
+                    <!-- Page Header -->
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">Review Data Kelembagaan</h1>
+                                <p class="mt-2 text-gray-600">Review and approve institutional data submissions</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="badge <?= $kelembagaan['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($kelembagaan['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
+                                    <?= ucfirst($kelembagaan['status']) ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mt-4 border-b border-gray-200"></div>
+                    </div>
 
                     <?php
                     $fields = [
-                        'peraturan' => 'Peraturan',
-                        'anggaran' => 'Anggaran',
-                        'forum_anak' => 'Forum Anak',
-                        'data_terpilah' => 'Data Terpilah',
-                        'dunia_usaha' => 'Dunia Usaha',
+                        'peraturan' => ['label' => 'Peraturan', 'icon' => 'fa-file-contract'],
+                        'anggaran' => ['label' => 'Anggaran', 'icon' => 'fa-money-bill-wave'],
+                        'forum_anak' => ['label' => 'Forum Anak', 'icon' => 'fa-users'],
+                        'data_terpilah' => ['label' => 'Data Terpilah', 'icon' => 'fa-database'],
+                        'dunia_usaha' => ['label' => 'Dunia Usaha', 'icon' => 'fa-building'],
                     ];
                     ?>
 
-                    <div class="space-y-4">
-                        <?php foreach ($fields as $key => $label): ?>
-                            <div class="bg-white p-4 rounded shadow border border-gray-200">
-                                <h2 class="text-lg font-semibold mb-2"><?= $label ?></h2>
-                                <p>Nilai: <span class="font-medium"><?= esc($kelembagaan[$key . '_value']) ?></span></p>
-                                <?php if (!empty($kelembagaan[$key . '_file'])): ?>
-                                    <div class="flex gap-3 mt-2">
-                                        <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($kelembagaan[$key . '_file'])) ?>"
-                                            class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
-                                            ⬇ Download File
-                                        </a>
+                    <!-- Assessment Cards -->
+                    <div class="space-y-4 mb-8">
+                        <?php foreach ($fields as $key => $field): ?>
+                            <div class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
+                                <div class="flex items-start">
+                                    <div class="bg-blue-50 p-3 rounded-lg mr-4">
+                                        <i class="<?= $field['icon'] ?> text-blue-600"></i>
                                     </div>
-                                <?php else: ?>
-                                    <p class="text-sm text-gray-500 italic">Belum ada file</p>
-                                <?php endif ?>
+                                    <div class="flex-1">
+                                        <h2 class="text-lg font-semibold text-gray-800 mb-1"><?= $field['label'] ?></h2>
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-gray-600 mb-2">
+                                                    Nilai: <span class="font-medium text-gray-800"><?= esc($kelembagaan[$key . '_value']) ?></span>
+                                                </p>
+                                                <?php if (!empty($kelembagaan[$key . '_file'])): ?>
+                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($kelembagaan[$key . '_file'])) ?>"
+                                                        class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
+                                                        <i class="fas fa-download mr-2"></i> Download File
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="text-sm text-gray-400 italic">No file uploaded</span>
+                                                <?php endif ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         <?php endforeach ?>
                     </div>
 
-                    <div class="mt-6 p-4 bg-gray-100 rounded">
-                        <p><strong>Total Nilai:</strong> <?= esc($kelembagaan['total_nilai']) ?></p>
-                        <p><strong>Status Saat Ini:</strong> <?= ucfirst($kelembagaan['status']) ?></p>
+                    <!-- Summary Section -->
+                    <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Summary</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Total Nilai</p>
+                                <p class="text-2xl font-bold text-gray-800"><?= esc($kelembagaan['total_nilai']) ?></p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Status</p>
+                                <p class="text-lg font-medium <?= $kelembagaan['status'] === 'pending' ? 'text-yellow-600' : ($kelembagaan['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                    <?= ucfirst($kelembagaan['status']) ?>
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-
+                    <!-- Download All Files -->
                     <?php if (!empty($id)): ?>
                         <?php
                         $zipPath = 'uploads/kelembagaan/' . $id . '.zip';
                         ?>
-                        <?php if (file_exists(FCPATH . $zipPath)): ?>
-                            <a href="<?= base_url($zipPath) ?>"
-                                class="inline-block mt-6 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
-                                ⬇ Download Semua File (ZIP)
-                            </a>
-                        <?php else: ?>
-                            <p class="mt-6 text-sm text-gray-500 italic">File ZIP belum tersedia untuk user ini.</p>
-                        <?php endif; ?>
+                        <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Download All Files</h3>
+                            <?php if (file_exists(FCPATH . $zipPath)): ?>
+                                <a href="<?= base_url($zipPath) ?>"
+                                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                                    <i class="fas fa-file-archive mr-2"></i> Download All Files (ZIP)
+                                </a>
+                            <?php else: ?>
+                                <p class="text-sm text-gray-500 italic">Archive not available for this submission.</p>
+                            <?php endif; ?>
+                        </div>
                     <?php endif; ?>
 
-
-                    <form method="post" action="<?= base_url('dashboard/admin/kelembagaan/approve') ?>"
-                        class="mt-6 flex gap-3">
+                    <!-- Approval Actions -->
+                    <form method="post" action="<?= base_url('dashboard/admin/kelembagaan/approve') ?>" class="mt-8">
                         <?= csrf_field() ?>
                         <input type="hidden" name="user_id" value="<?= $user_id ?>">
-
-                        <button type="submit" name="status" value="approved"
-                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                            ✅ Approve
-                        </button>
-                        <button type="submit" name="status" value="rejected"
-                            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-                            ❌ Reject
-                        </button>
+                        
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button type="submit" name="status" value="approved"
+                                class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                                <i class="fas fa-check-circle"></i> Approve
+                            </button>
+                            <button type="submit" name="status" value="rejected"
+                                class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
+                                <i class="fas fa-times-circle"></i> Reject
+                            </button>
+                        </div>
                     </form>
                 </div>
             </main>
         </div>
     </div>
 </body>
-
 </html>

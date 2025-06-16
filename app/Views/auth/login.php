@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login SIPANDAKABULAN</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Ganti icon tab jadi logo KKLA -->
+    <link rel="icon" type="image/png" href="<?= base_url('assets/img/LogoKKLA.png') ?>">
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-blue-400 via-blue-200 to-blue-400 flex flex-col items-center justify-center p-6">
@@ -13,7 +16,7 @@
     <img src="<?= base_url('assets/img/LogoKKLA.png') ?>" alt="Logo" class="w-24 mb-4 drop-shadow-lg">
 
     <h1 class="text-lg md:text-xl font-extrabold text-center text-gray-800 mb-6 leading-relaxed tracking-wide">
-        KEMENTERIAN <br> PEMBERDAYAAN PEREMPUAN DAN PERLINDUNGAN ANAK <br> REPUBLIK INDONESIA
+        KABUPATEN TASIKMALAYA <br> PEMBERDAYAAN PEREMPUAN DAN PERLINDUNGAN ANAK <br> REPUBLIK INDONESIA
     </h1>
 
     <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl w-full max-w-md">

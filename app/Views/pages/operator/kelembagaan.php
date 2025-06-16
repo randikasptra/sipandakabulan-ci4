@@ -9,6 +9,7 @@
     <title>Form Klaster Kelembagaan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -90,6 +91,9 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
         }
     </style>
+
+    <link rel="icon" type="image/png" href="<?= base_url('assets/img/LogoKKLA.png') ?>">
+
 </head>
 
 <body class="font-sans text-gray-800 antialiased pt-24">
