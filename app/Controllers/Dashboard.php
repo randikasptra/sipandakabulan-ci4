@@ -15,28 +15,39 @@ class Dashboard extends BaseController
         $this->announcementModel = new AnnouncementModel();
     }
 
-    public function kelembagaan($id = null)
-    {
-        $session = session();
-        if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
-        }
-
-        $userModel = new UserModel();
-
-        $data = [
-            'user_email' => $session->get('email'),
-            'user_role' => $session->get('role'),
-            'username' => $session->get('username'),
-            'id' => $id,
-            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
-            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
-            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
-            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
-        ];
-
-        return view('pages/operator/kelembagaan', $data);
+public function kelembagaan($id = null)
+{
+    $session = session();
+    if (!$session->get('logged_in')) {
+        return redirect()->to('/login');
     }
+
+    $userModel = new UserModel();
+    $kelembagaanModel = new \App\Models\KelembagaanModel();
+
+    // Ambil data kelembagaan berdasarkan user ID
+    $kelembagaan = $kelembagaanModel->where('user_id', $id)->first();
+
+    // Cek apakah file ZIP-nya ada
+    $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
+    $zipAvailable = file_exists($zipFilePath);
+
+    $data = [
+        'user_email' => $session->get('email'),
+        'user_role' => $session->get('role'),
+        'username' => $session->get('username'),
+        'id' => $id,
+        'kelembagaan' => $kelembagaan,
+        'zipAvailable' => $zipAvailable,
+        'user_id' => $id, // untuk form approval
+        'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+        'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+        'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+        'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+    ];
+
+    return view('pages/operator/kelembagaan', $data);
+}
 
     public function pengumuman_user()
     {

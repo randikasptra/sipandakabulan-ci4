@@ -31,7 +31,10 @@ $routes->group('dashboard', function ($routes) {
         $routes->post('users/(:num)/delete', 'AdminDashboard::delete/$1');
         $routes->get('users/(:num)/edit', 'AdminDashboard::editUser/$1');
         $routes->post('users/(:num)/update', 'AdminDashboard::updateUser/$1');
-
+        $routes->get('approve/(:num)', 'AdminDashboard::approve/$1');
+        $routes->get('approveAction/(:num)', 'AdminDashboard::approveAction');
+        // $routes->get('kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
+        $routes->get('review_kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
     });
 
 
@@ -69,15 +72,19 @@ $routes->group('dashboard', function ($routes) {
 });
 
 
+$routes->get('dashboard/admin/download_file', 'AdminDashboard::downloadFile');
+
 $routes->post('/dashboard/pengumuman_list/store', 'PengumumanController::store');
 
 
 
+$routes->get('download/kelembagaan/(:num)', 'DownloadController::kelembagaan/$1');
 
 
 
 $routes->get('/kelembagaan/form', 'Kelembagaan::form');
 $routes->post('/submit-kelembagaan', 'Kelembagaan::submit');
-
+$routes->get('/klaster1', 'Klaster1Controller::index');
+$routes->post('/submit-klaster1', 'Klaster1Controller::submit');
 // Download
 $routes->get('download', 'DownloadController::generateExcel');

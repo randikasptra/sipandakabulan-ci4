@@ -58,7 +58,7 @@
                   </div>
 
                   <div class="mt-4 text-right">
-                    <a href="<?= site_url('admin/approve/' . $user['id']) ?>"
+                    <a href="<?= site_url('dashboard/admin/approve/' . $user['id']) ?>"
                       class="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
                       <i class="ph ph-eye"></i> Lihat Detail
                     </a>
@@ -74,6 +74,6 @@
     </div>
   </div>
 
-  </body>
+</body>
 
 </html>

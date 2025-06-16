@@ -113,11 +113,63 @@ class AdminDashboard extends BaseController
 
         return redirect()->to('/dashboard/users')->with('success', 'Pengguna berhasil dihapus.');
     }
+    public function approveAction()
+    {
+        $userId = $this->request->getPost('user_id');
+        $table = $this->request->getPost('table');
+        $action = $this->request->getPost('action'); // 'approved' or 'rejected'
+
+        if (!in_array($action, ['approved', 'rejected'])) {
+            return redirect()->back()->with('error', 'Status tidak valid.');
+        }
+
+        // Dynamic model call
+        $modelClass = '\\App\\Models\\' . ucfirst($table) . 'Model';
+        if (!class_exists($modelClass)) {
+            return redirect()->back()->with('error', 'Model tidak ditemukan.');
+        }
+
+        $model = new $modelClass();
+        $model->where('user_id', $userId)->set(['status' => $action])->update();
+
+        return redirect()->back()->with('success', ucfirst($table) . ' berhasil di-' . $action);
+    }
+    public function reviewKelembagaan($id)
+    {
+        $kelembagaanModel = new \App\Models\KelembagaanModel();
+        $data = $kelembagaanModel->where('user_id', $id)->first();
+
+        if (!$data) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data tidak ditemukan');
+        }
+
+        return view('pages/admin/review_kelembagaan', [
+            'kelembagaan' => $data,
+            'user_id' => $id
+        ]);
+    }
+
+    public function submitReviewKelembagaan()
+    {
+        $model = new \App\Models\KelembagaanModel();
+
+        $user_id = $this->request->getPost('user_id');
+        $status = $this->request->getPost('status'); // approved / rejected
+
+        if (!in_array($status, ['approved', 'rejected'])) {
+            return redirect()->back()->with('error', 'Status tidak valid.');
+        }
+
+        $model->where('user_id', $user_id)->set(['status' => $status])->update();
+
+        return redirect()->to('dashboard/admin/approve/' . $user_id)->with('success', 'Status kelembagaan diperbarui.');
+    }
 
     public function desa()
     {
         return view('pages/admin/desa');
     }
+
 
     public function approval()
     {
@@ -140,19 +192,34 @@ class AdminDashboard extends BaseController
         return view('pages/admin/approval', $data);
     }
 
-    public function approveDesa($userId)
+    public function approve($id)
     {
-        $session = session();
-        if (!$session->get('logged_in') || $session->get('role') !== 'admin') {
-            return redirect()->to('/login')->with('errors', ['Akses tidak diizinkan']);
-        }
+        $kelembagaanModel = new \App\Models\KelembagaanModel();
+        $klaster1Model = new \App\Models\Klaster1Model();
 
-        $userModel = new UserModel();
-        $userModel->update($userId, ['status_approve' => 'approved']);
+        $kelembagaanData = $kelembagaanModel->where('user_id', $id)->first();
+        $klaster1Data = $klaster1Model->where('user_id', $id)->first();
 
-        return redirect()->to('/admin/approval')->with('success', 'Data desa berhasil di-approve.');
+        $data = [
+            'user_id' => $id,
+            'kelembagaan' => $kelembagaanData ? [$kelembagaanData] : [], // ubah jadi array
+            'klaster1' => $klaster1Data ? [$klaster1Data] : [],         // ubah jadi array
+        ];
+
+        return view('pages/admin/approve', $data);
     }
 
+    public function downloadFile()
+    {
+        $filename = $this->request->getGet('file');
+        $filepath = FCPATH . 'uploads/kelembagaan/' . $filename;
+
+        if (file_exists($filepath)) {
+            return $this->response->download($filepath, null);
+        }
+
+        return redirect()->back()->with('error', 'File tidak ditemukan.');
+    }
     public function rejectDesa($userId)
     {
         $session = session();
@@ -165,6 +232,7 @@ class AdminDashboard extends BaseController
 
         return redirect()->to('/admin/approval')->with('success', 'Data desa berhasil ditolak.');
     }
+
 
     public function laporan()
     {
@@ -183,4 +251,6 @@ class AdminDashboard extends BaseController
     {
         return view('pages/admin/settings');
     }
+
+
 }

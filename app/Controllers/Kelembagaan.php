@@ -11,6 +11,8 @@ class Kelembagaan extends Controller
     public function submit()
     {
         // dd($_FILES); // Dump semua file
+        dd($this->request->getPost(), $this->request->getFiles());
+
 
         $model = new KelembagaanModel();
         $id = session()->get('id');

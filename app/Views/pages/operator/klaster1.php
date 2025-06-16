@@ -206,9 +206,7 @@
                                             <?= str_contains($k['file'], '.xlsx') ? 'Format .XLSX (MAX. 10MB)' : 'Format .PDF, .DOCX, .JPG, .PNG (MAX. 10MB)' ?>
                                         </p>
                                     </div>
-                                    <input type="file" name="<?= $k['nama'] ?>_file" 
-                                        accept="<?= str_contains($k['file'], '.xlsx') ? '.xlsx' : '.pdf,.docx,.jpg,.png' ?>" 
-                                        class="hidden" />
+                                   <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
                                 </label>
                             </div>
                             <p class="text-xs mt-2 text-gray-500 file-name-preview"></p>
