@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Waktu pembuatan: 16 Jun 2025 pada 00.23
+-- Waktu pembuatan: 16 Jun 2025 pada 07.33
 -- Versi server: 9.1.0
 -- Versi PHP: 8.3.14
 
@@ -36,13 +36,14 @@ CREATE TABLE IF NOT EXISTS `announcements` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `announcements`
 --
 
 INSERT INTO `announcements` (`id`, `judul`, `isi`, `tujuan_desa`, `created_at`, `updated_at`) VALUES
+(12, 'Kepada Operator Desa Kab.Tasikmalaya', 'Ass.. diberitahukan kepada operator desa untuk segera memenuhi berkas dokumen yang belum lengkap karna akan segera submit ke pusat', NULL, '2025-06-16 14:31:35', '2025-06-16 14:31:35'),
 (5, 'Non ut incididunt qu', 'Sunt blanditiis fugd', 'Desa Jayaputra', '2025-06-15 05:29:15', '2025-06-15 20:41:04'),
 (6, 'Coba aja Ini mah', 'Awikaowkaokwoa', 'Desa Cigalontang', '2025-06-15 05:31:45', '2025-06-15 20:41:20'),
 (8, 'Penting', 'KBBI online atau (kamus besar bahasa Indonesia) daring - yang diluncurkan pada tahun 2016 ini adalah situs yang sengaja dibangun untuk membantu mempermudah pengguna dalam mencari arti kata bahasa Indonesia, dari ribuan kata dijadikan satu dan terorganisir serta tersusun dengan rapi sehingga ketika pengguna mencari sebuah kata didalam situs ini akan lebih mudah. bisa menggunakan form pencarian dan kategori berdasarkan huruf/abjad.\r\n\r\n', NULL, '2025-06-15 19:52:51', '2025-06-15 20:40:34');
@@ -191,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `desa`, `status_input`, `status_approve`, `created_at`, `updated_at`) VALUES
 (1, 'admin', 'admin@example.com', '$2y$10$MThsdn.Mltn0BS5ENfEO7uKKEcKRnsO/gH3Vi0UZrb5FdewkElElm', 'admin', NULL, 'belum', 'pending', '2025-06-15 01:04:15', '2025-06-15 01:04:15'),
-(2, 'Sariwangi', 'sariwangi@example.com', '$2y$10$NXJgFDu41mA8hI1/jLtu4O.txgEn44JibPngktV.fuik4uW.uiIzC', 'operator', 'Desa Sukamulih', 'belum', 'pending', '2025-06-15 01:04:15', '2025-06-15 19:34:17'),
+(2, 'Sariwangi', 'sariwangi@example.com', '$2y$10$NXJgFDu41mA8hI1/jLtu4O.txgEn44JibPngktV.fuik4uW.uiIzC', 'operator', 'Desa Sariwangi', 'belum', 'pending', '2025-06-15 01:04:15', '2025-06-16 14:29:46'),
 (3, 'Jayaputa', 'jayaputra2@example.com', '$2y$10$asvdUXpe7TIFtzclaXLwW.IXU1A50I3fTSob9Z5JWFq.Oar2apvFi', 'operator', 'Desa Jayaputra', 'belum', 'pending', '2025-06-15 01:04:15', '2025-06-15 01:04:15'),
 (4, 'Cigalontang', 'cigalontang@gmail.com', '$2y$10$KE.ICL9/1H7ZLeGZDRDq6.AkGu1pVgCT7O3La6lQW8wbJmvKVcO8S', 'operator', 'Desa Cigalontang', 'belum', 'pending', '2025-06-15 03:20:53', '2025-06-15 03:20:53'),
 (5, 'Jayaratu', 'jayaratu@gmail.com', '$2y$10$GQriZQugvNfI4zuZCH7n3.2GwXVTJDnbUg35lluTI1VLEccHCKiA2', 'operator', 'Desa Jayaratu', 'belum', 'pending', '2025-06-15 05:06:09', '2025-06-15 05:06:09'),

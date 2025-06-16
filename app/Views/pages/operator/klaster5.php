@@ -79,7 +79,7 @@
             <p class="text-sm text-gray-500 mt-1">Pilih jawaban dan unggah file sesuai sub poin.</p>
         </div>
 
-        <form action="/submit-klaster4" method="POST" enctype="multipart/form-data" class="space-y-10">
+        <form action="/submit-klaster5" method="POST" enctype="multipart/form-data" class="space-y-10">
 
             <?php
             $klaster5 = [

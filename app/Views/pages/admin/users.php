@@ -65,13 +65,13 @@
 
 <body class="bg-gray-50 text-gray-800">
 
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen ml-72">
 
         <!-- Sidebar Admin -->
         <?= $this->include('layouts/sidenav_admin') ?>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden mt-24">
 
             <!-- Header Admin -->
             <?= $this->include('layouts/header_admin') ?>

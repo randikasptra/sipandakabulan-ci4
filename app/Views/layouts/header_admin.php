@@ -12,7 +12,7 @@
 
 <body class="bg-gray-50">
     <header
-        class="bg-gradient-to-r from-blue-800 to-blue-700 text-white shadow-lg px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        class="fixed top-0 w-full bg-gradient-to-r from-blue-800 to-blue-700 text-white shadow-lg px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <!-- Title & Subtitle -->
 
         <!-- User Info -->

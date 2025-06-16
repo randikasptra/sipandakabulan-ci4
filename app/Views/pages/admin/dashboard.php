@@ -10,18 +10,18 @@
 
 <body class="bg-gray-100">
 
-    <div class="flex min-h-screen">
+    <div class="flex min-h-screen ml-72">
 
         <!-- Sidebar -->
         <?= $this->include('layouts/sidenav_admin') ?>
 
         <!-- Main Content -->
+        <?= $this->include('layouts/header_admin') ?>
         <div class="flex-1 flex flex-col">
 
             <!-- Header -->
-            <?= $this->include('layouts/header_admin') ?>
 
-            <main class="flex-1 p-8">
+            <main class="flex-1 p-8 mt-24">
 
                 <!-- Welcome -->
                 <div
