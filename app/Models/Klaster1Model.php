@@ -15,6 +15,8 @@ class Klaster1Model extends Model
         'AnakAktaKelahiran_file',
         'anggaran',
         'anggaran_file',
+        'created_at',
+        'updated_at'
     ];
 
     protected $useTimestamps = true;

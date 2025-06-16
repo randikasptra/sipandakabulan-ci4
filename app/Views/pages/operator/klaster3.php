@@ -33,21 +33,21 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
+
         .header-card {
             background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
             box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3), 0 4px 6px -2px rgba(30, 58, 138, 0.1);
         }
-        
+
         .form-container {
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
         }
-        
+
         .radio-option:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(59, 130, 246, 0.06);
         }
-        
+
         .file-upload:hover {
             background-color: #f8fafc;
         }
@@ -67,9 +67,10 @@
                         </div>
                         <h2 class="text-2xl md:text-3xl font-bold">Form Klaster III</h2>
                     </div>
-                    <p class="text-primary-100 opacity-90">Silakan isi data sesuai kondisi lapangan dan unggah dokumen pendukung.</p>
+                    <p class="text-primary-100 opacity-90">Silakan isi data sesuai kondisi lapangan dan unggah dokumen
+                        pendukung.</p>
                 </div>
-                
+
                 <div class="flex items-center gap-4">
                     <div class="hidden md:block h-12 w-px bg-white/30"></div>
                     <div class="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/20">
@@ -80,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="mt-6 pt-6 border-t border-white/10">
                 <div class="flex flex-wrap gap-4">
                     <div class="flex items-center gap-2 text-sm text-primary-100">
@@ -105,7 +106,8 @@
             <h1 class="text-3xl font-bold text-gray-900 mb-2">
                 Penilaian Klaster III
             </h1>
-            <p class="text-gray-500 max-w-2xl mx-auto">Isi semua poin dengan cermat dan unggah file pendukung jika tersedia.</p>
+            <p class="text-gray-500 max-w-2xl mx-auto">Isi semua poin dengan cermat dan unggah file pendukung jika
+                tersedia.</p>
         </div>
 
         <form action="/submit-klaster3" method="POST" enctype="multipart/form-data" class="space-y-8">
@@ -207,13 +209,15 @@
                 ?>
                 <div class="space-y-5 bg-gray-50 p-6 rounded-xl border border-gray-200 relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500"></div>
-                    
+
                     <div class="flex justify-between items-start">
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900"><?= $k['judul'] ?></h3>
-                            <p class="text-sm text-gray-500 mt-1">Total Nilai: <span class="font-medium text-primary-700"><?= $k['nilai'] ?></span></p>
+                            <p class="text-sm text-gray-500 mt-1">Total Nilai: <span
+                                    class="font-medium text-primary-700"><?= $k['nilai'] ?></span></p>
                         </div>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
                             <?= $k['nama'] ?>
                         </span>
                     </div>
@@ -233,7 +237,8 @@
                     </div>
 
                     <div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2">
-                        <p class="text-sm font-medium text-primary-800 flex items-center gap-2" id="<?= $k['nama'] ?>_selected">
+                        <p class="text-sm font-medium text-primary-800 flex items-center gap-2"
+                            id="<?= $k['nama'] ?>_selected">
                             <i class="ph ph-info text-lg"></i>
                             <span>Belum memilih nilai</span>
                         </p>
@@ -247,22 +252,23 @@
                         </a>
                     <?php endif; ?>
 
-                    <div class="mt-2">
+                     <div class="mt-2">
                         <label class="block">
                             <span class="text-sm font-medium text-gray-700 flex items-center gap-2 mb-1">
                                 <i class="ph ph-paperclip"></i>
                                 Unggah Dokumen Pendukung
                             </span>
                             <div class="mt-1 flex items-center">
-                                <label class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition file-upload">
+                                <label
+                                    class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
                                         <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
                                         <p class="mb-2 text-sm text-gray-500">
                                             <span class="font-semibold">Klik untuk upload</span> atau drag & drop
                                         </p>
-                                        <p class="text-xs text-gray-400">Format .PDF, .DOCX, .XLSX, .JPG, .PNG (MAX. 10MB)</p>
+                                        <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
                                     </div>
-                                    <input type="file" name="<?= $k['nama'] ?>_file" accept=".pdf,.docx,.xlsx,.jpg,.png" class="hidden" />
+                                    <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
                                 </label>
                             </div>
                             <p class="text-xs mt-2 text-gray-500 file-name-preview"></p>
@@ -309,7 +315,7 @@
                 const preview = parent.querySelector('.file-name-preview');
                 if (input.files.length > 0) {
                     preview.innerHTML = `<span class="text-green-600 font-medium"><i class="ph ph-check-circle"></i> File dipilih:</span> ${input.files[0].name}`;
-                    
+
                     // Change upload box style
                     const uploadBox = input.previousElementSibling;
                     uploadBox.classList.remove('border-gray-300', 'bg-gray-50');

@@ -86,5 +86,11 @@ $routes->get('/kelembagaan/form', 'Kelembagaan::form');
 $routes->post('/submit-kelembagaan', 'Kelembagaan::submit');
 $routes->get('/klaster1', 'Klaster1Controller::index');
 $routes->post('/submit-klaster1', 'Klaster1Controller::submit');
+$routes->post('/submit-klaster2', 'Klaster2Controller::submit');
+$routes->post('/submit-klaster3', 'Klaster3Controller::submit');
+$routes->post('/submit-klaster4', 'Klaster4Controller::submit');
+$routes->post('/submit-klaster5', 'Klaster5Controller::submit');
+
+
 // Download
 $routes->get('download', 'DownloadController::generateExcel');

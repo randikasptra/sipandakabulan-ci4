@@ -11,7 +11,7 @@ class Kelembagaan extends Controller
     public function submit()
     {
         // dd($_FILES); // Dump semua file
-        dd($this->request->getPost(), $this->request->getFiles());
+        // dd($this->request->getPost(), $this->request->getFiles());
 
 
         $model = new KelembagaanModel();
@@ -20,7 +20,7 @@ class Kelembagaan extends Controller
 
         // Ambil nilai inputan radio (value numerik)
         $data = [
-            'id' => $id,
+            'user_id' => $id, // ID user dari session
             'tahun' => $tahun,
             'peraturan_value' => (int) $this->request->getPost('peraturan'),
             'anggaran_value' => (int) $this->request->getPost('anggaran'),
@@ -46,7 +46,7 @@ class Kelembagaan extends Controller
             if ($file && $file->isValid() && !$file->hasMoved()) {
 
                 // ✅ Cek ukuran maksimum 1 GB (dalam byte)
-                if ($file->getSize() > 1024 * 1024 * 1024) {
+                if ($file->getSize() > 10024 * 10024 * 10024) {
                     return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 1GB.');
                 }
 

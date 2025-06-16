@@ -199,15 +199,16 @@
                                 Unggah Dokumen Pendukung
                             </span>
                             <div class="mt-1 flex items-center">
-                                <label class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition file-upload">
+                                <label
+                                    class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
                                         <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
                                         <p class="mb-2 text-sm text-gray-500">
                                             <span class="font-semibold">Klik untuk upload</span> atau drag & drop
                                         </p>
-                                        <p class="text-xs text-gray-400">Format .PDF, .DOCX, .XLSX, .JPG, .PNG (MAX. 10MB)</p>
+                                        <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
                                     </div>
-                                    <input type="file" name="<?= $k['nama'] ?>_file" accept=".pdf,.docx,.xlsx,.jpg,.png" class="hidden" />
+                                    <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
                                 </label>
                             </div>
                             <p class="text-xs mt-2 text-gray-500 file-name-preview"></p>

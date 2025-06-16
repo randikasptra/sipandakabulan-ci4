@@ -95,7 +95,6 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800 antialiased">
-
     <div class="flex min-h-screen lg:ml-72">
 
         <!-- Sidebar Admin -->
@@ -116,19 +115,17 @@
                             <h1 class="text-3xl font-bold text-gray-900">Pending Approvals</h1>
                             <p class="mt-2 text-gray-600">Review and approve pending submissions</p>
                         </div>
-                      
                     </div>
 
                     <?php
-                    // Data klaster yang tersedia saat ini
+                    // Semua klaster
                     $klasterData = [
                         'Kelembagaan' => $kelembagaan ?? [],
                         'Klaster 1' => $klaster1 ?? [],
-                        // Tambahkan nanti jika klaster lain sudah tersedia:
-                        // 'Klaster 2' => $klaster2 ?? [],
-                        // 'Klaster 3' => $klaster3 ?? [],
-                        // 'Klaster 4' => $klaster4 ?? [],
-                        // 'Klaster 5' => $klaster5 ?? [],
+                        'Klaster 2' => $klaster2 ?? [],
+                        'Klaster 3' => $klaster3 ?? [],
+                        'Klaster 4' => $klaster4 ?? [],
+                        'Klaster 5' => $klaster5 ?? [],
                     ];
                     ?>
 
@@ -166,10 +163,13 @@
                                                         <i class="fas fa-file-alt text-blue-600"></i>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-                                                    <a href="<?= site_url('dashboard/admin/review_kelembagaan/' . $item['user_id']) ?>"
-                                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                                                    <?php
+                                                    $slug = strtolower(str_replace(' ', '_', $klaster));
+                                                    ?>
+                                                    <a href="<?= site_url('dashboard/admin/review_' . $slug . '/' . $item['user_id']) ?>"
+                                                       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
                                                         <i class="fas fa-eye mr-2"></i>
                                                         Review Details
                                                     </a>

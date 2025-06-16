@@ -194,16 +194,31 @@ class AdminDashboard extends BaseController
 
     public function approve($id)
     {
+        // Panggil semua model klaster
         $kelembagaanModel = new \App\Models\KelembagaanModel();
         $klaster1Model = new \App\Models\Klaster1Model();
+        $klaster2Model = new \App\Models\Klaster2Model();
+        $klaster3Model = new \App\Models\Klaster3Model();
+        $klaster4Model = new \App\Models\Klaster4Model();
+        $klaster5Model = new \App\Models\Klaster5Model();
 
+        // Ambil data masing-masing klaster berdasarkan user_id
         $kelembagaanData = $kelembagaanModel->where('user_id', $id)->first();
         $klaster1Data = $klaster1Model->where('user_id', $id)->first();
+        $klaster2Data = $klaster2Model->where('user_id', $id)->first();
+        $klaster3Data = $klaster3Model->where('user_id', $id)->first();
+        $klaster4Data = $klaster4Model->where('user_id', $id)->first();
+        $klaster5Data = $klaster5Model->where('user_id', $id)->first();
 
+        // Siapkan data array untuk view
         $data = [
             'user_id' => $id,
-            'kelembagaan' => $kelembagaanData ? [$kelembagaanData] : [], // ubah jadi array
-            'klaster1' => $klaster1Data ? [$klaster1Data] : [],         // ubah jadi array
+            'kelembagaan' => $kelembagaanData ? [$kelembagaanData] : [],
+            'klaster1' => $klaster1Data ? [$klaster1Data] : [],
+            'klaster2' => $klaster2Data ? [$klaster2Data] : [],
+            'klaster3' => $klaster3Data ? [$klaster3Data] : [],
+            'klaster4' => $klaster4Data ? [$klaster4Data] : [],
+            'klaster5' => $klaster5Data ? [$klaster5Data] : [],
         ];
 
         return view('pages/admin/approve', $data);
