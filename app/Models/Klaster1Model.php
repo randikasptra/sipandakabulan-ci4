@@ -15,6 +15,8 @@ class Klaster1Model extends Model
         'AnakAktaKelahiran_file',
         'anggaran',
         'anggaran_file',
+        'total_nilai',
+        'status',
         'created_at',
         'updated_at'
     ];

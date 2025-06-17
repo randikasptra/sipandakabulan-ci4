@@ -11,7 +11,7 @@ class Klaster1Controller extends BaseController
         $model = new Klaster1Model();
 
         // Ambil ID user dari session
-        $userId = session()->get('id'); // GANTI sesuai nama session user kamu
+        $userId = session()->get('id'); // Sesuaikan nama session jika berbeda
 
         // Upload file
         $files = [];
@@ -26,13 +26,20 @@ class Klaster1Controller extends BaseController
             }
         }
 
+        // Ambil nilai input dan hitung total
+        $nilaiAnak = (int) $this->request->getPost('AnakAktaKelahiran');
+        $nilaiAnggaran = (int) $this->request->getPost('anggaran');
+        $totalNilai = $nilaiAnak + $nilaiAnggaran;
+
         // Simpan data
         $model->save([
             'user_id' => $userId,
-            'AnakAktaKelahiran' => $this->request->getPost('AnakAktaKelahiran'),
+            'AnakAktaKelahiran' => $nilaiAnak,
             'AnakAktaKelahiran_file' => $files['AnakAktaKelahiran_file'],
-            'anggaran' => $this->request->getPost('anggaran'),
+            'anggaran' => $nilaiAnggaran,
             'anggaran_file' => $files['anggaran_file'],
+            'total_nilai' => $totalNilai,
+            'status' => 'pending', // default status
         ]);
 
         return redirect()->back()->with('success', 'Data Klaster 1 berhasil disimpan!');

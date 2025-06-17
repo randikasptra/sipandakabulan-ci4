@@ -148,6 +148,21 @@ class AdminDashboard extends BaseController
             'user_id' => $id
         ]);
     }
+    public function reviewKlaster1($id)
+    {
+        $klaster1Model = new \App\Models\Klaster1Model();
+        $data = $klaster1Model->where('user_id', $id)->first();
+
+        if (!$data) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data tidak ditemukan');
+        }
+
+        return view('pages/admin/review_klaster1', [
+            'klaster1' => $data,
+            'user_id' => $id
+        ]);
+    }
+
 
     public function submitReviewKelembagaan()
     {

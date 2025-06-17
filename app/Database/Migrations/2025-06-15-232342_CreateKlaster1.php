@@ -15,6 +15,8 @@ class CreateKlaster1 extends Migration
             'AnakAktaKelahiran_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
             'anggaran' => ['type' => 'INT', 'constraint' => 11],
             'anggaran_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'total_nilai' => ['type' => 'INT', 'default' => 0],
+            'status' => ['type' => 'ENUM', 'constraint' => ['pending', 'approved', 'rejected'], 'default' => 'pending'],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ]);

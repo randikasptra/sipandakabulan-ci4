@@ -35,6 +35,7 @@ $routes->group('dashboard', function ($routes) {
         $routes->get('approveAction/(:num)', 'AdminDashboard::approveAction');
         // $routes->get('kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
         $routes->get('review_kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
+        $routes->get('review_klaster1/(:num)', 'AdminDashboard::reviewKlaster1/$1');
     });
 
 
