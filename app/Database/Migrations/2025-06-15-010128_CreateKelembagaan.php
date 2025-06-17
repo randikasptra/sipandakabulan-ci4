@@ -14,6 +14,8 @@ class CreateKelembagaan extends Migration
             'id' => ['type' => 'INT', 'auto_increment' => true],
             'user_id' => ['type' => 'INT', 'constraint' => 11],
             'tahun' => ['type' => 'INT', 'constraint' => 4],
+            'bulan' => ['type' => 'VARCHAR', 'constraint' => 10, 'null' => true],
+
 
             'peraturan_value' => ['type' => 'INT', 'default' => 0],
             'peraturan_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],

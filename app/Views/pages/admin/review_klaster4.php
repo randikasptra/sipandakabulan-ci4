@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= esc($title ?? 'Review Klaster 4') ?></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 600: '#0284c7', 700: '#0369a1', 800: '#075985' },
+                        success: { 500: '#10b981', 600: '#059669' },
+                        warning: { 500: '#f59e0b', 600: '#d97706' },
+                        danger: { 500: '#ef4444', 600: '#dc2626' }
+                    },
+                    boxShadow: {
+                        'card': '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)',
+                        'card-hover': '0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--tw-shadow) !important;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 600;
+            line-height: 1;
+            border-radius: 0.375rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 antialiased ml-24">
+    <div class="flex min-h-screen">
+        <?= $this->include('layouts/sidenav_admin') ?>
+        <div class="flex-1 flex flex-col overflow-hidden mt-24">
+            <?= $this->include('layouts/header_admin') ?>
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">Review Data Klaster 4</h1>
+                                <p class="mt-2 text-gray-600">Review dan verifikasi data indikator pada klaster 4</p>
+                            </div>
+                            <div>
+                                <span
+                                    class="badge <?= $klaster4['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($klaster4['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
+                                    <?= ucfirst($klaster4['status']) ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mt-4 border-b border-gray-200"></div>
+                    </div>
+
+                    <?php
+                    $fields = [
+                        'infoAnak' => 'Informasi Layak Anak',
+                        'kelompokAnak' => 'Kelompok Anak',
+                        'partisipasiDini' => 'Partisipasi Anak Usia Dini',
+                        'belajar12Tahun' => 'Program Wajib Belajar 12 Tahun',
+                        'sekolahRamahAnak' => 'Sekolah Ramah Anak',
+                        'fasilitasAnak' => 'Fasilitas Ramah Anak',
+                        'programPerjalanan' => 'Program Perjalanan Anak Aman',
+                    ];
+                    ?>
+
+                    <div class="space-y-4 mb-8">
+                        <?php foreach ($fields as $key => $label): ?>
+                            <div
+                                class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
+                                <div class="flex items-start">
+                                    <div class="bg-blue-50 p-3 rounded-lg mr-4">
+                                        <i class="fas fa-check-circle text-blue-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h2 class="text-lg font-semibold text-gray-800 mb-1"><?= $label ?></h2>
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-gray-600 mb-2">Nilai:
+                                                    <span
+                                                        class="font-medium text-gray-800"><?= esc($klaster4[$key]) ?></span>
+                                                </p>
+                                                <?php if (!empty($klaster4[$key . '_file'])): ?>
+                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster4[$key . '_file'])) ?>"
+                                                        class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
+                                                        <i class="fas fa-download mr-2"></i> Download File
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="text-sm text-gray-400 italic">Tidak ada file</span>
+                                                <?php endif ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
+                                <p class="text-xl font-semibold text-gray-800"><?= esc($klaster4['tahun']) ?> /
+                                    <?= esc($klaster4['bulan']) ?></p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Status</p>
+                                <p
+                                    class="text-lg font-medium <?= $klaster4['status'] === 'pending' ? 'text-yellow-600' : ($klaster4['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                    <?= ucfirst($klaster4['status']) ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php if (!empty($id)): ?>
+                        <?php $zipPath = 'uploads/klaster4/' . $id . '.zip'; ?>
+                        <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Download Semua File</h3>
+                            <?php if (file_exists(FCPATH . $zipPath)): ?>
+                                <a href="<?= base_url($zipPath) ?>"
+                                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                                    <i class="fas fa-file-archive mr-2"></i> Download Semua (ZIP)
+                                </a>
+                            <?php else: ?>
+                                <p class="text-sm text-gray-500 italic">Tidak ada arsip tersedia.</p>
+                            <?php endif ?>
+                        </div>
+                    <?php endif ?>
+
+                    <form method="post" action="<?= base_url('dashboard/admin/klaster4/approve') ?>" class="mt-8">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button type="submit" name="status" value="approved"
+                                class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                                <i class="fas fa-check-circle"></i> Approve
+                            </button>
+                            <button type="submit" name="status" value="rejected"
+                                class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
+                                <i class="fas fa-times-circle"></i> Reject
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -3,28 +3,57 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\KelembagaanModel;
 
 class AdminDashboard extends BaseController
 {
     public function index()
-    {
-        $userModel = new UserModel();
+{
+    $userModel = new \App\Models\UserModel();
 
-        $totalDesa = $userModel->where('role', 'operator')->countAllResults();
-        $sudahInput = $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults();
-        $belumInput = $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults();
-        $perluApprove = $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults();
+    // Load model klaster
+    $klaster1 = new \App\Models\Klaster1Model();
+    $klaster2 = new \App\Models\Klaster2Model();
+    $klaster3 = new \App\Models\Klaster3Model();
+    $klaster4 = new \App\Models\Klaster4Model();
+    $klaster5 = new \App\Models\Klaster5Model();
 
-        $data = [
-            'title' => 'Dashboard Admin',
-            'totalDesa' => $totalDesa,
-            'sudahInput' => $sudahInput,
-            'belumInput' => $belumInput,
-            'perluApprove' => $perluApprove,
-        ];
+    // Ambil semua user dengan role operator (desa)
+    $desaList = $userModel->where('role', 'operator')->findAll();
 
-        return view('pages/admin/dashboard', $data);
+    foreach ($desaList as &$desa) {
+        $userId = $desa['id'];
+
+        // Status input dan approve langsung dari kolom users
+        $desa['status_input'] = $desa['status_input'] ?? 'belum';
+        $desa['status_approve'] = $desa['status_approve'] ?? 'pending';
+        $desa['input_by'] = $desa['username'] ?? '-';
+        $desa['created_at'] = $desa['created_at'] ?? null;
+
+        // Cek klaster yang sudah diisi
+        $klasterTerisi = [];
+        if ($klaster1->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 1';
+        if ($klaster2->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 2';
+        if ($klaster3->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 3';
+        if ($klaster4->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 4';
+        if ($klaster5->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 5';
+
+        $desa['klaster_isi'] = !empty($klasterTerisi) ? implode(', ', $klasterTerisi) : '-';
     }
+
+    $data = [
+        'totalDesa' => count($desaList),
+        'sudahInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'sudah')),
+        'belumInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'belum')),
+        'perluApprove' => count(array_filter($desaList, fn($d) => $d['status_approve'] === 'pending')),
+        'desaList' => $desaList,
+    ];
+
+    return view('pages/admin/dashboard', $data);
+}
+
+
+
 
     public function users()
     {
@@ -140,7 +169,7 @@ class AdminDashboard extends BaseController
         $data = $kelembagaanModel->where('user_id', $id)->first();
 
         if (!$data) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data tidak ditemukan');
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data kelembagaan tidak ditemukan');
         }
 
         return view('pages/admin/review_kelembagaan', [
@@ -148,20 +177,53 @@ class AdminDashboard extends BaseController
             'user_id' => $id
         ]);
     }
+
     public function reviewKlaster1($id)
     {
-        $klaster1Model = new \App\Models\Klaster1Model();
-        $data = $klaster1Model->where('user_id', $id)->first();
+        return $this->reviewKlaster($id, 1);
+    }
 
-        if (!$data) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data tidak ditemukan');
+    public function reviewKlaster2($id)
+    {
+        return $this->reviewKlaster($id, 2);
+    }
+
+    public function reviewKlaster3($id)
+    {
+        return $this->reviewKlaster($id, 3);
+    }
+
+    public function reviewKlaster4($id)
+    {
+        return $this->reviewKlaster($id, 4);
+    }
+
+    public function reviewKlaster5($id)
+    {
+        return $this->reviewKlaster($id, 5);
+    }
+
+    // ✅ Fungsi reusable untuk klaster 1–5
+    private function reviewKlaster($id, $klasterNumber)
+    {
+        $modelClass = "\\App\\Models\\Klaster{$klasterNumber}Model";
+        if (!class_exists($modelClass)) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException("Model Klaster {$klasterNumber} tidak ditemukan.");
         }
 
-        return view('pages/admin/review_klaster1', [
-            'klaster1' => $data,
+        $model = new $modelClass();
+        $data = $model->where('user_id', $id)->first();
+
+        if (!$data) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException("Data Klaster {$klasterNumber} tidak ditemukan.");
+        }
+
+        return view("pages/admin/review_klaster{$klasterNumber}", [
+            "klaster{$klasterNumber}" => $data,
             'user_id' => $id
         ]);
     }
+
 
 
     public function submitReviewKelembagaan()
@@ -206,6 +268,7 @@ class AdminDashboard extends BaseController
 
         return view('pages/admin/approval', $data);
     }
+
 
     public function approve($id)
     {

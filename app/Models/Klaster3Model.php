@@ -11,6 +11,9 @@ class Klaster3Model extends Model
 
     protected $allowedFields = [
         'user_id',
+        'tahun',
+        'bulan',
+        'status',
         'kematianBayi',
         'kematianBayi_file',
         'giziBalita',
@@ -26,7 +29,7 @@ class Klaster3Model extends Model
         'layananAnakMiskin',
         'layananAnakMiskin_file',
         'kawasanTanpaRokok',
-        'kawasanTanpaRokok_file'
+        'kawasanTanpaRokok_file',
     ];
 
     protected $useTimestamps = true;

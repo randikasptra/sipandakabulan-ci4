@@ -11,7 +11,10 @@ class CreateKlaster3 extends Migration
         $this->forge->addField([
             'id'                          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
             'user_id'                     => ['type' => 'INT', 'unsigned' => true],
-            
+            'tahun'                       => ['type' => 'INT', 'constraint' => 4],
+            'bulan'                       => ['type' => 'VARCHAR', 'constraint' => 20],
+            'status'                      => ['type' => 'ENUM', 'constraint' => ['pending', 'approved', 'rejected'], 'default' => 'pending'],
+
             'kematianBayi'               => ['type' => 'INT', 'constraint' => 11],
             'kematianBayi_file'          => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
 
@@ -41,6 +44,7 @@ class CreateKlaster3 extends Migration
         ]);
 
         $this->forge->addKey('id', true);
+        $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('klaster3');
     }
 

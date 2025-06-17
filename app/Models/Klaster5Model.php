@@ -12,6 +12,8 @@ class Klaster5Model extends Model
 
     protected $allowedFields = [
         'user_id',
+        'tahun',
+        'bulan',
         'laporanKekerasanAnak',
         'laporanKekerasanAnak_file',
         'mekanismePenanggulanganBencana',
@@ -20,5 +22,6 @@ class Klaster5Model extends Model
         'programPencegahanKekerasan_file',
         'programPencegahanPekerjaanAnak',
         'programPencegahanPekerjaanAnak_file',
+        'status',
     ];
 }

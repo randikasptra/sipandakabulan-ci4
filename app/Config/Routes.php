@@ -35,7 +35,13 @@ $routes->group('dashboard', function ($routes) {
         $routes->get('approveAction/(:num)', 'AdminDashboard::approveAction');
         // $routes->get('kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
         $routes->get('review_kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
-        $routes->get('review_klaster1/(:num)', 'AdminDashboard::reviewKlaster1/$1');
+
+        // Review Klaster 1 sampai 5
+        $routes->get('review_klaster_1/(:num)', 'AdminDashboard::reviewKlaster1/$1');
+        $routes->get('review_klaster_2/(:num)', 'AdminDashboard::reviewKlaster2/$1');
+        $routes->get('review_klaster_3/(:num)', 'AdminDashboard::reviewKlaster3/$1');
+        $routes->get('review_klaster_4/(:num)', 'AdminDashboard::reviewKlaster4/$1');
+        $routes->get('review_klaster_5/(:num)', 'AdminDashboard::reviewKlaster5/$1');
     });
 
 

@@ -9,16 +9,36 @@ class Klaster1Controller extends BaseController
     public function submit()
     {
         $model = new Klaster1Model();
+        $userId = session()->get('id');
+        $tahun = date('Y');
+        $bulan = date('F'); // gunakan 'm' kalau mau angka
 
-        // Ambil ID user dari session
-        $userId = session()->get('id'); // Sesuaikan nama session jika berbeda
+        // ✅ Cek apakah user sudah mengisi untuk tahun & bulan ini
+        $existing = $model->where('user_id', $userId)
+                          ->where('tahun', $tahun)
+                          ->where('bulan', $bulan)
+                          ->whereIn('status', ['pending', 'approved'])
+                          ->first();
 
-        // Upload file
+        if ($existing) {
+            return redirect()->back()->with('error', 'Kamu sudah mengisi data Klaster 1 untuk bulan ini dan masih pending atau sudah disetujui.');
+        }
+
+        // ✅ Proses upload file
         $files = [];
         foreach (['AnakAktaKelahiran', 'anggaran'] as $field) {
             $file = $this->request->getFile("{$field}_file");
+
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                $newName = $file->getRandomName();
+                if ($file->getSize() > 1024 * 1024 * 1024) {
+                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 1GB.');
+                }
+
+                if ($file->getExtension() !== 'zip') {
+                    return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
+                }
+
+                $newName = $field . '_' . time() . '_' . $file->getClientName();
                 $file->move('uploads/klaster1/', $newName);
                 $files["{$field}_file"] = 'uploads/klaster1/' . $newName;
             } else {
@@ -26,22 +46,18 @@ class Klaster1Controller extends BaseController
             }
         }
 
-        // Ambil nilai input dan hitung total
-        $nilaiAnak = (int) $this->request->getPost('AnakAktaKelahiran');
-        $nilaiAnggaran = (int) $this->request->getPost('anggaran');
-        $totalNilai = $nilaiAnak + $nilaiAnggaran;
-
-        // Simpan data
+        // ✅ Simpan data
         $model->save([
             'user_id' => $userId,
-            'AnakAktaKelahiran' => $nilaiAnak,
+            'tahun' => $tahun,
+            'bulan' => $bulan,
+            'AnakAktaKelahiran' => $this->request->getPost('AnakAktaKelahiran'),
             'AnakAktaKelahiran_file' => $files['AnakAktaKelahiran_file'],
-            'anggaran' => $nilaiAnggaran,
+            'anggaran' => $this->request->getPost('anggaran'),
             'anggaran_file' => $files['anggaran_file'],
-            'total_nilai' => $totalNilai,
-            'status' => 'pending', // default status
+            'status' => 'pending',
         ]);
 
-        return redirect()->back()->with('success', 'Data Klaster 1 berhasil disimpan!');
+        return redirect()->back()->with('success', 'Data Klaster 1 berhasil disimpan dan menunggu persetujuan!');
     }
 }

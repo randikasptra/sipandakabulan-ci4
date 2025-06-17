@@ -19,13 +19,10 @@
         <?= $this->include('layouts/header_admin') ?>
         <div class="flex-1 flex flex-col">
 
-            <!-- Header -->
-
             <main class="flex-1 p-8 mt-24">
 
                 <!-- Welcome -->
-                <div
-                    class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center mb-8">
                     <div>
                         <h2 class="text-2xl font-bold mb-2">Selamat Datang, Admin SIPANDAKABULAN!</h2>
                         <p class="text-gray-600">
@@ -39,30 +36,25 @@
 
                 <!-- Statistik -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <p class="text-gray-500">Total Desa</p>
                         <p class="text-3xl font-bold"><?= esc($totalDesa) ?></p>
                     </div>
-
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <p class="text-gray-500">Sudah Input</p>
                         <p class="text-3xl font-bold text-green-600"><?= esc($sudahInput) ?></p>
                     </div>
-
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <p class="text-gray-500">Belum Input</p>
                         <p class="text-3xl font-bold text-red-500"><?= esc($belumInput) ?></p>
                     </div>
-
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <p class="text-gray-500">Perlu Approve</p>
                         <p class="text-3xl font-bold text-yellow-500"><?= esc($perluApprove) ?></p>
                     </div>
-
                 </div>
 
-                <!-- Tabel (optional, sesuaikan kalau mau nampilin detail per desa) -->
+                <!-- Tabel Status Desa -->
                 <div>
                     <h3 class="text-xl font-bold mb-4">Status Pengisian Desa</h3>
                     <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
@@ -73,6 +65,9 @@
                                     <th class="px-4 py-2 text-left">Nama Desa</th>
                                     <th class="px-4 py-2 text-left">Status Input</th>
                                     <th class="px-4 py-2 text-left">Status Approve</th>
+                                    <th class="px-4 py-2 text-left">Terakhir Diinput Oleh</th>
+                                    <th class="px-4 py-2 text-left">Waktu Input</th>
+                                    <th class="px-4 py-2 text-left">Klaster Terisi</th>
                                     <th class="px-4 py-2 text-left">Aksi</th>
                                 </tr>
                             </thead>
@@ -82,7 +77,7 @@
                                     <?php foreach ($desaList as $desa) : ?>
                                         <tr class="border-b">
                                             <td class="px-4 py-2"><?= $no++ ?></td>
-                                            <td class="px-4 py-2"><?= esc($desa['desa_name']) ?></td>
+                                            <td class="px-4 py-2"><?= esc($desa['desa']) ?></td>
                                             <td class="px-4 py-2">
                                                 <?php if ($desa['status_input'] === 'sudah') : ?>
                                                     <span class="text-green-600 font-semibold">Sudah Input</span>
@@ -100,13 +95,23 @@
                                                 <?php endif; ?>
                                             </td>
                                             <td class="px-4 py-2">
-                                                <button class="text-blue-600 hover:underline">Lihat Detail</button>
+                                                <?= esc($desa['input_by'] ?? '-') ?>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <?= !empty($desa['created_at']) ? date('d M Y H:i', strtotime($desa['created_at'])) : '-' ?>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <?= !empty($desa['klaster_isi']) ? esc($desa['klaster_isi']) : '<span class="text-gray-400 italic">Belum ada</span>' ?>
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                <a href="<?= base_url('dashboard/admin/review_kelembagaan/' . $desa['id']) ?>" class="text-blue-600 hover:underline">Lihat Detail</a>
+
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else : ?>
                                     <tr>
-                                        <td colspan="5" class="text-center py-4 text-gray-500">Data desa belum tersedia</td>
+                                        <td colspan="8" class="text-center py-4 text-gray-500">Data desa belum tersedia</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

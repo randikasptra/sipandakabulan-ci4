@@ -11,11 +11,12 @@ class Klaster1Model extends Model
 
     protected $allowedFields = [
         'user_id',
+        'tahun',
+        'bulan',
         'AnakAktaKelahiran',
         'AnakAktaKelahiran_file',
         'anggaran',
         'anggaran_file',
-        'total_nilai',
         'status',
         'created_at',
         'updated_at'

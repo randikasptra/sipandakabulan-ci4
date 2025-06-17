@@ -12,21 +12,24 @@ class Kelembagaan extends Controller
         $model = new KelembagaanModel();
         $userId = session()->get('id');
         $tahun = date('Y');
+        $bulan = date('F'); // atau bisa pakai date('m') kalau mau angka
 
-        // ✅ Cek apakah user sudah mengisi untuk tahun ini dengan status pending/approved
+        // ✅ Cek apakah user sudah mengisi untuk tahun & bulan ini dengan status pending/approved
         $existing = $model->where('user_id', $userId)
-                          ->where('tahun', $tahun)
-                          ->whereIn('status', ['pending', 'approved'])
-                          ->first();
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->whereIn('status', ['pending', 'approved'])
+            ->first();
 
         if ($existing) {
-            return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk tahun ini dan sedang menunggu atau sudah disetujui.');
+            return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk bulan ini dan sedang menunggu atau sudah disetujui.');
         }
 
         // ✅ Ambil nilai inputan
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
+            'bulan' => $bulan,
             'peraturan_value' => (int) $this->request->getPost('peraturan'),
             'anggaran_value' => (int) $this->request->getPost('anggaran'),
             'forum_anak_value' => (int) $this->request->getPost('forum_anak'),
@@ -57,7 +60,7 @@ class Kelembagaan extends Controller
                     return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
                 }
 
-                $newName = $field . '' . time() . '' . $file->getClientName();
+                $newName = $field . '_' . time() . '_' . $file->getClientName();
                 $file->move(ROOTPATH . 'public/uploads/kelembagaan/', $newName);
                 $data[$field . '_file'] = $newName;
             }
@@ -76,11 +79,14 @@ class Kelembagaan extends Controller
         $model = new KelembagaanModel();
         $userId = session()->get('id');
         $tahun = date('Y');
+        $bulan = date('F');
 
+        // ✅ Ambil data berdasarkan tahun & bulan
         $existing = $model->where('user_id', $userId)
-                          ->where('tahun', $tahun)
-                          ->orderBy('created_at', 'desc')
-                          ->first();
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         $data = [
             'user_name' => session()->get('user_name'),

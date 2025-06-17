@@ -11,6 +11,9 @@ class Klaster2Model extends Model
 
     protected $allowedFields = [
         'user_id',
+        'tahun',
+        'bulan',
+        'status',
         'perkawinanAnak',
         'perkawinanAnak_file',
         'pencegahanPernikahan',
@@ -20,7 +23,6 @@ class Klaster2Model extends Model
         'created_at',
         'updated_at'
     ];
-
 
     protected $useTimestamps = true;
 }

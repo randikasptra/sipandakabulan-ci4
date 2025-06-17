@@ -13,7 +13,7 @@ class KelembagaanModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'user_id', 'tahun',
+        'user_id', 'tahun','bulan',
         'peraturan_value', 'peraturan_file',
         'anggaran_value', 'anggaran_file',
         'forum_anak_value', 'forum_anak_file',
