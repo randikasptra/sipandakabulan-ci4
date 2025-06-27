@@ -2,8 +2,6 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-
-
 /**
  * @var RouteCollection $routes
  */
@@ -26,7 +24,7 @@ $routes->post('/logout', 'Auth::logout');
 $routes->group('dashboard', function ($routes) {
     // ADMIN ROUTES - menggunakan controller AdminDashboard
     $routes->group('admin', function ($routes) {
-        $routes->get('/', 'AdminDashboard::index'); // /dashboard/admin
+        $routes->get('/', 'AdminDashboard::index');
         $routes->post('users/create', 'AdminDashboard::storeUser');
         $routes->post('users/(:num)/delete', 'AdminDashboard::delete/$1');
         $routes->get('users/(:num)/edit', 'AdminDashboard::editUser/$1');
@@ -35,36 +33,39 @@ $routes->group('dashboard', function ($routes) {
         $routes->get('approveAction/(:num)', 'AdminDashboard::approveAction');
         $routes->get('approve/confirm(:num)', 'AdminDashboard::setuju/$1');
         $routes->get('review_kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
-        // $routes->get('kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
 
-        // Review Klaster 1 sampai 5
+        // Review Klaster 1 - 5
         $routes->get('review_klaster_1/(:num)', 'AdminDashboard::reviewKlaster1/$1');
         $routes->get('review_klaster_2/(:num)', 'AdminDashboard::reviewKlaster2/$1');
         $routes->get('review_klaster_3/(:num)', 'AdminDashboard::reviewKlaster3/$1');
         $routes->get('review_klaster_4/(:num)', 'AdminDashboard::reviewKlaster4/$1');
         $routes->get('review_klaster_5/(:num)', 'AdminDashboard::reviewKlaster5/$1');
 
-        $routes->get('review/(:num)', 'AdminBerkasController::review/$1'); // contoh: review/1, review/2
+        $routes->get('review/(:num)', 'AdminBerkasController::review/$1');
         $routes->post('update_status', 'AdminBerkasController::updateStatus');
         $routes->post('admin-berkas/store', 'AdminBerkasController::store');
+
+        // Approve klaster 1 dan 2 (kalau klaster lain menyusul)
         $routes->post('klaster1/approve', 'Klaster1Controller::approve');
+        $routes->post('klaster2/approve', 'Klaster2Controller::approve');
+        $routes->post('klaster3/approve', 'Klaster3Controller::approve');
+        $routes->post('klaster4/approve', 'Klaster4Controller::approve');
+        $routes->post('klaster5/approve', 'Klaster5Controller::approve');
     });
 
     $routes->get('berkas', 'AdminBerkasController::index');
     $routes->post('berkas/update-status', 'AdminBerkasController::updateStatus');
     $routes->get('pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
-    $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
-    $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
-    $routes->get('klaster', 'AdminDashboard::klaster');   // /dashboard/klaster
+    $routes->get('users', 'AdminDashboard::users');
+    $routes->get('desa', 'AdminDashboard::desa');
+    $routes->get('klaster', 'AdminDashboard::klaster');
     $routes->get('approve_list', 'AdminDashboard::approveList');
     $routes->get('approval', 'ApprovalController::index');
     $routes->post('approval/approve/(:num)', 'ApprovalController::approve/$1');
     $routes->post('approval/reject/(:num)', 'ApprovalController::reject/$1');
     $routes->get('approval/data', 'ApprovalController::getData');
     $routes->get('approval/proses/(:num)', 'ApprovalController::proses/$1');
-
-    $routes->get('berkas', 'AdminDashboard::berkas');   // /dashboard/laporan
-    $routes->get('settings', 'AdminDashboard::settings'); // /dashboard/settings
+    $routes->get('settings', 'AdminDashboard::settings');
 
     $routes->get('pengumuman_list', 'PengumumanController::index');
     $routes->get('/pengumuman/create', 'PengumumanController::create');
@@ -72,9 +73,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->post('pengumuman/update', 'PengumumanController::update');
     $routes->get('pengumuman_user', 'Dashboard::pengumuman_user');
 
-    // $routes->post('/pengumuman_list/store', 'PengumumanController::store');
-
-    // OPERATOR ROUTES - tetap di controller Dashboard
+    // OPERATOR ROUTES
     $routes->get('tutorial', 'Dashboard::tutorial');
     $routes->get('operator', 'Dashboard::index/operator');
     $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
@@ -85,26 +84,25 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('klaster5/(:num)', 'Dashboard::klaster5/$1');
 });
 
-
 $routes->get('dashboard/admin/download_file', 'AdminDashboard::downloadFile');
-
 $routes->post('/dashboard/pengumuman_list/store', 'PengumumanController::store');
-
-
 
 $routes->get('download/kelembagaan/(:num)', 'DownloadController::kelembagaan/$1');
 
-
-
+// Form untuk operator (submit & form view)
 $routes->get('/kelembagaan/form', 'Kelembagaan::form');
 $routes->post('/submit-kelembagaan', 'Kelembagaan::submit');
+
 $routes->get('/klaster1', 'Klaster1Controller::index');
 $routes->post('/submit-klaster1', 'Klaster1Controller::submit');
+$routes->get('/klaster2/form', 'Klaster2Controller::form'); // ✅ Ini yang ditambahkan
+$routes->get('/klaster3/form', 'Klaster3Controller::form'); // ✅ Ini yang ditambahkan
+$routes->get('/klaster4/form', 'Klaster4Controller::form'); // ✅ Ini yang ditambahkan
+$routes->get('/klaster5/form', 'Klaster5Controller::form'); // ✅ Ini yang ditambahkan
 $routes->post('/submit-klaster2', 'Klaster2Controller::submit');
 $routes->post('/submit-klaster3', 'Klaster3Controller::submit');
 $routes->post('/submit-klaster4', 'Klaster4Controller::submit');
 $routes->post('/submit-klaster5', 'Klaster5Controller::submit');
 
-
-// Download
+// Download general
 $routes->get('download', 'DownloadController::generateExcel');

@@ -96,4 +96,55 @@ class Klaster5Controller extends BaseController
 
         return view('pages/operator/klaster5', $data);
     }
+
+    public function approve()
+    {
+        $userId = $this->request->getPost('user_id');
+        $status = $this->request->getPost('status'); // 'approved' atau 'rejected'
+
+        $klaster5Model = new \App\Models\Klaster5Model();
+        $berkasKlasterModel = new \App\Models\BerkasKlasterModel();
+        $klasterFormModel = new \App\Models\KlasterFormModel();
+
+        // Ambil data klaster5 user
+        $klaster5 = $klaster5Model->where('user_id', $userId)->first();
+        if (!$klaster5) {
+            return redirect()->back()->with('error', 'Data Klaster 5 tidak ditemukan.');
+        }
+
+        // Ambil ID klaster dari slug
+        $klasterData = $klasterFormModel->where('slug', 'klaster5')->first();
+        if (!$klasterData) {
+            return redirect()->back()->with('error', 'Klaster tidak ditemukan.');
+        }
+
+        // Cek apakah data sudah ada di berkas_klaster
+        $existing = $berkasKlasterModel
+            ->where('user_id', $userId)
+            ->where('klaster', $klasterData['id'])
+            ->first();
+
+        $dataBerkas = [
+            'user_id' => $userId,
+            'klaster' => $klasterData['id'],
+            'tahun' => $klaster5['tahun'],
+            'bulan' => $klaster5['bulan'],
+            'total_nilai' => $klaster5['total_nilai'] ?? 0,
+            'status' => $status,
+            'catatan' => $status === 'rejected' ? $this->request->getPost('catatan') : null,
+            'file_path' => 'klaster5/' . $userId . '.zip' // atau sesuaikan file zip-nya
+        ];
+
+        if ($existing) {
+            $berkasKlasterModel->update($existing['id'], $dataBerkas);
+        } else {
+            $berkasKlasterModel->insert($dataBerkas);
+        }
+
+        // Update status di klaster5
+        $klaster5Model->where('user_id', $userId)->set(['status' => $status])->update();
+
+        return redirect()->back()->with('success', 'Status Klaster 5 berhasil diperbarui dan disimpan ke laporan.');
+    }
+
 }

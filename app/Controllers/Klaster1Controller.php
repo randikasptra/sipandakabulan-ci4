@@ -76,32 +76,49 @@ class Klaster1Controller extends BaseController
         $userId = $this->request->getPost('user_id');
         $status = $this->request->getPost('status'); // approved / rejected
 
-        // ✅ Inisialisasi model
-        $klaster1Model = new \App\Models\Klaster1Model();
-        $berkasKlasterModel = new \App\Models\BerkasKlasterModel();
-
-        // ✅ Ambil data dari klaster1
-        $klaster1 = $klaster1Model->where('user_id', $userId)->first();
+        // Ambil data klaster1 user
+        $klaster1 = $this->klaster1Model->where('user_id', $userId)->first();
 
         if (!$klaster1) {
             return redirect()->back()->with('error', 'Data klaster1 tidak ditemukan.');
         }
 
-        // ✅ Simpan ke tabel berkas_klaster
-        $berkasKlasterModel->save([
+        // Ambil ID klaster dari slug
+        $klasterFormModel = new \App\Models\KlasterFormModel();
+        $klasterData = $klasterFormModel->where('slug', 'klaster1')->first();
+
+        if (!$klasterData) {
+            return redirect()->back()->with('error', 'Data klaster tidak ditemukan.');
+        }
+
+        // Cek apakah data sudah ada di berkas_klaster
+        $existing = $this->berkasKlasterModel
+            ->where('user_id', $userId)
+            ->where('klaster', $klasterData['id'])
+            ->first();
+
+        $dataBerkas = [
             'user_id' => $userId,
-            'klaster' => 'klaster1',
+            'klaster' => $klasterData['id'],
             'tahun' => $klaster1['tahun'],
             'bulan' => $klaster1['bulan'],
             'total_nilai' => $klaster1['total_nilai'] ?? 0,
             'status' => $status,
-            'catatan' => '', // nanti bisa diisi kalau perlu
-        ]);
+            'catatan' => null,
+            'file_path' => 'klaster1/' . $userId . '.zip' // <- opsional, tergantung kamu punya file ZIP atau tidak
+        ];
 
-        // ✅ Update status di klaster1
-        $klaster1Model->where('user_id', $userId)->set(['status' => $status])->update();
+        if ($existing) {
+            $this->berkasKlasterModel->update($existing['id'], $dataBerkas);
+        } else {
+            $this->berkasKlasterModel->insert($dataBerkas);
+        }
 
-        return redirect()->back()->with('success', 'Status klaster1 berhasil diperbarui.');
+        // Update status di klaster1
+        $this->klaster1Model->where('user_id', $userId)->set(['status' => $status])->update();
+
+        return redirect()->back()->with('success', 'Status klaster1 berhasil diperbarui dan disimpan ke laporan.');
     }
+
 
 }

@@ -15,10 +15,10 @@ class Klaster2Controller extends BaseController
 
         // Cek apakah sudah mengisi untuk bulan dan tahun ini
         $existing = $model->where('user_id', $userId)
-                          ->where('tahun', $tahun)
-                          ->where('bulan', $bulan)
-                          ->whereIn('status', ['pending', 'approved'])
-                          ->first();
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->whereIn('status', ['pending', 'approved'])
+            ->first();
 
         if ($existing) {
             return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk bulan ini dan sedang menunggu atau sudah disetujui.');
@@ -70,10 +70,10 @@ class Klaster2Controller extends BaseController
         $bulan = date('F');
 
         $existing = $model->where('user_id', $userId)
-                          ->where('tahun', $tahun)
-                          ->where('bulan', $bulan)
-                          ->orderBy('created_at', 'desc')
-                          ->first();
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         $data = [
             'user_name' => session()->get('user_name'),
@@ -85,4 +85,55 @@ class Klaster2Controller extends BaseController
 
         return view('pages/operator/klaster2', $data);
     }
+
+    public function approve()
+    {
+        $userId = $this->request->getPost('user_id');
+        $status = $this->request->getPost('status'); // 'approved' atau 'rejected'
+
+        $klaster2Model = new \App\Models\Klaster2Model();
+        $berkasKlasterModel = new \App\Models\BerkasKlasterModel();
+        $klasterFormModel = new \App\Models\KlasterFormModel();
+
+        // Ambil data klaster2 user
+        $klaster2 = $klaster2Model->where('user_id', $userId)->first();
+        if (!$klaster2) {
+            return redirect()->back()->with('error', 'Data Klaster 2 tidak ditemukan.');
+        }
+
+        // Ambil ID klaster dari slug
+        $klasterData = $klasterFormModel->where('slug', 'klaster2')->first();
+        if (!$klasterData) {
+            return redirect()->back()->with('error', 'Klaster tidak ditemukan.');
+        }
+
+        // Cek apakah data sudah ada di berkas_klaster
+        $existing = $berkasKlasterModel
+            ->where('user_id', $userId)
+            ->where('klaster', $klasterData['id'])
+            ->first();
+
+        $dataBerkas = [
+            'user_id' => $userId,
+            'klaster' => $klasterData['id'],
+            'tahun' => $klaster2['tahun'],
+            'bulan' => $klaster2['bulan'],
+            'total_nilai' => $klaster2['total_nilai'] ?? 0,
+            'status' => $status,
+            'catatan' => $status === 'rejected' ? $this->request->getPost('catatan') : null,
+            'file_path' => 'klaster2/' . $userId . '.zip' // jika kamu pakai ZIP, ini bisa disesuaikan
+        ];
+
+        if ($existing) {
+            $berkasKlasterModel->update($existing['id'], $dataBerkas);
+        } else {
+            $berkasKlasterModel->insert($dataBerkas);
+        }
+
+        // Update status di klaster2
+        $klaster2Model->where('user_id', $userId)->set(['status' => $status])->update();
+
+        return redirect()->back()->with('success', 'Status Klaster 2 berhasil diperbarui dan disimpan ke laporan.');
+    }
+
 }
