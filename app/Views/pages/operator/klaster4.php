@@ -232,10 +232,16 @@
                 </div>
             <?php endforeach; ?>
 
-            <div class="text-center pt-6">
+            <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
                 <button type="submit"
-                    class="bg-[color:var(--primary)] hover:bg-[color:var(--primary-light)] text-white px-8 py-4 rounded-xl font-semibold shadow transition-all duration-300 flex items-center gap-2 justify-center">
-                    <i class="ph ph-paper-plane-right"></i> Submit Klaster IV
+                    class="px-8 py-3 bg-gradient-to-r from-primary-700 to-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center justify-center gap-2">
+                    <i class="ph ph-paper-plane-tilt"></i>
+                    Submit Klaster IV
+                </button>
+                <button type="reset"
+                    class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-300 flex items-center justify-center gap-2">
+                    <i class="ph ph-arrow-counter-clockwise"></i>
+                    Reset Form
                 </button>
             </div>
 

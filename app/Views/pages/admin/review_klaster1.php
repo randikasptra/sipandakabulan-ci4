@@ -27,17 +27,21 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
         }
+
         .card {
             transition: all 0.3s ease;
         }
+
         .card:hover {
             transform: translateY(-2px);
             box-shadow: var(--tw-shadow) !important;
         }
+
         .badge {
             display: inline-flex;
             align-items: center;
@@ -64,7 +68,8 @@
                                 <p class="mt-2 text-gray-600">Review dan verifikasi data indikator pada klaster 1</p>
                             </div>
                             <div>
-                                <span class="badge <?= $klaster1['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($klaster1['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
+                                <span
+                                    class="badge <?= $klaster1['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($klaster1['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
                                     <?= ucfirst($klaster1['status']) ?>
                                 </span>
                             </div>
@@ -81,27 +86,32 @@
 
                     <div class="space-y-4 mb-8">
                         <?php foreach ($fields as $key => $field): ?>
-                            <div class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
+                            <div
+                                class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
                                 <div class="flex items-start">
                                     <div class="bg-blue-50 p-3 rounded-lg mr-4">
                                         <i class="fas <?= $field['icon'] ?> text-blue-600"></i>
                                     </div>
                                     <div class="flex-1">
                                         <h2 class="text-lg font-semibold text-gray-800 mb-1"><?= $field['label'] ?></h2>
-                                        <p class="text-gray-600 mb-2">
-                                            <?= $key === 'anggaran' ? 'Rp ' . number_format($klaster1[$key], 0, ',', '.') : esc($klaster1[$key]) . '%' ?>
-                                        </p>
-                                        <?php
-                                            $fileKey = $key . '_file';
-                                            if (!empty($klaster1[$fileKey])):
-                                        ?>
-                                            <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster1[$fileKey])) ?>"
-                                                class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
-                                                <i class="fas fa-download mr-2"></i> Download File
-                                            </a>
-                                        <?php else: ?>
-                                            <span class="text-sm text-gray-400 italic">Tidak ada file</span>
-                                        <?php endif ?>
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-gray-600 mb-2">
+                                                    Nilai:
+                                                    <span class="font-medium text-gray-800">
+                                                        <?= esc($klaster1[$key . '_value'] ?? '-') ?>
+                                                    </span>
+                                                </p>
+                                                <?php if (!empty($klaster1[$key . '_file'] ?? null)): ?>
+                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster1[$key . '_file']) . '&folder=klaster1') ?>"
+                                                        class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
+                                                        <i class="fas fa-download mr-2"></i> Download File
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="text-sm text-gray-400 italic">No file uploaded</span>
+                                                <?php endif ?>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -114,11 +124,13 @@
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
                                 <p class="text-xl font-semibold text-gray-800"><?= esc($klaster1['tahun']) ?> /
-                                    <?= esc($klaster1['bulan']) ?></p>
+                                    <?= esc($klaster1['bulan']) ?>
+                                </p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>
-                                <p class="text-lg font-medium <?= $klaster1['status'] === 'pending' ? 'text-yellow-600' : ($klaster1['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                <p
+                                    class="text-lg font-medium <?= $klaster1['status'] === 'pending' ? 'text-yellow-600' : ($klaster1['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
                                     <?= ucfirst($klaster1['status']) ?>
                                 </p>
                             </div>

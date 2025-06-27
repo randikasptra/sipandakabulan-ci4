@@ -331,7 +331,16 @@ class AdminDashboard extends BaseController
     public function downloadFile()
     {
         $filename = $this->request->getGet('file');
-        $filepath = FCPATH . 'uploads/kelembagaan/' . $filename;
+        $folder = $this->request->getGet('folder'); // folder: kelembagaan, klaster1, dst
+
+        // Validasi folder agar hanya yang diizinkan
+        $allowedFolders = ['kelembagaan', 'klaster1', 'klaster2', 'klaster3']; // tambahkan sesuai kebutuhan
+
+        if (!in_array($folder, $allowedFolders)) {
+            return redirect()->back()->with('error', 'Folder tidak valid.');
+        }
+
+        $filepath = FCPATH . 'uploads/' . $folder . '/' . $filename;
 
         if (file_exists($filepath)) {
             return $this->response->download($filepath, null);
@@ -339,6 +348,7 @@ class AdminDashboard extends BaseController
 
         return redirect()->back()->with('error', 'File tidak ditemukan.');
     }
+
     public function rejectDesa($userId)
     {
         $session = session();

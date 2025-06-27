@@ -107,7 +107,7 @@
                                                         class="font-medium text-gray-800"><?= esc($klaster3[$key]) ?></span>
                                                 </p>
                                                 <?php if (!empty($klaster3[$key . '_file'])): ?>
-                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster3[$key . '_file'])) ?>"
+                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster3[$key . '_file']) . '&folder=klaster3') ?>"
                                                         class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
                                                         <i class="fas fa-download mr-2"></i> Download File
                                                     </a>
@@ -128,7 +128,8 @@
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
                                 <p class="text-xl font-semibold text-gray-800"><?= esc($klaster3['tahun']) ?> /
-                                    <?= esc($klaster3['bulan']) ?></p>
+                                    <?= esc($klaster3['bulan']) ?>
+                                </p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>

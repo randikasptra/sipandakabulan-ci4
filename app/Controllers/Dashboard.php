@@ -15,39 +15,39 @@ class Dashboard extends BaseController
         $this->announcementModel = new AnnouncementModel();
     }
 
-public function kelembagaan($id = null)
-{
-    $session = session();
-    if (!$session->get('logged_in')) {
-        return redirect()->to('/login');
+    public function kelembagaan($id = null)
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $userModel = new UserModel();
+        $kelembagaanModel = new \App\Models\KelembagaanModel();
+
+        // Ambil data kelembagaan berdasarkan user ID
+        $kelembagaan = $kelembagaanModel->where('user_id', $id)->first();
+
+        // Cek apakah file ZIP-nya ada
+        $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
+        $zipAvailable = file_exists($zipFilePath);
+
+        $data = [
+            'user_email' => $session->get('email'),
+            'user_role' => $session->get('role'),
+            'username' => $session->get('username'),
+            'id' => $id,
+            'kelembagaan' => $kelembagaan,
+            'zipAvailable' => $zipAvailable,
+            'user_id' => $id, // untuk form approval
+            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+        ];
+
+        return view('pages/operator/kelembagaan', $data);
     }
-
-    $userModel = new UserModel();
-    $kelembagaanModel = new \App\Models\KelembagaanModel();
-
-    // Ambil data kelembagaan berdasarkan user ID
-    $kelembagaan = $kelembagaanModel->where('user_id', $id)->first();
-
-    // Cek apakah file ZIP-nya ada
-    $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
-    $zipAvailable = file_exists($zipFilePath);
-
-    $data = [
-        'user_email' => $session->get('email'),
-        'user_role' => $session->get('role'),
-        'username' => $session->get('username'),
-        'id' => $id,
-        'kelembagaan' => $kelembagaan,
-        'zipAvailable' => $zipAvailable,
-        'user_id' => $id, // untuk form approval
-        'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
-        'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
-        'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
-        'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
-    ];
-
-    return view('pages/operator/kelembagaan', $data);
-}
 
     public function pengumuman_user()
     {
@@ -87,15 +87,34 @@ public function kelembagaan($id = null)
             return redirect()->to('/login');
         }
 
+        $userModel = new UserModel();
+        $klaster1Model = new \App\Models\Klaster1Model();
+
+        // Ambil data klaster1 berdasarkan user ID
+        $klaster1 = $klaster1Model->where('user_id', $id)->first();
+
+        // Cek apakah file ZIP-nya ada
+        $zipFilePath = FCPATH . 'uploads/klaster1/' . $id . '.zip';
+        $zipAvailable = file_exists($zipFilePath);
+
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
             'id' => $id,
+            'klaster1' => $klaster1,
+            'zipAvailable' => $zipAvailable,
+            'user_id' => $id,
+            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
         ];
 
         return view('pages/operator/klaster1', $data);
     }
+
+
     public function klaster2($id = null)
     {
         $session = session();
@@ -103,15 +122,33 @@ public function kelembagaan($id = null)
             return redirect()->to('/login');
         }
 
+        $userModel = new UserModel();
+        $klaster2Model = new \App\Models\Klaster2Model();
+
+        // Ambil data klaster2 berdasarkan user ID
+        $klaster2 = $klaster2Model->where('user_id', $id)->first();
+
+        // Cek apakah file ZIP-nya ada
+        $zipFilePath = FCPATH . 'uploads/klaster2/' . $id . '.zip';
+        $zipAvailable = file_exists($zipFilePath);
+
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
             'id' => $id,
+            'klaster2' => $klaster2,
+            'zipAvailable' => $zipAvailable,
+            'user_id' => $id,
+            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
         ];
 
         return view('pages/operator/klaster2', $data);
     }
+
     public function klaster3($id = null)
     {
         $session = session();
@@ -119,15 +156,33 @@ public function kelembagaan($id = null)
             return redirect()->to('/login');
         }
 
+        $userModel = new UserModel();
+        $klaster3Model = new \App\Models\Klaster3Model();
+
+        // Ambil data klaster3 berdasarkan user ID
+        $klaster3 = $klaster3Model->where('user_id', $id)->first();
+
+        // Cek apakah file ZIP-nya ada
+        $zipFilePath = FCPATH . 'uploads/klaster3/' . $id . '.zip';
+        $zipAvailable = file_exists($zipFilePath);
+
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
             'id' => $id,
+            'klaster3' => $klaster3,
+            'zipAvailable' => $zipAvailable,
+            'user_id' => $id,
+            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
         ];
 
         return view('pages/operator/klaster3', $data);
     }
+
     public function klaster4($id = null)
     {
         $session = session();
@@ -135,15 +190,36 @@ public function kelembagaan($id = null)
             return redirect()->to('/login');
         }
 
+        $userModel = new UserModel();
+        $klaster4Model = new \App\Models\Klaster4Model();
+
+        // Ambil data klaster4 berdasarkan user ID
+        $klaster4 = $klaster4Model->where('user_id', $id)->first();
+
+        // Cek apakah file ZIP-nya ada
+        $zipFilePath = FCPATH . 'uploads/klaster4/' . $id . '.zip';
+        $zipAvailable = file_exists($zipFilePath);
+
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
             'id' => $id,
+            'klaster4' => $klaster4,
+            'zipAvailable' => $zipAvailable,
+            'user_id' => $id,
+            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
         ];
 
         return view('pages/operator/klaster4', $data);
     }
+
+
+
+
     public function klaster5($id = null)
     {
         $session = session();

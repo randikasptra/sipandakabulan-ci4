@@ -103,14 +103,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $no = 1; foreach ($berkas as $b): ?>
+                            <?php $no = 1;
+                            foreach ($berkas as $b): ?>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="px-4 py-2 align-top"><?= $no++ ?></td>
                                     <td class="px-4 py-2 align-top"><?= esc($b['desa']) ?></td>
                                     <td class="px-4 py-2 align-top"><?= esc($b['nama_klaster']) ?></td>
                                     <td class="px-4 py-2 align-top">
                                         <a href="<?= base_url('uploads/' . $b['file_path']) ?>" target="_blank"
-                                           class="text-blue-600 underline hover:text-blue-800 transition">
+                                            class="text-blue-600 underline hover:text-blue-800 transition">
                                             Download
                                         </a>
                                     </td>
@@ -125,22 +126,22 @@
                                         <?php if ($b['status'] === 'pending'): ?>
                                             <div class="flex flex-wrap gap-2">
                                                 <a href="<?= base_url('admin-berkas/approve/' . $b['id']) ?>"
-                                                   class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs">
+                                                    class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs">
                                                     Approve
                                                 </a>
                                                 <form action="<?= base_url('admin-berkas/reject/' . $b['id']) ?>" method="post"
-                                                      class="flex flex-wrap gap-2">
+                                                    class="flex flex-wrap gap-2">
                                                     <?= csrf_field() ?>
                                                     <input type="text" name="catatan" placeholder="Catatan"
-                                                           class="text-xs px-2 py-1 border rounded" required>
+                                                        class="text-xs px-2 py-1 border rounded" required>
                                                     <button type="submit"
-                                                            class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">
+                                                        class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">
                                                         Reject
                                                     </button>
                                                 </form>
                                             </div>
                                         <?php else: ?>
-                                            <?= $b['catatan'] 
+                                            <?= $b['catatan']
                                                 ? '<div class="text-xs text-red-600">Catatan: ' . esc($b['catatan']) . '</div>'
                                                 : '<div class="text-xs text-gray-400 italic">Tidak ada catatan</div>' ?>
                                         <?php endif; ?>

@@ -1,3 +1,7 @@
+<?php
+$user_id = $klaster2['user_id'] ?? $id ?? null;
+?>
+
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 
@@ -48,7 +52,6 @@
             padding: 0.35em 0.65em;
             font-size: 0.75em;
             font-weight: 600;
-            line-height: 1;
             border-radius: 0.375rem;
         }
     </style>
@@ -68,8 +71,7 @@
                                 <p class="mt-2 text-gray-600">Review dan verifikasi data indikator pada klaster 2</p>
                             </div>
                             <div>
-                                <span
-                                    class="badge <?= $klaster2['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($klaster2['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
+                                <span class="badge <?= $klaster2['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($klaster2['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
                                     <?= ucfirst($klaster2['status']) ?>
                                 </span>
                             </div>
@@ -87,8 +89,7 @@
 
                     <div class="space-y-4 mb-8">
                         <?php foreach ($fields as $key => $field): ?>
-                            <div
-                                class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
+                            <div class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
                                 <div class="flex items-start">
                                     <div class="bg-blue-50 p-3 rounded-lg mr-4">
                                         <i class="fas <?= $field['icon'] ?> text-blue-600"></i>
@@ -98,11 +99,10 @@
                                         <div class="flex items-center justify-between">
                                             <div>
                                                 <p class="text-gray-600 mb-2">Nilai:
-                                                    <span
-                                                        class="font-medium text-gray-800"><?= esc($klaster2[$key]) ?></span>
+                                                    <span class="font-medium text-gray-800"><?= esc($klaster2[$key]) ?></span>
                                                 </p>
                                                 <?php if (!empty($klaster2[$key . '_file'])): ?>
-                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster2[$key . '_file'])) ?>"
+                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster2[$key . '_file']) . '&folder=klaster2') ?>"
                                                         class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
                                                         <i class="fas fa-download mr-2"></i> Download File
                                                     </a>
@@ -127,16 +127,15 @@
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>
-                                <p
-                                    class="text-lg font-medium <?= $klaster2['status'] === 'pending' ? 'text-yellow-600' : ($klaster2['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                <p class="text-lg font-medium <?= $klaster2['status'] === 'pending' ? 'text-yellow-600' : ($klaster2['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
                                     <?= ucfirst($klaster2['status']) ?>
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <?php if (!empty($id)): ?>
-                        <?php $zipPath = 'uploads/klaster2/' . $id . '.zip'; ?>
+                    <?php if (!empty($user_id)): ?>
+                        <?php $zipPath = 'uploads/klaster2/' . $user_id . '.zip'; ?>
                         <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
                             <h3 class="text-lg font-semibold text-gray-800 mb-4">Download Semua File</h3>
                             <?php if (file_exists(FCPATH . $zipPath)): ?>

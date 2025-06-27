@@ -46,8 +46,8 @@ $routes->group('dashboard', function ($routes) {
 
         $routes->get('review/(:num)', 'AdminBerkasController::review/$1'); // contoh: review/1, review/2
         $routes->post('update_status', 'AdminBerkasController::updateStatus');
-         $routes->post('admin-berkas/store', 'AdminBerkasController::store');
-         $routes->post('klaster1/approve', 'Klaster1Controller::approve');
+        $routes->post('admin-berkas/store', 'AdminBerkasController::store');
+        $routes->post('klaster1/approve', 'Klaster1Controller::approve');
     });
 
     $routes->get('berkas', 'AdminBerkasController::index');

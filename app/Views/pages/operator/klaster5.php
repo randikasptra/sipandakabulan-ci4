@@ -182,17 +182,15 @@
                             </span>
                             <div class="mt-1 flex items-center">
                                 <label
-                                    class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition file-upload">
+                                    class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
                                     <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
                                         <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
                                         <p class="mb-2 text-sm text-gray-500">
                                             <span class="font-semibold">Klik untuk upload</span> atau drag & drop
                                         </p>
-                                        <p class="text-xs text-gray-400">Format .PDF, .DOCX, .XLSX, .JPG, .PNG (MAX. 10MB)
-                                        </p>
+                                        <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
                                     </div>
-                                    <input type="file" name="<?= $k['nama'] ?>_file" accept=".pdf,.docx,.xlsx,.jpg,.png"
-                                        class="hidden" />
+                                    <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
                                 </label>
                             </div>
                             <p class="text-xs mt-2 text-gray-500 file-name-preview"></p>
@@ -201,13 +199,18 @@
                 </div>
             <?php endforeach; ?>
 
-            <div class="text-center pt-6">
+            <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
                 <button type="submit"
-                    class="bg-[color:var(--primary)] hover:bg-[color:var(--primary-light)] text-white px-8 py-4 rounded-xl font-semibold shadow transition-all duration-300 flex items-center gap-2 justify-center">
-                    <i class="ph ph-paper-plane-right"></i> Submit Klaster V
+                    class="px-8 py-3 bg-gradient-to-r from-primary-700 to-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center justify-center gap-2">
+                    <i class="ph ph-paper-plane-tilt"></i>
+                    Submit Penilaian
+                </button>
+                <button type="reset"
+                    class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-300 flex items-center justify-center gap-2">
+                    <i class="ph ph-arrow-counter-clockwise"></i>
+                    Reset Form
                 </button>
             </div>
-
         </form>
     </div>
 

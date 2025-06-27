@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\Klaster4Model;
 
 class Klaster4Controller extends BaseController
@@ -11,74 +10,91 @@ class Klaster4Controller extends BaseController
     {
         $model = new Klaster4Model();
         $userId = session()->get('id');
-
         $tahun = date('Y');
         $bulan = date('F');
 
-        // Cek apakah user sudah mengisi data untuk tahun & bulan yang sama
+        // Cek apakah sudah mengisi untuk bulan dan tahun ini
         $existing = $model->where('user_id', $userId)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->first();
+                          ->where('tahun', $tahun)
+                          ->where('bulan', $bulan)
+                          ->whereIn('status', ['pending', 'approved'])
+                          ->first();
 
         if ($existing) {
-            return redirect()->back()->with('error', 'Kamu sudah mengisi Klaster 4 untuk bulan ini.');
+            return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk bulan ini dan sedang menunggu atau sudah disetujui.');
         }
 
-        // Data input dari radio
+        // Ambil nilai input radio
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
             'bulan' => $bulan,
-            'infoAnak' => $this->request->getPost('infoAnak'),
-            'kelompokAnak' => $this->request->getPost('kelompokAnak'),
-            'partisipasiDini' => $this->request->getPost('partisipasiDini'),
-            'belajar12Tahun' => $this->request->getPost('belajar12Tahun'),
-            'sekolahRamahAnak' => $this->request->getPost('sekolahRamahAnak'),
-            'fasilitasAnak' => $this->request->getPost('fasilitasAnak'),
-            'programPerjalanan' => $this->request->getPost('programPerjalanan'),
-            'status' => 'pending'
+            'infoAnak' => (int) $this->request->getPost('infoAnak'),
+            'kelompokAnak' => (int) $this->request->getPost('kelompokAnak'),
+            'partisipasiDini' => (int) $this->request->getPost('partisipasiDini'),
+            'belajar12Tahun' => (int) $this->request->getPost('belajar12Tahun'),
+            'sekolahRamahAnak' => (int) $this->request->getPost('sekolahRamahAnak'),
+            'fasilitasAnak' => (int) $this->request->getPost('fasilitasAnak'),
+            'programPerjalanan' => (int) $this->request->getPost('programPerjalanan'),
         ];
 
-        // Daftar file fields
-        $fileFields = [
-            'infoAnak_file',
-            'kelompokAnak_file',
-            'partisipasiDini_file',
-            'belajar12Tahun_file',
-            'sekolahRamahAnak_file',
-            'fasilitasAnak_file',
-            'programPerjalanan_file'
+        // Daftar field upload file
+        $fields = [
+            'infoAnak', 'kelompokAnak', 'partisipasiDini', 'belajar12Tahun',
+            'sekolahRamahAnak', 'fasilitasAnak', 'programPerjalanan'
         ];
 
-        // Upload path
-        $uploadPath = FCPATH . 'uploads/klaster4/';
-        if (!is_dir($uploadPath))
-            mkdir($uploadPath, 0777, true);
+        foreach ($fields as $field) {
+            $file = $this->request->getFile("{$field}_file");
 
-        // Proses upload file
-        foreach ($fileFields as $field) {
-            $file = $this->request->getFile($field);
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                // Validasi ekstensi file zip
-                if ($file->getExtension() !== 'zip') {
-                    return redirect()->back()->with('error', 'File ' . $field . ' harus berupa ZIP.');
-                }
-
-                // Validasi ukuran file (max 1GB)
+                // Validasi ukuran
                 if ($file->getSize() > 1024 * 1024 * 1024) {
-                    return redirect()->back()->with('error', 'Ukuran file ' . $field . ' terlalu besar (maks 1GB).');
+                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 1GB.');
                 }
 
-                $newName = $field . '_' . time() . '.' . $file->getExtension();
-                $file->move($uploadPath, $newName);
-                $data[$field] = 'uploads/klaster4/' . $newName;
+                // Validasi ekstensi
+                if ($file->getExtension() !== 'zip') {
+                    return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
+                }
+
+                // Simpan file ke uploads/ saja (tanpa folder klaster4/)
+                $newName = $field . '_' . time() . '_' . $file->getClientName();
+                $file->move(ROOTPATH . 'public/uploads/klaster4/', $newName);
+                $data["{$field}_file"] = $newName; // hanya nama file
             }
         }
 
-        // Simpan data
+        // Tambahkan status
+        $data['status'] = 'pending';
+
+        // Simpan ke database
         $model->save($data);
 
-        return redirect()->back()->with('success', 'Data Klaster IV berhasil disimpan dan menunggu persetujuan.');
+        return redirect()->to('/klaster4/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+    }
+
+    public function form()
+    {
+        $model = new Klaster4Model();
+        $userId = session()->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        $existing = $model->where('user_id', $userId)
+                          ->where('tahun', $tahun)
+                          ->where('bulan', $bulan)
+                          ->orderBy('created_at', 'desc')
+                          ->first();
+
+        $data = [
+            'user_name' => session()->get('user_name'),
+            'user_email' => session()->get('user_email'),
+            'user_role' => session()->get('user_role'),
+            'status' => $existing['status'] ?? null,
+            'existing' => $existing ?? null,
+        ];
+
+        return view('pages/operator/klaster4', $data);
     }
 }

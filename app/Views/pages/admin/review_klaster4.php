@@ -127,7 +127,8 @@
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
                                 <p class="text-xl font-semibold text-gray-800"><?= esc($klaster4['tahun']) ?> /
-                                    <?= esc($klaster4['bulan']) ?></p>
+                                    <?= esc($klaster4['bulan']) ?>
+                                </p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>
