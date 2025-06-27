@@ -222,7 +222,7 @@
                 ]
             ];
 
-            foreach ($klaster as $k):
+  foreach ($klaster as $k):
                 $first_key = array_key_first($k['opsi']);
                 ?>
                 <div class="space-y-5 bg-gray-50 p-6 rounded-xl border border-gray-200 relative overflow-hidden">
@@ -295,6 +295,19 @@
                     </div>
                 </div>
             <?php endforeach; ?>
+
+            <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
+                <button type="submit"
+                    class="px-8 py-3 bg-gradient-to-r from-primary-700 to-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center justify-center gap-2">
+                    <i class="ph ph-paper-plane-tilt"></i>
+                    Submit Penilaian
+                </button>
+                <button type="reset"
+                    class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-300 flex items-center justify-center gap-2">
+                    <i class="ph ph-arrow-counter-clockwise"></i>
+                    Reset Form
+                </button>
+            </div>
 
             <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
                 <button type="submit"

@@ -63,7 +63,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 ml-64">
 
     <div class="flex min-h-screen">
 
@@ -71,7 +71,7 @@
         <?= $this->include('layouts/sidenav_admin') ?>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden mt-12">
 
             <!-- Header Admin -->
             <?= $this->include('layouts/header_admin') ?>

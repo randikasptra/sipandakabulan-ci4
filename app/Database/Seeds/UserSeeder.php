@@ -11,8 +11,8 @@ class UserSeeder extends Seeder
         $data = [
             [
                 'username'   => 'admin',
-                'email'      => 'admin@example.com',
-                'password'   => password_hash('admin123', PASSWORD_DEFAULT),
+                'email'      => 'admin@gmail.com',
+                'password'   => password_hash('password123', PASSWORD_DEFAULT),
                 'role'       => 'admin',
                 'desa'       => null,
                 'created_at' => date('Y-m-d H:i:s'),
@@ -20,8 +20,8 @@ class UserSeeder extends Seeder
             ],
             [
                 'username'   => 'Sariwangi',
-                'email'      => 'sariwangi@example.com',
-                'password'   => password_hash('sariwangi123', PASSWORD_DEFAULT),
+                'email'      => 'sariwangi@gmail.com',
+                'password'   => password_hash('password123', PASSWORD_DEFAULT),
                 'role'       => 'operator',
                 'desa'       => 'Desa Sariwangi',
                 'created_at' => date('Y-m-d H:i:s'),
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'username'   => 'Jayaputa',
-                'email'      => 'jayaputra@example.com',
+                'email'      => 'jayaputra@gmail.com',
                 'password'   => password_hash('password123', PASSWORD_DEFAULT),
                 'role'       => 'operator',
                 'desa'       => 'Desa Jayaputra',
@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'username'   => 'Jayaratu',
-                'email'      => 'jayaratu@example.com',
+                'email'      => 'jayaratu@gmail.com',
                 'password'   => password_hash('password123', PASSWORD_DEFAULT),
                 'role'       => 'operator',
                 'desa'       => 'Desa Jayaratu',

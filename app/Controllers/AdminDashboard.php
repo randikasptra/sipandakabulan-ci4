@@ -8,49 +8,54 @@ use App\Models\KelembagaanModel;
 class AdminDashboard extends BaseController
 {
     public function index()
-{
-    $userModel = new \App\Models\UserModel();
+    {
+        $userModel = new \App\Models\UserModel();
 
-    // Load model klaster
-    $klaster1 = new \App\Models\Klaster1Model();
-    $klaster2 = new \App\Models\Klaster2Model();
-    $klaster3 = new \App\Models\Klaster3Model();
-    $klaster4 = new \App\Models\Klaster4Model();
-    $klaster5 = new \App\Models\Klaster5Model();
+        // Load model klaster
+        $klaster1 = new \App\Models\Klaster1Model();
+        $klaster2 = new \App\Models\Klaster2Model();
+        $klaster3 = new \App\Models\Klaster3Model();
+        $klaster4 = new \App\Models\Klaster4Model();
+        $klaster5 = new \App\Models\Klaster5Model();
 
-    // Ambil semua user dengan role operator (desa)
-    $desaList = $userModel->where('role', 'operator')->findAll();
+        // Ambil semua user dengan role operator (desa)
+        $desaList = $userModel->where('role', 'operator')->findAll();
 
-    foreach ($desaList as &$desa) {
-        $userId = $desa['id'];
+        foreach ($desaList as &$desa) {
+            $userId = $desa['id'];
 
-        // Status input dan approve langsung dari kolom users
-        $desa['status_input'] = $desa['status_input'] ?? 'belum';
-        $desa['status_approve'] = $desa['status_approve'] ?? 'pending';
-        $desa['input_by'] = $desa['username'] ?? '-';
-        $desa['created_at'] = $desa['created_at'] ?? null;
+            // Status input dan approve langsung dari kolom users
+            $desa['status_input'] = $desa['status_input'] ?? 'belum';
+            $desa['status_approve'] = $desa['status_approve'] ?? 'pending';
+            $desa['input_by'] = $desa['username'] ?? '-';
+            $desa['created_at'] = $desa['created_at'] ?? null;
 
-        // Cek klaster yang sudah diisi
-        $klasterTerisi = [];
-        if ($klaster1->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 1';
-        if ($klaster2->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 2';
-        if ($klaster3->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 3';
-        if ($klaster4->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 4';
-        if ($klaster5->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 5';
+            // Cek klaster yang sudah diisi
+            $klasterTerisi = [];
+            if ($klaster1->where('user_id', $userId)->first())
+                $klasterTerisi[] = 'Klaster 1';
+            if ($klaster2->where('user_id', $userId)->first())
+                $klasterTerisi[] = 'Klaster 2';
+            if ($klaster3->where('user_id', $userId)->first())
+                $klasterTerisi[] = 'Klaster 3';
+            if ($klaster4->where('user_id', $userId)->first())
+                $klasterTerisi[] = 'Klaster 4';
+            if ($klaster5->where('user_id', $userId)->first())
+                $klasterTerisi[] = 'Klaster 5';
 
-        $desa['klaster_isi'] = !empty($klasterTerisi) ? implode(', ', $klasterTerisi) : '-';
+            $desa['klaster_isi'] = !empty($klasterTerisi) ? implode(', ', $klasterTerisi) : '-';
+        }
+
+        $data = [
+            'totalDesa' => count($desaList),
+            'sudahInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'sudah')),
+            'belumInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'belum')),
+            'perluApprove' => count(array_filter($desaList, fn($d) => $d['status_approve'] === 'pending')),
+            'desaList' => $desaList,
+        ];
+
+        return view('pages/admin/dashboard', $data);
     }
-
-    $data = [
-        'totalDesa' => count($desaList),
-        'sudahInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'sudah')),
-        'belumInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'belum')),
-        'perluApprove' => count(array_filter($desaList, fn($d) => $d['status_approve'] === 'pending')),
-        'desaList' => $desaList,
-    ];
-
-    return view('pages/admin/dashboard', $data);
-}
 
 
 
@@ -166,17 +171,25 @@ class AdminDashboard extends BaseController
     public function reviewKelembagaan($id)
     {
         $kelembagaanModel = new \App\Models\KelembagaanModel();
-        $data = $kelembagaanModel->where('user_id', $id)->first();
+        $berkasModel = new \App\Models\BerkasKlasterModel();
 
-        if (!$data) {
+        // Ambil data kelembagaan
+        $kelembagaan = $kelembagaanModel->where('user_id', $id)->first();
+
+        if (!$kelembagaan) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Data kelembagaan tidak ditemukan');
         }
 
+        // Ambil data berkas (untuk tombol Approve/Reject)
+        $berkas = $berkasModel->where('user_id', $id)->findAll();
+
         return view('pages/admin/review_kelembagaan', [
-            'kelembagaan' => $data,
+            'kelembagaan' => $kelembagaan,
+            'berkas' => $berkas,
             'user_id' => $id
         ]);
     }
+
 
     public function reviewKlaster1($id)
     {
@@ -246,6 +259,10 @@ class AdminDashboard extends BaseController
     {
         return view('pages/admin/desa');
     }
+    public function berkas()
+    {
+        return view('pages/admin/berkas');
+    }
 
 
     public function approval()
@@ -268,7 +285,6 @@ class AdminDashboard extends BaseController
 
         return view('pages/admin/approval', $data);
     }
-
 
     public function approve($id)
     {
@@ -300,6 +316,16 @@ class AdminDashboard extends BaseController
         ];
 
         return view('pages/admin/approve', $data);
+    }
+    public function setujui($id)
+    {
+        $userModel = new \App\Models\UserModel();
+
+        $userModel->update($id, [
+            'status_approve' => 'approved'
+        ]);
+
+        return redirect()->to('/dashboard/admin/approval')->with('success', 'Data desa berhasil disetujui.');
     }
 
     public function downloadFile()

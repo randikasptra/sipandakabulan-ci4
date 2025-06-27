@@ -33,8 +33,9 @@ $routes->group('dashboard', function ($routes) {
         $routes->post('users/(:num)/update', 'AdminDashboard::updateUser/$1');
         $routes->get('approve/(:num)', 'AdminDashboard::approve/$1');
         $routes->get('approveAction/(:num)', 'AdminDashboard::approveAction');
-        // $routes->get('kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
+        $routes->get('approve/confirm(:num)', 'AdminDashboard::setuju/$1');
         $routes->get('review_kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
+        // $routes->get('kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
 
         // Review Klaster 1 sampai 5
         $routes->get('review_klaster_1/(:num)', 'AdminDashboard::reviewKlaster1/$1');
@@ -42,9 +43,15 @@ $routes->group('dashboard', function ($routes) {
         $routes->get('review_klaster_3/(:num)', 'AdminDashboard::reviewKlaster3/$1');
         $routes->get('review_klaster_4/(:num)', 'AdminDashboard::reviewKlaster4/$1');
         $routes->get('review_klaster_5/(:num)', 'AdminDashboard::reviewKlaster5/$1');
+
+        $routes->get('review/(:num)', 'AdminBerkasController::review/$1'); // contoh: review/1, review/2
+        $routes->post('update_status', 'AdminBerkasController::updateStatus');
+         $routes->post('admin-berkas/store', 'AdminBerkasController::store');
+         $routes->post('klaster1/approve', 'Klaster1Controller::approve');
     });
 
-
+    $routes->get('berkas', 'AdminBerkasController::index');
+    $routes->post('berkas/update-status', 'AdminBerkasController::updateStatus');
     $routes->get('pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
     $routes->get('users', 'AdminDashboard::users');       // /dashboard/users
     $routes->get('desa', 'AdminDashboard::desa');         // /dashboard/desa
@@ -56,7 +63,7 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('approval/data', 'ApprovalController::getData');
     $routes->get('approval/proses/(:num)', 'ApprovalController::proses/$1');
 
-    $routes->get('laporan', 'AdminDashboard::laporan');   // /dashboard/laporan
+    $routes->get('berkas', 'AdminDashboard::berkas');   // /dashboard/laporan
     $routes->get('settings', 'AdminDashboard::settings'); // /dashboard/settings
 
     $routes->get('pengumuman_list', 'PengumumanController::index');

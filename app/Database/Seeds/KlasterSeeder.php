@@ -51,13 +51,13 @@ class KlasterSeeder extends Seeder
                 'nilai_maksimal' => 100,
                 'progres' => 0
             ],
-            [
-                'title' => 'Penyelenggaraan KLA di Kecamatan/Desa',
-                'slug' => 'penyelenggaraan-kla-di-kecamatan-desa',
-                'nilai_em' => 0,
-                'nilai_maksimal' => 100,
-                'progres' => 0
-            ],
+            // [
+            //     'title' => 'Penyelenggaraan KLA di Kecamatan/Desa',
+            //     'slug' => 'penyelenggaraan-kla-di-kecamatan-desa',
+            //     'nilai_em' => 0,
+            //     'nilai_maksimal' => 100,
+            //     'progres' => 0
+            // ],
         ];
 
         // Masukkan ke tabel 'klasters'

@@ -87,7 +87,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 antialiased">
+<body class="bg-gray-50 text-gray-800 antialiased ml-64">
 
     <div class="flex min-h-screen">
 
@@ -200,9 +200,16 @@
                     <?php endif; ?>
 
                     <!-- Approval Actions -->
-                    <form method="post" action="<?= base_url('dashboard/admin/kelembagaan/approve') ?>" class="mt-8">
+                    <!-- Approval Actions -->
+                    <form method="post" action="<?= base_url('dashboard/admin/admin-berkas/store') ?>" class="mt-8">
                         <?= csrf_field() ?>
                         <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                        <input type="hidden" name="klaster" value="kelembagaan">
+                        <input type="hidden" name="tahun" value="<?= esc($kelembagaan['tahun']) ?>">
+                        <input type="hidden" name="bulan" value="<?= esc($kelembagaan['bulan']) ?>">
+                        <input type="hidden" name="total_nilai" value="<?= esc($kelembagaan['total_nilai']) ?>">
+                        <input type="hidden" name="catatan" value="">
+
                         <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
                             <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -212,7 +219,6 @@
                                         <?= esc($kelembagaan['bulan']) ?>
                                     </p>
                                 </div>
-                             
                             </div>
                         </div>
 
@@ -221,12 +227,14 @@
                                 class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
                                 <i class="fas fa-check-circle"></i> Approve
                             </button>
+
                             <button type="submit" name="status" value="rejected"
                                 class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
                                 <i class="fas fa-times-circle"></i> Reject
                             </button>
                         </div>
                     </form>
+
                 </div>
             </main>
         </div>

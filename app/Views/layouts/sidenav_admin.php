@@ -1,4 +1,5 @@
-<aside class="fixed left-0 w-72 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex flex-col min-h-screen shadow-2xl z-10">
+<aside
+  class="fixed left-0 w-72 bg-gradient-to-b from-blue-800 to-blue-900 text-white flex flex-col min-h-screen shadow-2xl z-64">
   <!-- App Header with Glass Effect -->
   <div class="px-6 py-5 border-b border-blue-700 bg-blue-800/50 backdrop-blur-md">
     <div class="flex flex-col items-center text-center">
@@ -85,6 +86,21 @@
       </div>
       <span class="text-blue-100 group-hover:text-white">Pengumuman</span>
     </a>
+    <!-- Laporan -->
+    <a href="/dashboard/berkas"
+      class="flex items-center py-3 px-4 rounded-xl hover:bg-blue-700/50 transition-all duration-200 group">
+      <div
+        class="w-8 h-8 rounded-lg bg-blue-700/70 group-hover:bg-blue-600 flex items-center justify-center mr-3 transition-all duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
+          class="w-5 h-5 text-blue-300 group-hover:text-white">
+          <path fill-rule="evenodd"
+            d="M6.75 3A2.25 2.25 0 004.5 5.25v13.5A2.25 2.25 0 006.75 21h10.5A2.25 2.25 0 0019.5 18.75V9.31a2.25 2.25 0 00-.659-1.591l-4.56-4.56A2.25 2.25 0 0012.69 3H6.75zm6.19 1.5L18 9.56v9.19a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75V5.25a.75.75 0 01.75-.75h6.19z"
+            clip-rule="evenodd" />
+        </svg>
+      </div>
+      <span class="text-blue-100 group-hover:text-white">Laporan</span>
+    </a>
+
 
     <!-- Pengaturan -->
     <!-- <a href="/dashboard/settings" class="flex items-center py-3 px-4 rounded-xl hover:bg-blue-700/50 transition-all duration-200 group">
