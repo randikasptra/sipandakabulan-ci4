@@ -334,7 +334,7 @@ class AdminDashboard extends BaseController
         $folder = $this->request->getGet('folder'); // folder: kelembagaan, klaster1, dst
 
         // Validasi folder agar hanya yang diizinkan
-        $allowedFolders = ['kelembagaan', 'klaster1', 'klaster2', 'klaster3']; // tambahkan sesuai kebutuhan
+        $allowedFolders = ['kelembagaan', 'klaster1', 'klaster2', 'klaster3', 'klaster4', 'klaster5']; // tambahkan sesuai kebutuhan
 
         if (!in_array($folder, $allowedFolders)) {
             return redirect()->back()->with('error', 'Folder tidak valid.');

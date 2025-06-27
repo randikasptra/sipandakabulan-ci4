@@ -15,10 +15,10 @@ class Klaster4Controller extends BaseController
 
         // Cek apakah sudah mengisi untuk bulan dan tahun ini
         $existing = $model->where('user_id', $userId)
-                          ->where('tahun', $tahun)
-                          ->where('bulan', $bulan)
-                          ->whereIn('status', ['pending', 'approved'])
-                          ->first();
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->whereIn('status', ['pending', 'approved'])
+            ->first();
 
         if ($existing) {
             return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk bulan ini dan sedang menunggu atau sudah disetujui.');
@@ -40,8 +40,13 @@ class Klaster4Controller extends BaseController
 
         // Daftar field upload file
         $fields = [
-            'infoAnak', 'kelompokAnak', 'partisipasiDini', 'belajar12Tahun',
-            'sekolahRamahAnak', 'fasilitasAnak', 'programPerjalanan'
+            'infoAnak',
+            'kelompokAnak',
+            'partisipasiDini',
+            'belajar12Tahun',
+            'sekolahRamahAnak',
+            'fasilitasAnak',
+            'programPerjalanan'
         ];
 
         foreach ($fields as $field) {
@@ -82,10 +87,10 @@ class Klaster4Controller extends BaseController
         $bulan = date('F');
 
         $existing = $model->where('user_id', $userId)
-                          ->where('tahun', $tahun)
-                          ->where('bulan', $bulan)
-                          ->orderBy('created_at', 'desc')
-                          ->first();
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->orderBy('created_at', 'desc')
+            ->first();
 
         $data = [
             'user_name' => session()->get('user_name'),
