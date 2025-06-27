@@ -100,4 +100,55 @@ class Klaster3Controller extends BaseController
 
         return view('pages/operator/klaster3', $data);
     }
+    public function approve()
+    {
+        $userId = $this->request->getPost('user_id');
+        $status = $this->request->getPost('status'); // 'approved' atau 'rejected'
+
+        $klaster3Model = new \App\Models\Klaster3Model();
+        $berkasKlasterModel = new \App\Models\BerkasKlasterModel();
+        $klasterFormModel = new \App\Models\KlasterFormModel();
+
+        // Ambil data klaster3 milik user
+        $klaster3 = $klaster3Model->where('user_id', $userId)->first();
+        if (!$klaster3) {
+            return redirect()->back()->with('error', 'Data Klaster 3 tidak ditemukan.');
+        }
+
+        // Ambil ID klaster dari slug
+        $klasterData = $klasterFormModel->where('slug', 'klaster3')->first();
+        if (!$klasterData) {
+            return redirect()->back()->with('error', 'Klaster tidak ditemukan.');
+        }
+
+        // Cek apakah data sudah ada di berkas_klaster
+        $existing = $berkasKlasterModel
+            ->where('user_id', $userId)
+            ->where('klaster', $klasterData['id'])
+            ->first();
+
+        // Siapkan data berkas
+        $dataBerkas = [
+            'user_id' => $userId,
+            'klaster' => $klasterData['id'],
+            'tahun' => $klaster3['tahun'],
+            'bulan' => $klaster3['bulan'],
+            'total_nilai' => $klaster3['total_nilai'] ?? 0,
+            'status' => $status,
+            'catatan' => $status === 'rejected' ? $this->request->getPost('catatan') : null,
+            'file_path' => 'klaster3/' . $userId . '.zip' // opsional, sesuaikan dengan sistem file kamu
+        ];
+
+        if ($existing) {
+            $berkasKlasterModel->update($existing['id'], $dataBerkas);
+        } else {
+            $berkasKlasterModel->insert($dataBerkas);
+        }
+
+        // Update status klaster3
+        $klaster3Model->where('user_id', $userId)->set(['status' => $status])->update();
+
+        return redirect()->back()->with('success', 'Status Klaster 3 berhasil diperbarui dan disimpan ke laporan.');
+    }
+
 }

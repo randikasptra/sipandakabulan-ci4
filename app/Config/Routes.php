@@ -51,6 +51,7 @@ $routes->group('dashboard', function ($routes) {
         $routes->post('klaster3/approve', 'Klaster3Controller::approve');
         $routes->post('klaster4/approve', 'Klaster4Controller::approve');
         $routes->post('klaster5/approve', 'Klaster5Controller::approve');
+        
     });
 
     $routes->get('berkas', 'AdminBerkasController::index');

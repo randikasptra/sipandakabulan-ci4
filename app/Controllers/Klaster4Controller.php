@@ -48,7 +48,7 @@ class Klaster4Controller extends BaseController
             'fasilitasAnak',
             'programPerjalanan'
         ];
-        
+
 
         foreach ($fields as $field) {
             $file = $this->request->getFile("{$field}_file");
@@ -103,4 +103,51 @@ class Klaster4Controller extends BaseController
 
         return view('pages/operator/klaster4', $data);
     }
+
+    public function approve()
+    {
+        $userId = $this->request->getPost('user_id');
+        $status = $this->request->getPost('status');
+
+        $klaster4Model = new \App\Models\Klaster4Model();
+        $berkasKlasterModel = new \App\Models\BerkasKlasterModel();
+        $klasterFormModel = new \App\Models\KlasterFormModel();
+
+        $klaster4 = $klaster4Model->where('user_id', $userId)->first();
+        if (!$klaster4) {
+            return redirect()->back()->with('error', 'Data Klaster 4 tidak ditemukan.');
+        }
+
+        $klasterData = $klasterFormModel->where('slug', 'klaster4')->first();
+        if (!$klasterData) {
+            return redirect()->back()->with('error', 'Klaster tidak ditemukan.');
+        }
+
+        $existing = $berkasKlasterModel
+            ->where('user_id', $userId)
+            ->where('klaster', $klasterData['id'])
+            ->first();
+
+        $dataBerkas = [
+            'user_id' => $userId,
+            'klaster' => $klasterData['id'],
+            'tahun' => $klaster4['tahun'],
+            'bulan' => $klaster4['bulan'],
+            'total_nilai' => $klaster4['total_nilai'] ?? 0,
+            'status' => $status,
+            'catatan' => $status === 'rejected' ? $this->request->getPost('catatan') : null,
+            'file_path' => 'klaster4/' . $userId . '.zip'
+        ];
+
+        if ($existing) {
+            $berkasKlasterModel->update($existing['id'], $dataBerkas);
+        } else {
+            $berkasKlasterModel->insert($dataBerkas);
+        }
+
+        $klaster4Model->where('user_id', $userId)->set(['status' => $status])->update();
+
+        return redirect()->back()->with('success', 'Status Klaster 4 berhasil diperbarui dan disimpan ke laporan.');
+    }
+
 }
