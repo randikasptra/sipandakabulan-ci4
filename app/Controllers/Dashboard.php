@@ -227,15 +227,33 @@ class Dashboard extends BaseController
             return redirect()->to('/login');
         }
 
+        $userModel = new UserModel();
+        $klaster5Model = new \App\Models\Klaster5Model();
+
+        // Ambil data klaster5 berdasarkan user ID
+        $klaster5 = $klaster5Model->where('user_id', $id)->first();
+
+        // Cek apakah file ZIP-nya tersedia
+        $zipFilePath = FCPATH . 'uploads/klaster5/' . $id . '.zip';
+        $zipAvailable = file_exists($zipFilePath);
+
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
             'id' => $id,
+            'klaster5' => $klaster5,
+            'zipAvailable' => $zipAvailable,
+            'user_id' => $id,
+            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
         ];
 
         return view('pages/operator/klaster5', $data);
     }
+
 
     public function tutorial()
     {

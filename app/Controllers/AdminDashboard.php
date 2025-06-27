@@ -331,7 +331,7 @@ class AdminDashboard extends BaseController
     public function downloadFile()
     {
         $filename = $this->request->getGet('file');
-        $folder = $this->request->getGet('folder'); // folder: kelembagaan, klaster1, dst
+        $folder = $this->request->getGet('folder'); 
 
         // Validasi folder agar hanya yang diizinkan
         $allowedFolders = ['kelembagaan', 'klaster1', 'klaster2', 'klaster3', 'klaster4', 'klaster5']; // tambahkan sesuai kebutuhan

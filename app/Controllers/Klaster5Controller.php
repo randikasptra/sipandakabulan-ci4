@@ -10,61 +10,71 @@ class Klaster5Controller extends BaseController
     public function submit()
     {
         $model = new Klaster5Model();
-        $id = session()->get('id');
+        $userId = session()->get('id');
         $tahun = date('Y');
-        $bulan = date('F'); // Nama bulan, misalnya: January, February, dst.
+        $bulan = date('F');
 
-        // 🔍 Cek jika user sudah submit tahun ini (opsional, jika ingin dibatasi 1x per tahun)
-        $existing = $model->where('user_id', $id)
+        // Cek apakah sudah mengisi untuk bulan dan tahun ini
+        $existing = $model->where('user_id', $userId)
             ->where('tahun', $tahun)
-            ->where('status !=', 'rejected')
+            ->where('bulan', $bulan)
+            ->whereIn('status', ['pending', 'approved'])
             ->first();
 
         if ($existing) {
-            return redirect()->back()->with('error', 'Data untuk tahun ini sudah diajukan.');
+            return redirect()->back()->with('error', 'Kamu sudah mengisi form Klaster 5 untuk bulan ini dan sedang menunggu atau sudah disetujui.');
         }
 
-        // 📥 Data nilai radio
+        // Ambil nilai input
         $data = [
-            'user_id' => $id,
+            'user_id' => $userId,
             'tahun' => $tahun,
             'bulan' => $bulan,
             'laporanKekerasanAnak' => (int) $this->request->getPost('laporanKekerasanAnak'),
             'mekanismePenanggulanganBencana' => (int) $this->request->getPost('mekanismePenanggulanganBencana'),
             'programPencegahanKekerasan' => (int) $this->request->getPost('programPencegahanKekerasan'),
             'programPencegahanPekerjaanAnak' => (int) $this->request->getPost('programPencegahanPekerjaanAnak'),
-            'status' => 'pending', // default status
         ];
 
-        // 📂 File upload
+        // Daftar nama field file
         $fileFields = [
-            'laporanKekerasanAnak_file',
-            'mekanismePenanggulanganBencana_file',
-            'programPencegahanKekerasan_file',
-            'programPencegahanPekerjaanAnak_file'
+            'laporanKekerasanAnak',
+            'mekanismePenanggulanganBencana',
+            'programPencegahanKekerasan',
+            'programPencegahanPekerjaanAnak'
         ];
 
+        // Path upload
         $uploadPath = FCPATH . 'uploads/klaster5/';
-        if (!is_dir($uploadPath))
+        if (!is_dir($uploadPath)) {
             mkdir($uploadPath, 0777, true);
+        }
 
+        // Upload file
         foreach ($fileFields as $field) {
-            $file = $this->request->getFile($field);
+            $file = $this->request->getFile("{$field}_file");
+
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                if ($file->getExtension() !== 'zip') {
-                    return redirect()->back()->with('error', 'File untuk ' . $field . ' harus dalam format ZIP.');
+                if ($file->getSize() > 1024 * 1024 * 1024) {
+                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 1GB.');
                 }
 
-                $newName = $field . '_' . time() . '.' . $file->getExtension();
+                if ($file->getExtension() !== 'zip') {
+                    return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
+                }
+
+                $newName = $field . '_' . time() . '_' . $file->getClientName();
                 $file->move($uploadPath, $newName);
-                $data[$field] = 'uploads/klaster5/' . $newName;
+                $data["{$field}_file"] = $newName;
             }
         }
 
-        // 💾 Simpan
+        // Tambahkan status
+        $data['status'] = 'pending';
+
         $model->save($data);
 
-        return redirect()->back()->with('success', 'Data Klaster V berhasil disimpan dan sedang menunggu persetujuan admin.');
+        return redirect()->to('/klaster5/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
 
     public function form()
@@ -72,14 +82,18 @@ class Klaster5Controller extends BaseController
         $model = new Klaster5Model();
         $userId = session()->get('id');
         $tahun = date('Y');
+        $bulan = date('F');
 
         $existing = $model->where('user_id', $userId)
             ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
             ->orderBy('created_at', 'desc')
             ->first();
 
         $data = [
             'user_name' => session()->get('user_name'),
+            'user_email' => session()->get('user_email'),
+            'user_role' => session()->get('user_role'),
             'status' => $existing['status'] ?? null,
             'existing' => $existing ?? null,
         ];
