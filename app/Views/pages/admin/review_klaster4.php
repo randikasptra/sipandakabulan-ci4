@@ -106,7 +106,7 @@
                                                         class="font-medium text-gray-800"><?= esc($klaster4[$key]) ?></span>
                                                 </p>
                                                 <?php if (!empty($klaster4[$key . '_file'])): ?>
-                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster4[$key . '_file'])) ?>"
+                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster4[$key . '_file']) . '&folder=klaster4') ?>"
                                                         class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
                                                         <i class="fas fa-download mr-2"></i> Download File
                                                     </a>
