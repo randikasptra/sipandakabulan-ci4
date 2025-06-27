@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Models\Klaster5Model;
 
 class Klaster5Controller extends BaseController
@@ -25,7 +24,7 @@ class Klaster5Controller extends BaseController
             return redirect()->back()->with('error', 'Kamu sudah mengisi form Klaster 5 untuk bulan ini dan sedang menunggu atau sudah disetujui.');
         }
 
-        // Ambil nilai input
+        // Ambil nilai input radio
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
@@ -36,42 +35,39 @@ class Klaster5Controller extends BaseController
             'programPencegahanPekerjaanAnak' => (int) $this->request->getPost('programPencegahanPekerjaanAnak'),
         ];
 
-        // Daftar nama field file
-        $fileFields = [
+        // Daftar field upload file
+        $fields = [
             'laporanKekerasanAnak',
             'mekanismePenanggulanganBencana',
             'programPencegahanKekerasan',
             'programPencegahanPekerjaanAnak'
         ];
 
-        // Path upload
-        $uploadPath = FCPATH . 'uploads/klaster5/';
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
-
-        // Upload file
-        foreach ($fileFields as $field) {
+        foreach ($fields as $field) {
             $file = $this->request->getFile("{$field}_file");
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
+                // Validasi ukuran
                 if ($file->getSize() > 1024 * 1024 * 1024) {
                     return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 1GB.');
                 }
 
+                // Validasi ekstensi
                 if ($file->getExtension() !== 'zip') {
                     return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
                 }
 
+                // Simpan file ke uploads/klaster5/
                 $newName = $field . '_' . time() . '_' . $file->getClientName();
-                $file->move($uploadPath, $newName);
-                $data["{$field}_file"] = $newName;
+                $file->move(ROOTPATH . 'public/uploads/klaster5/', $newName);
+                $data["{$field}_file"] = $newName; // hanya nama file
             }
         }
 
         // Tambahkan status
         $data['status'] = 'pending';
 
+        // Simpan ke database
         $model->save($data);
 
         return redirect()->to('/klaster5/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
