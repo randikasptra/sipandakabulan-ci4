@@ -100,4 +100,47 @@ class Kelembagaan extends Controller
 
         return view('pages/operator/kelembagaan', $data);
     }
+
+    public function updateStatus()
+    {
+        $berkasModel = new \App\Models\BerkasKlasterModel();
+        $kelembagaanModel = new \App\Models\KelembagaanModel();
+
+        $id = $this->request->getPost('berkas_id');
+        $status = $this->request->getPost('status');
+        $catatan = $this->request->getPost('catatan');
+
+        // Update status di berkas_klaster
+        $berkasModel->update($id, [
+            'status' => $status,
+            'catatan' => ($status === 'rejected') ? $catatan : null,
+        ]);
+
+        // Ambil data berkas untuk keperluan update kelembagaan (jika klaster 1)
+        $berkas = $berkasModel->find($id);
+
+        if ($berkas && $berkas['klaster'] == 1) {
+            $kelembagaan = $kelembagaanModel
+                ->where('user_id', $berkas['user_id'])
+                ->where('tahun', $berkas['tahun'])
+                ->where('bulan', $berkas['bulan']) // Pastikan format 'bulan' sama (contoh: 'June')
+                ->first();
+
+            // ✅ Debug apakah ditemukan datanya
+            // dd($kelembagaan);
+
+            if ($kelembagaan) {
+                $kelembagaanModel->update($kelembagaan['id'], [
+                    'status' => $status
+                ]);
+            } else {
+                log_message('error', 'Data kelembagaan tidak ditemukan untuk user_id: ' . $berkas['user_id'] . ', tahun: ' . $berkas['tahun'] . ', bulan: ' . $berkas['bulan']);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Status berkas berhasil diperbarui.');
+    }
+
+
+
 }

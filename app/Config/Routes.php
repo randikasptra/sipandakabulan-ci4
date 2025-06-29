@@ -96,10 +96,10 @@ $routes->post('/submit-kelembagaan', 'Kelembagaan::submit');
 
 $routes->get('/klaster1', 'Klaster1Controller::index');
 $routes->post('/submit-klaster1', 'Klaster1Controller::submit');
-$routes->get('/klaster2/form', 'Klaster2Controller::form'); // ✅ Ini yang ditambahkan
-$routes->get('/klaster3/form', 'Klaster3Controller::form'); // ✅ Ini yang ditambahkan
-$routes->get('/klaster4/form', 'Klaster4Controller::form'); // ✅ Ini yang ditambahkan
-$routes->get('/klaster5/form', 'Klaster5Controller::form'); // ✅ Ini yang ditambahkan
+$routes->get('/klaster2/form', 'Klaster2Controller::form'); 
+$routes->get('/klaster3/form', 'Klaster3Controller::form'); 
+$routes->get('/klaster4/form', 'Klaster4Controller::form'); 
+$routes->get('/klaster5/form', 'Klaster5Controller::form'); 
 $routes->post('/submit-klaster2', 'Klaster2Controller::submit');
 $routes->post('/submit-klaster3', 'Klaster3Controller::submit');
 $routes->post('/submit-klaster4', 'Klaster4Controller::submit');
