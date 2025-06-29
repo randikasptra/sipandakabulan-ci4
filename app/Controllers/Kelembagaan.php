@@ -3,19 +3,28 @@
 namespace App\Controllers;
 
 use App\Models\KelembagaanModel;
-use CodeIgniter\Controller;
+use App\Models\BerkasKlasterModel;
+use App\Models\KlasterFormModel;
 
-class Kelembagaan extends Controller
+class Kelembagaan extends BaseController
 {
+    protected $kelembagaanModel;
+    protected $berkasKlasterModel;
+
+    public function __construct()
+    {
+        $this->kelembagaanModel = new KelembagaanModel();
+        $this->berkasKlasterModel = new BerkasKlasterModel();
+    }
+
     public function submit()
     {
-        $model = new KelembagaanModel();
         $userId = session()->get('id');
         $tahun = date('Y');
-        $bulan = date('F'); // atau bisa pakai date('m') kalau mau angka
+        $bulan = date('F'); // gunakan 'm' kalau mau angka
 
-        // ✅ Cek apakah user sudah mengisi untuk tahun & bulan ini dengan status pending/approved
-        $existing = $model->where('user_id', $userId)
+        $existing = $this->kelembagaanModel
+            ->where('user_id', $userId)
             ->where('tahun', $tahun)
             ->where('bulan', $bulan)
             ->whereIn('status', ['pending', 'approved'])
@@ -25,7 +34,6 @@ class Kelembagaan extends Controller
             return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk bulan ini dan sedang menunggu atau sudah disetujui.');
         }
 
-        // ✅ Ambil nilai inputan
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
@@ -37,7 +45,6 @@ class Kelembagaan extends Controller
             'dunia_usaha_value' => (int) $this->request->getPost('dunia_usaha'),
         ];
 
-        // ✅ Hitung total nilai
         $data['total_nilai'] = array_sum([
             $data['peraturan_value'],
             $data['anggaran_value'],
@@ -46,10 +53,9 @@ class Kelembagaan extends Controller
             $data['dunia_usaha_value'],
         ]);
 
-        // ✅ Proses file upload ZIP
         $fields = ['peraturan', 'anggaran', 'forum_anak', 'data_terpilah', 'dunia_usaha'];
         foreach ($fields as $field) {
-            $file = $this->request->getFile($field . '_file');
+            $file = $this->request->getFile("{$field}_file");
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
                 if ($file->getSize() > 1024 * 1024 * 1024) {
@@ -62,27 +68,27 @@ class Kelembagaan extends Controller
 
                 $newName = $field . '_' . time() . '_' . $file->getClientName();
                 $file->move(ROOTPATH . 'public/uploads/kelembagaan/', $newName);
-                $data[$field . '_file'] = $newName;
+                $data["{$field}_file"] = $newName;
+            } else {
+                $data["{$field}_file"] = null;
             }
         }
 
-        // ✅ Set status default 'pending'
         $data['status'] = 'pending';
 
-        $model->save($data);
+        $this->kelembagaanModel->save($data);
 
         return redirect()->to('/kelembagaan/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
 
     public function form()
     {
-        $model = new KelembagaanModel();
         $userId = session()->get('id');
         $tahun = date('Y');
         $bulan = date('F');
 
-        // ✅ Ambil data berdasarkan tahun & bulan
-        $existing = $model->where('user_id', $userId)
+        $existing = $this->kelembagaanModel
+            ->where('user_id', $userId)
             ->where('tahun', $tahun)
             ->where('bulan', $bulan)
             ->orderBy('created_at', 'desc')
@@ -103,36 +109,26 @@ class Kelembagaan extends Controller
 
     public function updateStatus()
     {
-        $berkasModel = new \App\Models\BerkasKlasterModel();
-        $kelembagaanModel = new \App\Models\KelembagaanModel();
-
         $id = $this->request->getPost('berkas_id');
         $status = $this->request->getPost('status');
         $catatan = $this->request->getPost('catatan');
 
-        // Update status di berkas_klaster
-        $berkasModel->update($id, [
+        $this->berkasKlasterModel->update($id, [
             'status' => $status,
             'catatan' => ($status === 'rejected') ? $catatan : null,
         ]);
 
-        // Ambil data berkas untuk keperluan update kelembagaan (jika klaster 1)
-        $berkas = $berkasModel->find($id);
+        $berkas = $this->berkasKlasterModel->find($id);
 
         if ($berkas && $berkas['klaster'] == 1) {
-            $kelembagaan = $kelembagaanModel
+            $kelembagaan = $this->kelembagaanModel
                 ->where('user_id', $berkas['user_id'])
                 ->where('tahun', $berkas['tahun'])
-                ->where('bulan', $berkas['bulan']) // Pastikan format 'bulan' sama (contoh: 'June')
+                ->where('bulan', $berkas['bulan'])
                 ->first();
 
-            // ✅ Debug apakah ditemukan datanya
-            // dd($kelembagaan);
-
             if ($kelembagaan) {
-                $kelembagaanModel->update($kelembagaan['id'], [
-                    'status' => $status
-                ]);
+                $this->kelembagaanModel->update($kelembagaan['id'], ['status' => $status]);
             } else {
                 log_message('error', 'Data kelembagaan tidak ditemukan untuk user_id: ' . $berkas['user_id'] . ', tahun: ' . $berkas['tahun'] . ', bulan: ' . $berkas['bulan']);
             }
@@ -140,7 +136,4 @@ class Kelembagaan extends Controller
 
         return redirect()->back()->with('success', 'Status berkas berhasil diperbarui.');
     }
-
-
-
 }

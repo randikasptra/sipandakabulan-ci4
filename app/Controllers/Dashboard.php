@@ -162,6 +162,8 @@ class Dashboard extends BaseController
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+             'status' => $klaster2['status'] ?? null,
+            'existing' => $klaster2 ?? []
         ];
 
         return view('pages/operator/klaster2', $data);
