@@ -222,79 +222,94 @@
                 ]
             ];
 
-            foreach ($klaster as $k):
-                $first_key = array_key_first($k['opsi']);
-                ?>
-                <div class="space-y-5 bg-gray-50 p-6 rounded-xl border border-gray-200 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500"></div>
+        
+foreach ($klaster as $k):
+    $first_key = array_key_first($k['opsi']);
+    $selected = old($k['nama'], $existing[$k['nama'] . '_value'] ?? null);
+    $readonly = ($status === 'approved') ? 'disabled' : '';
+    $fileUploaded = $existing[$k['nama'] . '_file'] ?? null;
+?>
+<div class="space-y-5 bg-gray-50 p-6 rounded-xl border border-gray-200 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500"></div>
 
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900"><?= $k['judul'] ?></h3>
-                            <p class="text-sm text-gray-500 mt-1">Total Nilai: <span
-                                    class="font-medium text-primary-700"><?= $k['nilai'] ?></span></p>
-                        </div>
-                        <span
-                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                            <?= $k['nama'] ?>
-                        </span>
-                    </div>
+    <div class="flex justify-between items-start">
+        <div>
+            <h3 class="text-lg font-semibold text-gray-900"><?= $k['judul'] ?></h3>
+            <p class="text-sm text-gray-500 mt-1">Total Nilai: 
+                <span class="font-medium text-primary-700"><?= $k['nilai'] ?></span>
+            </p>
+        </div>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"><?= $k['nama'] ?></span>
+    </div>
 
-                    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-                        <?php foreach ($k['opsi'] as $val => $label): ?>
-                            <label
-                                class="radio-option flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 hover:border-primary-500 cursor-pointer transition-all duration-200">
-                                <input type="radio" name="<?= $k['nama'] ?>" value="<?= $val ?>"
-                                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" <?php if ($val === $first_key)
-                                        echo 'required'; ?> />
-                                <div class="flex-1">
-                                    <span class="block text-sm font-medium text-gray-700"><?= $label ?></span>
-                                    <span class="block text-xs text-primary-600 font-semibold mt-1"><?= $val ?> poin</span>
-                                </div>
-                            </label>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2">
-                        <p class="text-sm font-medium text-primary-800 flex items-center gap-2"
-                            id="<?= $k['nama'] ?>_selected">
-                            <i class="ph ph-info text-lg"></i>
-                            <span>Belum memilih nilai</span>
-                        </p>
-                    </div>
-
-                    <?php if ($k['file']): ?>
-                        <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download
-                            class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-primary-500 text-primary-600 text-sm font-medium rounded-lg transition duration-200 hover:bg-primary-50">
-                            <i class="ph ph-download-simple text-lg"></i>
-                            Download Template Excel
-                        </a>
-                    <?php endif; ?>
-
-                    <div class="mt-2">
-                        <label class="block">
-                            <span class="text-sm font-medium text-gray-700 flex items-center gap-2 mb-1">
-                                <i class="ph ph-paperclip"></i>
-                                Unggah Dokumen Pendukung
-                            </span>
-                            <div class="mt-1 flex items-center">
-                                <label
-                                    class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-                                    <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
-                                        <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
-                                        <p class="mb-2 text-sm text-gray-500">
-                                            <span class="font-semibold">Klik untuk upload</span> atau drag & drop
-                                        </p>
-                                        <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
-                                    </div>
-                                    <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
-                                </label>
-                            </div>
-                            <p class="text-xs mt-2 text-gray-500 file-name-preview"></p>
-                        </label>
-                    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <?php foreach ($k['opsi'] as $val => $label): ?>
+            <label
+                class="radio-option flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 hover:border-primary-500 transition-all duration-200 <?= $readonly ? 'cursor-not-allowed' : 'cursor-pointer' ?>">
+                <input
+                    type="radio"
+                    name="<?= $k['nama'] ?>"
+                    value="<?= $val ?>"
+                    <?= ($selected == $val) ? 'checked' : '' ?>
+                    <?= $readonly ?>
+                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
+                />
+                <div class="flex-1">
+                    <span class="block text-sm font-medium text-gray-700"><?= $label ?></span>
+                    <span class="block text-xs text-primary-600 font-semibold mt-1"><?= $val ?> poin</span>
                 </div>
-            <?php endforeach; ?>
+            </label>
+        <?php endforeach; ?>
+    </div>
+
+    <?php if ($status !== 'approved'): ?>
+        <div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2">
+            <p class="text-sm font-medium text-primary-800 flex items-center gap-2" id="<?= $k['nama'] ?>_selected">
+                <i class="ph ph-info text-lg"></i>
+                <span><?= $selected ? "Nilai terpilih: $selected poin" : 'Belum memilih nilai' ?></span>
+            </p>
+        </div>
+    <?php else: ?>
+        <div class="bg-green-50 border border-green-100 rounded-lg px-4 py-2 text-green-800">
+            <p class="text-sm font-medium flex items-center gap-2">
+                <i class="ph ph-check-circle"></i>
+                Nilai yang dipilih: <?= $selected ?> poin
+            </p>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($status === 'approved'): ?>
+        <p class="text-sm mt-2 text-gray-600">
+            <i class="ph ph-paperclip"></i> File yang diunggah: 
+            <strong><?= $fileUploaded ?: 'Tidak ada file' ?></strong>
+        </p>
+    <?php else: ?>
+        <div class="mt-2">
+            <label class="block">
+                <span class="text-sm font-medium text-gray-700 flex items-center gap-2 mb-1">
+                    <i class="ph ph-paperclip"></i>
+                    Unggah Dokumen Pendukung
+                </span>
+                <div class="mt-1 flex items-center">
+                    <label
+                        class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                            <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
+                            <p class="mb-2 text-sm text-gray-500">
+                                <span class="font-semibold">Klik untuk upload</span> atau drag & drop
+                            </p>
+                            <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
+                        </div>
+                        <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
+                    </label>
+                </div>
+                <p class="text-xs mt-2 text-gray-500 file-name-preview"></p>
+            </label>
+        </div>
+    <?php endif; ?>
+</div>
+<?php endforeach; ?>
+
 
 
 

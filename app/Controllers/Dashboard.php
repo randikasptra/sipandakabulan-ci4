@@ -25,8 +25,14 @@ class Dashboard extends BaseController
         $userModel = new UserModel();
         $kelembagaanModel = new \App\Models\KelembagaanModel();
 
-        // Ambil data kelembagaan berdasarkan user ID
-        $kelembagaan = $kelembagaanModel->where('user_id', $id)->first();
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        // Ambil data kelembagaan berdasarkan user_id, tahun, dan bulan
+        $kelembagaan = $kelembagaanModel->where('user_id', $id)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
 
         // Cek apakah file ZIP-nya ada
         $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
@@ -40,14 +46,21 @@ class Dashboard extends BaseController
             'kelembagaan' => $kelembagaan,
             'zipAvailable' => $zipAvailable,
             'user_id' => $id, // untuk form approval
+
+            // Data untuk kebutuhan statistik
             'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+
+            // Ini yang dibutuhkan di view:
+            'existing' => $kelembagaan ?? [],
+            'status' => $kelembagaan['status'] ?? null
         ];
 
         return view('pages/operator/kelembagaan', $data);
     }
+
 
     public function pengumuman_user()
     {
