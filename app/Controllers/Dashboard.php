@@ -122,10 +122,15 @@ class Dashboard extends BaseController
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+
+            // ✅ Ini yang kamu lupa:
+            'status' => $klaster1['status'] ?? null,
+            'existing' => $klaster1 ?? []
         ];
 
         return view('pages/operator/klaster1', $data);
     }
+
 
 
     public function klaster2($id = null)

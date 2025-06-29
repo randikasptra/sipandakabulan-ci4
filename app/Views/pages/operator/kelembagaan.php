@@ -223,7 +223,7 @@
             ];
 
         
-foreach ($klaster as $k):
+             foreach ($klaster as $k):
     $first_key = array_key_first($k['opsi']);
     $selected = old($k['nama'], $existing[$k['nama'] . '_value'] ?? null);
     $readonly = ($status === 'approved') ? 'disabled' : '';
@@ -278,6 +278,15 @@ foreach ($klaster as $k):
         </div>
     <?php endif; ?>
 
+    <!-- ✅ Tombol download template tetap tampil jika tersedia -->
+    <?php if ($k['file']): ?>
+        <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download
+            class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-primary-500 text-primary-600 text-sm font-medium rounded-lg transition duration-200 hover:bg-primary-50">
+            <i class="ph ph-download-simple text-lg"></i>
+            Download Template Excel
+        </a>
+    <?php endif; ?>
+
     <?php if ($status === 'approved'): ?>
         <p class="text-sm mt-2 text-gray-600">
             <i class="ph ph-paperclip"></i> File yang diunggah: 
@@ -286,29 +295,39 @@ foreach ($klaster as $k):
     <?php else: ?>
         <div class="mt-2">
             <label class="block">
-                <span class="text-sm font-medium text-gray-700 flex items-center gap-2 mb-1">
-                    <i class="ph ph-paperclip"></i>
-                    Unggah Dokumen Pendukung
-                </span>
-                <div class="mt-1 flex items-center">
-                    <label
-                        class="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
-                        <div class="flex flex-col items-center justify-center pt-5 pb-6 px-4">
-                            <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
-                            <p class="mb-2 text-sm text-gray-500">
-                                <span class="font-semibold">Klik untuk upload</span> atau drag & drop
-                            </p>
-                            <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
-                        </div>
-                        <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
-                    </label>
-                </div>
-                <p class="text-xs mt-2 text-gray-500 file-name-preview"></p>
-            </label>
+    <span class="text-sm font-medium text-gray-700 flex items-center gap-2 mb-1">
+        <i class="ph ph-paperclip"></i>
+        Unggah Dokumen Pendukung
+    </span>
+    <div class="mt-1 flex items-center">
+        <label
+            class="upload-wrapper flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition relative overflow-hidden">
+            
+            <!-- Default upload instruction -->
+            <div class="upload-instruction flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
+                <p class="mb-2 text-sm text-gray-500">
+                    <span class="font-semibold">Klik untuk upload</span> atau drag & drop
+                </p>
+                <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
+            </div>
+
+            <!-- File name preview (initially hidden) -->
+            <div class="file-preview hidden flex-col items-center justify-center text-center p-5">
+                <i class="ph ph-file-zip text-3xl text-primary-600 mb-2"></i>
+                <p class="text-sm font-medium text-primary-700 filename-preview"></p>
+            </div>
+
+            <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
+        </label>
+    </div>
+</label>
+
         </div>
     <?php endif; ?>
 </div>
 <?php endforeach; ?>
+
 
 
 
@@ -361,6 +380,28 @@ foreach ($klaster as $k):
                 }
             });
         });
+
+
+          // Menampilkan nama file ZIP yang diupload secara real-time
+    document.querySelectorAll('.upload-wrapper').forEach(wrapper => {
+    const input = wrapper.querySelector('input[type="file"]');
+    const instruction = wrapper.querySelector('.upload-instruction');
+    const preview = wrapper.querySelector('.file-preview');
+    const filename = wrapper.querySelector('.filename-preview');
+
+    input.addEventListener('change', () => {
+        if (input.files.length > 0) {
+            instruction.classList.add('hidden');
+            preview.classList.remove('hidden');
+            filename.textContent = input.files[0].name;
+        } else {
+            instruction.classList.remove('hidden');
+            preview.classList.add('hidden');
+            filename.textContent = '';
+        }
+    });
+});
+
     </script>
 
 </body>
