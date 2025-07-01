@@ -21,21 +21,21 @@ class Kelembagaan extends BaseController
     {
         $userId = session()->get('id');
         $tahun = date('Y');
-        $bulan = date('F'); // gunakan 'm' kalau format angka
+        $bulan = date('F');
 
-        // Cek apakah sudah pernah mengisi dan status masih 'pending' atau 'approved'
-        $existing = $this->kelembagaanModel
+        $kelembagaanModel = new \App\Models\KelembagaanModel();
+
+        $existing = $kelembagaanModel
             ->where('user_id', $userId)
             ->where('tahun', $tahun)
             ->where('bulan', $bulan)
-            ->whereIn('status', ['pending', 'approved'])
             ->first();
 
-        if ($existing) {
-            return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk bulan ini dan sedang menunggu atau sudah disetujui.');
+        // Jika statusnya pending/approved, tolak input baru
+        if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
+            return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
         }
 
-        // Ambil nilai dari radio
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
@@ -45,9 +45,9 @@ class Kelembagaan extends BaseController
             'forum_anak_value' => (int) $this->request->getPost('forum_anak'),
             'data_terpilah_value' => (int) $this->request->getPost('data_terpilah'),
             'dunia_usaha_value' => (int) $this->request->getPost('dunia_usaha'),
+            'status' => 'pending',
         ];
 
-        // Hitung total nilai
         $data['total_nilai'] = array_sum([
             $data['peraturan_value'],
             $data['anggaran_value'],
@@ -56,37 +56,36 @@ class Kelembagaan extends BaseController
             $data['dunia_usaha_value'],
         ]);
 
-        // Proses upload file .zip per field
         $fields = ['peraturan', 'anggaran', 'forum_anak', 'data_terpilah', 'dunia_usaha'];
         foreach ($fields as $field) {
             $file = $this->request->getFile("{$field}_file");
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                if ($file->getSize() > 1024 * 1024 * 1024) { // 1GB
-                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 1GB.');
+                if ($file->getSize() > 10 * 1024 * 1024) {
+                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 10MB.');
                 }
 
-                if (strtolower($file->getExtension()) !== 'zip') {
+                if ($file->getExtension() !== 'zip') {
                     return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
                 }
 
                 $newName = $field . '_' . time() . '_' . $file->getClientName();
                 $file->move(ROOTPATH . 'public/uploads/kelembagaan/', $newName);
                 $data["{$field}_file"] = $newName;
-            } else {
-                $data["{$field}_file"] = null;
             }
         }
 
-        // Set status awal sebagai 'pending'
-        $data['status'] = 'pending';
+        if ($existing && $existing['status'] === 'rejected') {
+            // update existing data (overwriting rejected)
+            $kelembagaanModel->update($existing['id'], $data);
+        } else {
+            // buat baru
+            $kelembagaanModel->insert($data);
+        }
 
-        // Simpan ke database
-        $this->kelembagaanModel->save($data);
-
-        return redirect()->to('/dashboard/kelembagaan/' . $userId)
-            ->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+        return redirect()->to('/kelembagaan/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
+
 
     public function form()
     {

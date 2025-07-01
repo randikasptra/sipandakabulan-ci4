@@ -3,49 +3,68 @@
 namespace App\Controllers;
 
 use App\Models\Klaster2Model;
+use App\Models\BerkasKlasterModel;
+use App\Models\KlasterFormModel;
 
 class Klaster2Controller extends BaseController
 {
+    protected $klaster2Model;
+    protected $berkasKlasterModel;
+
+    public function __construct()
+    {
+        $this->klaster2Model = new Klaster2Model();
+        $this->berkasKlasterModel = new BerkasKlasterModel();
+    }
+
     public function submit()
     {
-        $model = new Klaster2Model();
         $userId = session()->get('id');
         $tahun = date('Y');
         $bulan = date('F');
 
-        // Cek apakah sudah mengisi untuk bulan dan tahun ini
-        $existing = $model->where('user_id', $userId)
+        // Cek apakah data sudah ada dan statusnya tidak bisa input ulang
+        $existing = $this->klaster2Model
+            ->where('user_id', $userId)
             ->where('tahun', $tahun)
             ->where('bulan', $bulan)
-            ->whereIn('status', ['pending', 'approved'])
             ->first();
 
-        if ($existing) {
-            return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk bulan ini dan sedang menunggu atau sudah disetujui.');
+        if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
+            return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
         }
 
-        // Ambil nilai input
+        // Ambil nilai dari form
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
             'bulan' => $bulan,
-            'perkawinanAnak' => (int) $this->request->getPost('perkawinanAnak'),
-            'pencegahanPernikahan' => (int) $this->request->getPost('pencegahanPernikahan'),
-            'lembagaKonsultasi' => (int) $this->request->getPost('lembagaKonsultasi'),
+            'perkawinanAnak_value' => (int) $this->request->getPost('perkawinanAnak'),
+            'pencegahanPernikahan_value' => (int) $this->request->getPost('pencegahanPernikahan'),
+            'lembagaKonsultasi_value' => (int) $this->request->getPost('lembagaKonsultasi'),
+            'status' => 'pending',
         ];
 
-        // Proses upload file
+        // Hitung total nilai
+        $data['total_nilai'] = array_sum([
+            $data['perkawinanAnak_value'],
+            $data['pencegahanPernikahan_value'],
+            $data['lembagaKonsultasi_value'],
+        ]);
+
+        // Handle upload ZIP untuk tiap field
         $fields = ['perkawinanAnak', 'pencegahanPernikahan', 'lembagaKonsultasi'];
+
         foreach ($fields as $field) {
             $file = $this->request->getFile("{$field}_file");
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                if ($file->getSize() > 1024 * 1024 * 1024) {
-                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 1GB.');
+                if ($file->getSize() > 10 * 1024 * 1024) {
+                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 10MB.');
                 }
 
                 if ($file->getExtension() !== 'zip') {
-                    return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
+                    return redirect()->back()->with('error', "File $field harus berformat ZIP.");
                 }
 
                 $newName = $field . '_' . time() . '_' . $file->getClientName();
@@ -54,22 +73,24 @@ class Klaster2Controller extends BaseController
             }
         }
 
-        // Tambahkan status
-        $data['status'] = 'pending';
-
-        $model->save($data);
+        // Update jika sebelumnya reject, atau insert baru
+        if ($existing && $existing['status'] === 'rejected') {
+            $this->klaster2Model->update($existing['id'], $data);
+        } else {
+            $this->klaster2Model->insert($data);
+        }
 
         return redirect()->to('/klaster2/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
 
     public function form()
     {
-        $model = new Klaster2Model();
         $userId = session()->get('id');
         $tahun = date('Y');
         $bulan = date('F');
 
-        $existing = $model->where('user_id', $userId)
+        $existing = $this->klaster2Model
+            ->where('user_id', $userId)
             ->where('tahun', $tahun)
             ->where('bulan', $bulan)
             ->orderBy('created_at', 'desc')
@@ -81,6 +102,8 @@ class Klaster2Controller extends BaseController
             'user_role' => session()->get('user_role'),
             'status' => $existing['status'] ?? null,
             'existing' => $existing ?? null,
+            'nilai_em' => $existing['total_nilai'] ?? 0,
+            'nilai_maksimal' => 180, // Total dari 3 indikator (misal)
         ];
 
         return view('pages/operator/klaster2', $data);
@@ -89,51 +112,53 @@ class Klaster2Controller extends BaseController
     public function approve()
     {
         $userId = $this->request->getPost('user_id');
-        $status = $this->request->getPost('status'); // 'approved' atau 'rejected'
+        $status = $this->request->getPost('status'); // approved atau rejected
+        $catatan = $this->request->getPost('catatan');
 
-        $klaster2Model = new \App\Models\Klaster2Model();
-        $berkasKlasterModel = new \App\Models\BerkasKlasterModel();
-        $klasterFormModel = new \App\Models\KlasterFormModel();
+        $klasterFormModel = new KlasterFormModel();
 
-        // Ambil data klaster2 user
-        $klaster2 = $klaster2Model->where('user_id', $userId)->first();
+        $klaster2 = $this->klaster2Model
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
         if (!$klaster2) {
             return redirect()->back()->with('error', 'Data Klaster 2 tidak ditemukan.');
         }
 
-        // Ambil ID klaster dari slug
-        $klasterData = $klasterFormModel->where('slug', 'klaster2')->first();
-        if (!$klasterData) {
-            return redirect()->back()->with('error', 'Klaster tidak ditemukan.');
-        }
+        $klasterMeta = $klasterFormModel->where('slug', 'klaster2')->first();
 
-        // Cek apakah data sudah ada di berkas_klaster
-        $existing = $berkasKlasterModel
-            ->where('user_id', $userId)
-            ->where('klaster', $klasterData['id'])
-            ->first();
+        if (!$klasterMeta) {
+            return redirect()->back()->with('error', 'Metadata Klaster tidak ditemukan.');
+        }
 
         $dataBerkas = [
             'user_id' => $userId,
-            'klaster' => $klasterData['id'],
+            'klaster' => $klasterMeta['id'],
             'tahun' => $klaster2['tahun'],
             'bulan' => $klaster2['bulan'],
             'total_nilai' => $klaster2['total_nilai'] ?? 0,
             'status' => $status,
-            'catatan' => $status === 'rejected' ? $this->request->getPost('catatan') : null,
-            'file_path' => 'klaster2/' . $userId . '.zip' // jika kamu pakai ZIP, ini bisa disesuaikan
+            'catatan' => ($status === 'rejected') ? $catatan : null,
+            'file_path' => 'klaster2/' . $userId . '.zip',
         ];
 
-        if ($existing) {
-            $berkasKlasterModel->update($existing['id'], $dataBerkas);
+        $existingBerkas = $this->berkasKlasterModel
+            ->where('user_id', $userId)
+            ->where('klaster', $klasterMeta['id'])
+            ->first();
+
+        if ($existingBerkas) {
+            $this->berkasKlasterModel->update($existingBerkas['id'], $dataBerkas);
         } else {
-            $berkasKlasterModel->insert($dataBerkas);
+            $this->berkasKlasterModel->insert($dataBerkas);
         }
 
-        // Update status di klaster2
-        $klaster2Model->where('user_id', $userId)->set(['status' => $status])->update();
+        $this->klaster2Model
+            ->where('user_id', $userId)
+            ->set(['status' => $status])
+            ->update();
 
         return redirect()->back()->with('success', 'Status Klaster 2 berhasil diperbarui dan disimpan ke laporan.');
     }
-
 }

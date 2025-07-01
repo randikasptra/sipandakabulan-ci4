@@ -97,6 +97,8 @@
 </head>
 
 <body class="font-sans text-gray-800 antialiased pt-24">
+    <pre>Status dari controller: <?= htmlspecialchars($status) ?></pre>
+
 
     <!-- Header Card -->
     <div class="header-card p-8 rounded-2xl text-white mx-6 mt-6 mb-10">
@@ -156,7 +158,8 @@
             id="formKelembagaan">
 
             <?php
-            $formReadonly = in_array($status, ['pending', 'approved']);
+            // $formReadonly = in_array($status, ['pending', 'approved']);
+            $formReadonly = ($status === 'pending' || $status === 'approved');
 
             $klaster = [
                 [

@@ -26,23 +26,17 @@ class Dashboard extends BaseController
         $kelembagaanModel = new \App\Models\KelembagaanModel();
 
         $tahun = date('Y');
-        $bulan = date('F');
+        $bulan = date('F'); // Pastikan sama dengan saat submit()
 
-        // Ambil data kelembagaan berdasarkan user_id, tahun, dan bulan
-        $kelembagaan = $kelembagaanModel->where('user_id', $id)
+        $kelembagaan = $kelembagaanModel
+            ->where('user_id', session()->get('id'))
+
             ->where('tahun', $tahun)
             ->where('bulan', $bulan)
             ->first();
 
-        // Cek apakah file ZIP-nya ada
         $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
         $zipAvailable = file_exists($zipFilePath);
-
-        // Default status jika belum ada data
-        $status = $kelembagaan['status'] ?? 'draft';
-
-        // Tentukan apakah form readonly berdasarkan status
-        $formReadonly = in_array($status, ['pending', 'approved']);
 
         $data = [
             'user_email' => $session->get('email'),
@@ -51,22 +45,21 @@ class Dashboard extends BaseController
             'id' => $id,
             'kelembagaan' => $kelembagaan,
             'zipAvailable' => $zipAvailable,
-            'user_id' => $id, // untuk form approval
+            'user_id' => $id,
 
-            // Data untuk kebutuhan statistik
             'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
 
-            // Data utama untuk view
+            // penting
             'existing' => $kelembagaan ?? [],
-            'status' => $status,
-            'formReadonly' => $formReadonly
+            'status' => $kelembagaan['status'] ?? null,
         ];
 
         return view('pages/operator/kelembagaan', $data);
     }
+
 
 
 
@@ -104,6 +97,8 @@ class Dashboard extends BaseController
     public function klaster1($id = null)
     {
         $session = session();
+
+        // Cek login
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
@@ -111,29 +106,39 @@ class Dashboard extends BaseController
         $userModel = new UserModel();
         $klaster1Model = new \App\Models\Klaster1Model();
 
-        // Ambil data klaster1 berdasarkan user ID
-        $klaster1 = $klaster1Model->where('user_id', $id)->first();
+        $userId = $session->get('id');
+        $tahun = date('Y');
+        $bulan = date('F'); // sesuaikan dengan format penyimpanan kamu
 
-        // Cek apakah file ZIP-nya ada
-        $zipFilePath = FCPATH . 'uploads/klaster1/' . $id . '.zip';
+        // Ambil data klaster1 berdasarkan session user ID
+        $klaster1 = $klaster1Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        // Cek file ZIP berdasarkan userId atau dari $id
+        $zipFilePath = FCPATH . 'uploads/klaster1/' . ($id ?? $userId) . '.zip';
         $zipAvailable = file_exists($zipFilePath);
 
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
-            'id' => $id,
-            'klaster1' => $klaster1,
-            'zipAvailable' => $zipAvailable,
-            'user_id' => $id,
+            'id' => $id ?? $userId,
+            'user_id' => $userId,
+
+            // Statistik
             'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
 
-            // ✅ Ini yang kamu lupa:
+            // Form data
+            'klaster1' => $klaster1,
+            'existing' => $klaster1 ?? [],
             'status' => $klaster1['status'] ?? null,
-            'existing' => $klaster1 ?? []
+            'zipAvailable' => $zipAvailable,
         ];
 
         return view('pages/operator/klaster1', $data);
@@ -141,9 +146,13 @@ class Dashboard extends BaseController
 
 
 
+
+
     public function klaster2($id = null)
     {
         $session = session();
+
+        // Cek apakah user sudah login
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
@@ -151,35 +160,53 @@ class Dashboard extends BaseController
         $userModel = new UserModel();
         $klaster2Model = new \App\Models\Klaster2Model();
 
-        // Ambil data klaster2 berdasarkan user ID
-        $klaster2 = $klaster2Model->where('user_id', $id)->first();
+        $tahun = date('Y');
+        $bulan = date('F');
 
-        // Cek apakah file ZIP-nya ada
-        $zipFilePath = FCPATH . 'uploads/klaster2/' . $id . '.zip';
+        // ✅ Ambil user_id dari session
+        $userId = $session->get('id');
+
+        // Ambil data klaster2 berdasarkan session user ID
+        $klaster2 = $klaster2Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        // Cek apakah file ZIP-nya tersedia (pakai ID dari argumen URL untuk nama file jika perlu)
+        $zipFilePath = FCPATH . 'uploads/klaster2/' . ($id ?? $userId) . '.zip';
         $zipAvailable = file_exists($zipFilePath);
 
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
-            'id' => $id,
+            'id' => $id ?? $userId,
+            'user_id' => $userId,
             'klaster2' => $klaster2,
             'zipAvailable' => $zipAvailable,
-            'user_id' => $id,
+
+            // Statistik
             'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+
+            // Status & data form
+            'existing' => $klaster2 ?? [],
             'status' => $klaster2['status'] ?? null,
-            'existing' => $klaster2 ?? []
         ];
 
         return view('pages/operator/klaster2', $data);
     }
 
+
+
     public function klaster3($id = null)
     {
         $session = session();
+
+        // Cek login
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
@@ -187,35 +214,50 @@ class Dashboard extends BaseController
         $userModel = new UserModel();
         $klaster3Model = new \App\Models\Klaster3Model();
 
-        // Ambil data klaster3 berdasarkan user ID
-        $klaster3 = $klaster3Model->where('user_id', $id)->first();
+        $userId = $session->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
 
-        // Cek apakah file ZIP-nya ada
-        $zipFilePath = FCPATH . 'uploads/klaster3/' . $id . '.zip';
+        // Ambil data klaster3 berdasarkan session user ID
+        $klaster3 = $klaster3Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        // Cek apakah file ZIP-nya tersedia
+        $zipFilePath = FCPATH . 'uploads/klaster3/' . ($id ?? $userId) . '.zip';
         $zipAvailable = file_exists($zipFilePath);
 
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
-            'id' => $id,
-            'klaster3' => $klaster3,
-            'zipAvailable' => $zipAvailable,
-            'user_id' => $id,
+            'id' => $id ?? $userId,
+            'user_id' => $userId,
+
+            // Statistik
             'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
-            'status' => $klaster2['status'] ?? null,
-            'existing' => $klaster2 ?? []
+
+            // Data form
+            'klaster3' => $klaster3,
+            'existing' => $klaster3 ?? [],
+            'status' => $klaster3['status'] ?? null,
+            'zipAvailable' => $zipAvailable,
         ];
 
         return view('pages/operator/klaster3', $data);
     }
 
+
     public function klaster4($id = null)
     {
         $session = session();
+
+        // Cek login
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
@@ -223,27 +265,39 @@ class Dashboard extends BaseController
         $userModel = new UserModel();
         $klaster4Model = new \App\Models\Klaster4Model();
 
-        // Ambil data klaster4 berdasarkan user ID
-        $klaster4 = $klaster4Model->where('user_id', $id)->first();
+        $userId = $session->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
 
-        // Cek apakah file ZIP-nya ada
-        $zipFilePath = FCPATH . 'uploads/klaster4/' . $id . '.zip';
+        // Ambil data klaster4 berdasarkan session user ID
+        $klaster4 = $klaster4Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        // Cek file ZIP
+        $zipFilePath = FCPATH . 'uploads/klaster4/' . ($id ?? $userId) . '.zip';
         $zipAvailable = file_exists($zipFilePath);
 
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
-            'id' => $id,
-            'klaster4' => $klaster4,
-            'zipAvailable' => $zipAvailable,
-            'user_id' => $id,
+            'id' => $id ?? $userId,
+            'user_id' => $userId,
+
+            // Statistik
             'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
-            'status' => $klaster2['status'] ?? null,
-            'existing' => $klaster2 ?? []
+
+            // Form data
+            'klaster4' => $klaster4,
+            'existing' => $klaster4 ?? [],
+            'status' => $klaster4['status'] ?? null,
+            'zipAvailable' => $zipAvailable,
         ];
 
         return view('pages/operator/klaster4', $data);
@@ -252,9 +306,12 @@ class Dashboard extends BaseController
 
 
 
+
     public function klaster5($id = null)
     {
         $session = session();
+
+        // Cek login
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
         }
@@ -262,29 +319,44 @@ class Dashboard extends BaseController
         $userModel = new UserModel();
         $klaster5Model = new \App\Models\Klaster5Model();
 
-        // Ambil data klaster5 berdasarkan user ID
-        $klaster5 = $klaster5Model->where('user_id', $id)->first();
+        $userId = $session->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
 
-        // Cek apakah file ZIP-nya tersedia
-        $zipFilePath = FCPATH . 'uploads/klaster5/' . $id . '.zip';
+        // Ambil data klaster5 berdasarkan user, tahun, dan bulan
+        $klaster5 = $klaster5Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        // Cek file ZIP
+        $zipFilePath = FCPATH . 'uploads/klaster5/' . ($id ?? $userId) . '.zip';
         $zipAvailable = file_exists($zipFilePath);
 
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
-            'id' => $id,
-            'klaster5' => $klaster5,
-            'zipAvailable' => $zipAvailable,
-            'user_id' => $id,
+            'id' => $id ?? $userId,
+            'user_id' => $userId,
+
+            // Statistik
             'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+
+            // Form data
+            'klaster5' => $klaster5,
+            'existing' => $klaster5 ?? [],
+            'status' => $klaster5['status'] ?? null,
+            'zipAvailable' => $zipAvailable,
         ];
 
         return view('pages/operator/klaster5', $data);
     }
+
 
 
     public function tutorial()
