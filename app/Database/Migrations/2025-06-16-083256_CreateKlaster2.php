@@ -21,11 +21,12 @@ class CreateKlaster2 extends Migration
             'pencegahanPernikahan_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
             'lembagaKonsultasi' => ['type' => 'INT', 'constraint' => 11],
             'lembagaKonsultasi_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
-
+            'total_nilai' => ['type' => 'INT', 'null' => true],
+            
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
-        
+
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('klaster2');
