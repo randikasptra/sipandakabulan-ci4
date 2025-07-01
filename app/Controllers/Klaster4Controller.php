@@ -51,6 +51,7 @@ class Klaster4Controller extends BaseController
             'programPerjalanan'
         ];
 
+        // Hitung total hanya untuk view nanti (tidak disimpan)
         $totalNilai = 0;
 
         foreach ($fields as $field) {
@@ -75,12 +76,12 @@ class Klaster4Controller extends BaseController
             }
         }
 
-        $data['total_nilai'] = $totalNilai;
-
+        // Simpan data ke database
         $this->klaster4Model->insert($data);
 
         return redirect()->to('/klaster4/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
+
 
     public function form()
     {
@@ -101,12 +102,21 @@ class Klaster4Controller extends BaseController
             'user_role' => session()->get('user_role'),
             'status' => $existing['status'] ?? null,
             'existing' => $existing ?? null,
-            'nilai_em' => $existing['total_nilai'] ?? 0,
-            'nilai_maksimal' => 220, // atau sesuai ketentuan nilai tertinggi
+            'nilai_em' => isset($existing) ? array_sum([
+                $existing['infoAnak'] ?? 0,
+                $existing['kelompokAnak'] ?? 0,
+                $existing['partisipasiDini'] ?? 0,
+                $existing['belajar12Tahun'] ?? 0,
+                $existing['sekolahRamahAnak'] ?? 0,
+                $existing['fasilitasAnak'] ?? 0,
+                $existing['programPerjalanan'] ?? 0,
+            ]) : 0,
+            'nilai_maksimal' => 220, // Ubah sesuai ketentuan
         ];
 
         return view('pages/operator/klaster4', $data);
     }
+
 
     public function approve()
     {
