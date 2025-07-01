@@ -115,10 +115,9 @@
             <p class="text-gray-500 max-w-2xl mx-auto">Isi sesuai kondisi lapangan dan unggah dokumen pendukung untuk memastikan penilaian yang akurat dan transparan.</p>
         </div>
 
-      <form action="/submit-klaster1" method="POST" enctype="multipart/form-data" class="space-y-8">
-
+     <form action="/submit-klaster1" method="POST" enctype="multipart/form-data" class="space-y-8">
     <?php
-    $formReadonly = in_array($status, ['pending', 'approved']);
+    $formReadonly = ($status === 'pending' || $status === 'approved');
 
     $klaster = [
         [
@@ -148,7 +147,7 @@
     ];
 
     foreach ($klaster as $k):
-        $selected = isset($existing[$k['nama'] . '_value']) ? $existing[$k['nama'] . '_value'] : old($k['nama']);
+        $selected = isset($existing[$k['nama']]) ? $existing[$k['nama']] : old($k['nama']);
         $readonly = $formReadonly ? 'disabled' : '';
         $fileUploaded = $existing[$k['nama'] . '_file'] ?? null;
     ?>
@@ -261,8 +260,8 @@
             Form sudah dikirim dan sedang diproses, tidak bisa diubah.
         </div>
     <?php endif; ?>
-
 </form>
+
 
     </div>
 

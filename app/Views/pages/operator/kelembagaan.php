@@ -97,7 +97,6 @@
 </head>
 
 <body class="font-sans text-gray-800 antialiased pt-24">
-    <pre>Status dari controller: <?= htmlspecialchars($status) ?></pre>
 
 
     <!-- Header Card -->

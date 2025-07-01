@@ -111,7 +111,9 @@
         <form action="/submit-klaster2" method="POST" enctype="multipart/form-data" class="space-y-8">
 
             <?php
-            $formReadonly = in_array($status, ['pending', 'approved']);
+            // $formReadonly = in_array($status, ['pending', 'approved']);
+            $formReadonly = ($status === 'pending' || $status === 'approved');
+
 
             $klaster = [
                 [

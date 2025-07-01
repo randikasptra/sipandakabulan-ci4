@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Klaster1Model;
 use App\Models\BerkasKlasterModel;
+use App\Models\KlasterFormModel;
 
 class Klaster1Controller extends BaseController
 {
@@ -20,9 +21,8 @@ class Klaster1Controller extends BaseController
     {
         $userId = session()->get('id');
         $tahun = date('Y');
-        $bulan = date('F'); // gunakan 'm' kalau mau angka
+        $bulan = date('F');
 
-        // ✅ Cek apakah user sudah mengisi untuk tahun & bulan ini
         $existing = $this->klaster1Model
             ->where('user_id', $userId)
             ->where('tahun', $tahun)
@@ -34,9 +34,18 @@ class Klaster1Controller extends BaseController
             return redirect()->back()->with('error', 'Kamu sudah mengisi data Klaster 1 untuk bulan ini dan masih pending atau sudah disetujui.');
         }
 
-        // ✅ Proses upload file
+        // Ambil nilai input
+        $AnakAktaKelahiran_value = (int) $this->request->getPost('AnakAktaKelahiran');
+        $anggaran_value = (int) $this->request->getPost('anggaran');
+
+        // Hitung total
+        $total_nilai = $AnakAktaKelahiran_value + $anggaran_value;
+
+        // Upload file
+        $fields = ['AnakAktaKelahiran', 'anggaran'];
         $files = [];
-        foreach (['AnakAktaKelahiran', 'anggaran'] as $field) {
+
+        foreach ($fields as $field) {
             $file = $this->request->getFile("{$field}_file");
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
@@ -56,42 +65,66 @@ class Klaster1Controller extends BaseController
             }
         }
 
-        // ✅ Simpan data klaster1
+        // Simpan data
         $this->klaster1Model->save([
             'user_id' => $userId,
             'tahun' => $tahun,
             'bulan' => $bulan,
-            'AnakAktaKelahiran' => $this->request->getPost('AnakAktaKelahiran'),
+            'AnakAktaKelahiran_value' => $AnakAktaKelahiran_value,
             'AnakAktaKelahiran_file' => $files['AnakAktaKelahiran_file'],
-            'anggaran' => $this->request->getPost('anggaran'),
+            'anggaran_value' => $anggaran_value,
             'anggaran_file' => $files['anggaran_file'],
+            'total_nilai' => $total_nilai,
             'status' => 'pending',
         ]);
 
-        return redirect()->back()->with('success', 'Data Klaster 1 berhasil disimpan dan menunggu persetujuan!');
+        return redirect()->to('/klaster1/form')->with('success', 'Data Klaster 1 berhasil disimpan dan menunggu persetujuan!');
+    }
+
+    public function form()
+    {
+        $userId = session()->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        $existing = $this->klaster1Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $data = [
+            'user_name' => session()->get('user_name'),
+            'user_email' => session()->get('user_email'),
+            'user_role' => session()->get('user_role'),
+            'status' => $existing['status'] ?? null,
+            'existing' => $existing ?? null,
+            'nilai_em' => $existing['total_nilai'] ?? 0,
+            'nilai_maksimal' => 100, // contoh, sesuaikan dengan total nilai maksimal klaster1
+        ];
+
+        return view('pages/operator/klaster1', $data);
     }
 
     public function approve()
     {
         $userId = $this->request->getPost('user_id');
-        $status = $this->request->getPost('status'); // approved / rejected
+        $status = $this->request->getPost('status');
 
-        // Ambil data klaster1 user
         $klaster1 = $this->klaster1Model->where('user_id', $userId)->first();
 
         if (!$klaster1) {
             return redirect()->back()->with('error', 'Data klaster1 tidak ditemukan.');
         }
 
-        // Ambil ID klaster dari slug
-        $klasterFormModel = new \App\Models\KlasterFormModel();
+        $klasterFormModel = new KlasterFormModel();
         $klasterData = $klasterFormModel->where('slug', 'klaster1')->first();
 
         if (!$klasterData) {
             return redirect()->back()->with('error', 'Data klaster tidak ditemukan.');
         }
 
-        // Cek apakah data sudah ada di berkas_klaster
         $existing = $this->berkasKlasterModel
             ->where('user_id', $userId)
             ->where('klaster', $klasterData['id'])
@@ -104,8 +137,8 @@ class Klaster1Controller extends BaseController
             'bulan' => $klaster1['bulan'],
             'total_nilai' => $klaster1['total_nilai'] ?? 0,
             'status' => $status,
-            'catatan' => null,
-            'file_path' => 'klaster1/' . $userId . '.zip' // <- opsional, tergantung kamu punya file ZIP atau tidak
+            'catatan' => $status === 'rejected' ? $this->request->getPost('catatan') : null,
+            'file_path' => 'klaster1/' . $userId . '.zip'
         ];
 
         if ($existing) {
@@ -114,11 +147,8 @@ class Klaster1Controller extends BaseController
             $this->berkasKlasterModel->insert($dataBerkas);
         }
 
-        // Update status di klaster1
         $this->klaster1Model->where('user_id', $userId)->set(['status' => $status])->update();
 
         return redirect()->back()->with('success', 'Status klaster1 berhasil diperbarui dan disimpan ke laporan.');
     }
-
-
 }
