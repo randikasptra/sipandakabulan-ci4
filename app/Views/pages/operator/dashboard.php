@@ -27,14 +27,14 @@
 
         <div class="mt-4 md:mt-0 text-center">
             <p class="text-green-600 font-bold text-lg">
-                Evaluasi SIPANDAKABULAN sudah <?= $totalProgres >= 100 ? 'Selesai' : 'Berlangsung' ?>
+                Evaluasi SIPANDAKABULAN: <?= $totalProgres >= 100 ? 'Selesai ✅' : 'Berlangsung ⏳' ?>
             </p>
             <p class="text-gray-700">
-                Nilai EM <span class="font-bold"><?= number_format($totalEm, 1) ?></span>
-                | Nilai Maksimal <?= number_format($totalMax, 1) ?>
+                Nilai EM: <span class="font-bold"><?= number_format($totalEm, 1) ?></span>
+                | Maksimal: <?= number_format($totalMax, 1) ?>
             </p>
-            <div class="w-48 bg-gray-300 rounded-full h-4 mt-2">
-                <div class="bg-green-500 h-4 rounded-full transition-all duration-500"
+            <div class="w-48 bg-gray-200 rounded-full h-4 mt-2 overflow-hidden">
+                <div class="bg-green-500 h-full transition-all duration-700"
                      style="width: <?= $totalProgres ?>%"></div>
             </div>
         </div>
@@ -42,14 +42,13 @@
 </section>
 
 <!-- Card Klaster Section -->
-<section class="px-6 pb-6 ">
-
+<section class="px-6 pb-6">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <?php foreach ($klasters as $klaster): ?>
             <?php
-            $nilaiEm = $klaster['nilai_em'] ?? 0;
-            $nilaiMax = $klaster['nilai_maksimal'] ?? 100;
-            $progres = $nilaiMax > 0 ? round(($nilaiEm / $nilaiMax) * 100) : 0;
+                $nilaiEm = $klaster['nilai_em'] ?? 0;
+                $nilaiMax = $klaster['nilai_maksimal'] ?? 100;
+                $progres = $nilaiMax > 0 ? round(($nilaiEm / $nilaiMax) * 100) : 0;
             ?>
             <?= view('components/card_klaster', [
                 'klaster' => $klaster['slug'],
@@ -61,7 +60,6 @@
             ]) ?>
         <?php endforeach; ?>
     </div>
-
 </section>
 
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>

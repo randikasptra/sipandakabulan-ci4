@@ -5,7 +5,7 @@ $urlKlaster = getKlasterSlug($klaster);
 // fallback jika belum ada data
 $nilaiEm = $nilaiEm ?? 0;
 $nilaiMaksimal = $nilaiMaksimal ?? 100;
-$progres = $progres ?? 0;
+$progres = ($nilaiMaksimal > 0) ? round(($nilaiEm / $nilaiMaksimal) * 100) : 0;
 ?>
 
 <a href="<?= site_url('dashboard/' . $urlKlaster . '/' . intval($id)) ?>"
@@ -33,9 +33,9 @@ $progres = $progres ?? 0;
     </div>
 
     <!-- Progress Bar -->
-    <div class="h-1.5 bg-gray-100 overflow-hidden">
-        <div class="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-1000 ease-out" 
-             style="width: <?= $progres ?>%"></div>
+    <div class="h-2 bg-gray-200 overflow-hidden">
+        <div class="h-full transition-all duration-1000 ease-out rounded-r-full"
+             style="width: <?= $progres ?>%; background: linear-gradient(to right, #22c55e, #16a34a);"></div>
     </div>
 
     <!-- Button -->

@@ -338,12 +338,28 @@
                         Reset Form
                     </button>
                 </div>
-            <?php else: ?>
-                <div class="pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
-                    Form sudah dikirim dan sedang diproses, tidak bisa diubah.
-                </div>
-            <?php endif; ?>
+            <?php elseif ($status === 'pending'): ?>
+  
+<?php else: ?>
+    <div class="pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
+        Form sudah dikirim dan tidak bisa diubah.
+    </div>
+<?php endif; ?>
+
         </form>
+
+        <?php if ($formReadonly && $status === 'pending'): ?>
+    <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
+        <form action="<?= site_url('kelembagaan/batal') ?>" method="post" onsubmit="return confirm('Yakin ingin membatalkan pengiriman data ini?');">
+            <?= csrf_field() ?>
+            <button type="submit"
+                class="px-8 py-3 bg-red-100 border border-red-300 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition duration-300 flex items-center justify-center gap-2">
+                <i class="ph ph-x-circle"></i>
+                Batal Kirim
+            </button>
+        </form>
+    </div>
+<?php endif; ?>
 
     </div>
 
