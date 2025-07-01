@@ -99,9 +99,10 @@
                                                 <p class="text-gray-600 mb-2">
                                                     Nilai:
                                                     <span class="font-medium text-gray-800">
-                                                        <?= esc($klaster1[$key . '_value'] ?? '-') ?>
+                                                        <?= esc($klaster1[$key] ?? '-') ?>
                                                     </span>
                                                 </p>
+
                                                 <?php if (!empty($klaster1[$key . '_file'] ?? null)): ?>
                                                     <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster1[$key . '_file']) . '&folder=klaster1') ?>"
                                                         class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">

@@ -116,9 +116,10 @@
                         0 => 'Di bawah rata-rata nasional',
                         15 => 'Sama dengan rata-rata nasional',
                         30 => 'Di atas rata-rata nasional',
-                    ]
-                ],
-                [
+                    ],
+                        'file' => 'FasilitasInformasi.xlsx'
+                    ],
+                    [
                     'judul' => '4. Presentasi Belajar 12 Tahun (Total Nilai 50)',
                     'nama' => 'belajar12Tahun',
                     'nilai' => 50,
@@ -127,10 +128,11 @@
                         25 => '≥ 25%',
                         40 => '≥ 50%',
                         50 => '100%',
-                    ]
-                ],
-                [
-                    'judul' => '5. Sekolah Ramah Anak (Total Nilai 20)',
+                    ],
+                        'file' => 'FasilitasInformasi.xlsx'
+                    ],
+                    [
+                        'judul' => '5. Sekolah Ramah Anak (Total Nilai 20)',
                     'nama' => 'sekolahRamahAnak',
                     'nilai' => 20,
                     'opsi' => [
@@ -139,7 +141,8 @@
                         10 => '4–5 komponen',
                         15 => '6–8 komponen',
                         20 => '9–10 komponen',
-                    ]
+                    ],
+                    'file' => 'FasilitasInformasi.xlsx'
                 ],
                 [
                     'judul' => '6. Fasilitas Kreativitas Anak di Luar Sekolah (Total Nilai 45)',
@@ -149,9 +152,10 @@
                         0 => 'Tidak ada',
                         20 => '≤ 3 fasilitas kreativitas',
                         45 => '4–5 fasilitas kreativitas',
-                    ]
-                ],
-                [
+                    ],
+                        'file' => 'FasilitasInformasi.xlsx'
+                    ],
+                    [
                     'judul' => '7. Program Sarana & Prasarana Perjalanan Anak Sekolah (Total Nilai 40)',
                     'nama' => 'programPerjalanan',
                     'nilai' => 40,
@@ -160,11 +164,12 @@
                         15 => '≤ 3 program',
                         30 => '4–5 program',
                         40 => '8 program',
-                    ]
+                    ],
+                    'file' => 'FasilitasInformasi.xlsx'
                 ],
             ];
 
-               foreach ($klaster as $k):
+                         foreach ($klaster as $k):
         // $selected = old($k['nama'], $existing[$k['nama'] . '_value'] ?? null);
          $selected = $existing[$k['nama'] . '_value'] ?? old($k['nama']);
         $readonly = $formReadonly ? 'disabled' : '';
