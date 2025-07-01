@@ -142,4 +142,42 @@ class Kelembagaan extends BaseController
 
         return redirect()->back()->with('success', 'Status berkas berhasil diperbarui.');
     }
+
+    public function batal()
+    {
+        $userId = session()->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        $existing = $this->kelembagaanModel
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$existing) {
+            return redirect()->back()->with('error', 'Tidak ada data yang bisa dibatalkan.');
+        }
+
+        // Hapus file jika ada
+        $fields = ['peraturan_file', 'anggaran_file', 'forum_anak_file', 'data_terpilah_file', 'dunia_usaha_file'];
+        foreach ($fields as $fileField) {
+            if (!empty($existing[$fileField])) {
+                $filePath = ROOTPATH . 'public/uploads/kelembagaan/' . $existing[$fileField];
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+        }
+
+        // Hapus data
+        $this->kelembagaanModel->delete($existing['id']);
+
+        return redirect()->to('/kelembagaan/form')->with('success', 'Pengiriman data dibatalkan. Silakan isi ulang formulir.');
+    }
+
+
+
+
 }

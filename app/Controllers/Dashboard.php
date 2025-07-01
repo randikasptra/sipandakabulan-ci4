@@ -3,6 +3,12 @@
 namespace App\Controllers;
 
 use App\Models\KlasterFormModel;
+use App\Models\KelembagaanModel;
+use App\Models\Klaster1Model;
+use App\Models\Klaster2Model;
+use App\Models\Klaster3Model;
+use App\Models\Klaster4Model;
+use App\Models\Klaster5Model;
 use App\Models\UserModel;
 use App\Models\AnnouncementModel;
 
@@ -391,6 +397,24 @@ class Dashboard extends BaseController
             return redirect()->to('/login')->with('errors', ['Akses tidak diizinkan']);
         }
 
+        $userId = $session->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        // Ambil data kelembagaan
+        $kelembagaanModel = new KelembagaanModel();
+        $kelembagaan = $kelembagaanModel
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        // Hitung nilai dan progresnya
+        $nilaiEm = $kelembagaan['total_nilai'] ?? 0;
+        $nilaiMaksimal = 220;
+        $progres = ($nilaiMaksimal > 0) ? round(($nilaiEm / $nilaiMaksimal) * 100) : 0;
+
+        // Ambil semua klaster untuk ditampilkan
         $klasterModel = new KlasterFormModel();
         $klasters = $klasterModel->findAll();
 
@@ -399,6 +423,9 @@ class Dashboard extends BaseController
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
             'klasters' => $klasters,
+            'nilaiEm' => $nilaiEm,
+            'nilaiMaksimal' => $nilaiMaksimal,
+            'progres' => $progres,
         ];
 
         if ($role === 'operator') {

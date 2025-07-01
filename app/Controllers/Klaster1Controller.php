@@ -110,6 +110,41 @@ class Klaster1Controller extends BaseController
         return view('pages/operator/klaster1', $data);
     }
 
+    public function batal()
+    {
+        $userId = session()->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        $existing = $this->klaster1Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$existing) {
+            return redirect()->back()->with('error', 'Tidak ada data yang bisa dibatalkan.');
+        }
+
+        // Hapus file ZIP jika ada
+        $files = ['AnakAktaKelahiran_file', 'anggaran_file'];
+        foreach ($files as $fileField) {
+            if (!empty($existing[$fileField])) {
+                $filePath = ROOTPATH . 'public/uploads/klaster1/' . $existing[$fileField];
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+        }
+
+        // Hapus data
+        $this->klaster1Model->delete($existing['id']);
+
+        return redirect()->to('/klaster1/form')->with('success', 'Data berhasil dibatalkan. Silakan isi ulang formulir.');
+    }
+
+
     public function approve()
     {
         $userId = $this->request->getPost('user_id');
