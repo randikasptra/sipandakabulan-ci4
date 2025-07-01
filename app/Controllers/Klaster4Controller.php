@@ -171,4 +171,48 @@ class Klaster4Controller extends BaseController
 
         return redirect()->back()->with('success', 'Status Klaster 4 berhasil diperbarui dan disimpan ke laporan.');
     }
+
+    public function batal()
+    {
+        $userId = session()->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        $existing = $this->klaster4Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$existing) {
+            return redirect()->back()->with('error', 'Tidak ada data yang bisa dibatalkan.');
+        }
+
+        // Nama-nama field file yang perlu dicek dan dihapus
+        $fileFields = [
+            'infoAnak_file',
+            'kelompokAnak_file',
+            'partisipasiDini_file',
+            'belajar12Tahun_file',
+            'sekolahRamahAnak_file',
+            'fasilitasAnak_file',
+            'programPerjalanan_file',
+        ];
+
+        foreach ($fileFields as $field) {
+            if (!empty($existing[$field])) {
+                $filePath = ROOTPATH . 'public/uploads/klaster4/' . $existing[$field];
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+        }
+
+        // Hapus data dari database
+        $this->klaster4Model->delete($existing['id']);
+
+        return redirect()->to('/klaster4/form')->with('success', 'Pengiriman data berhasil dibatalkan. Silakan isi ulang jika perlu.');
+    }
+
 }
