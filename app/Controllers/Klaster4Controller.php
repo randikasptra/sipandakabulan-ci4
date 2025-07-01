@@ -51,7 +51,6 @@ class Klaster4Controller extends BaseController
             'programPerjalanan'
         ];
 
-        // Hitung total hanya untuk view nanti (tidak disimpan)
         $totalNilai = 0;
 
         foreach ($fields as $field) {
@@ -76,11 +75,15 @@ class Klaster4Controller extends BaseController
             }
         }
 
-        // Simpan data ke database
+        // Tambahkan total_nilai ke data
+        $data['total_nilai'] = $totalNilai;
+
+        // Simpan ke database
         $this->klaster4Model->insert($data);
 
         return redirect()->to('/klaster4/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
+
 
 
     public function form()

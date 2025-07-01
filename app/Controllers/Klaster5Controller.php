@@ -72,11 +72,15 @@ class Klaster5Controller extends BaseController
             }
         }
 
-        // Simpan tanpa total_nilai karena belum ada di tabel
+        // Masukkan total nilai
+        $data['total_nilai'] = $totalNilai;
+
+        // Simpan data
         $this->klaster5Model->insert($data);
 
         return redirect()->to('/klaster5/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
+
 
 
     public function form()

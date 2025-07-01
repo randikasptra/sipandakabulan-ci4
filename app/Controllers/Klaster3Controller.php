@@ -75,14 +75,20 @@ class Klaster3Controller extends BaseController
                 $newName = $field . '_' . time() . '_' . $file->getClientName();
                 $file->move(ROOTPATH . 'public/uploads/klaster3/', $newName);
                 $data["{$field}_file"] = $newName;
+            } else {
+                $data["{$field}_file"] = null;
             }
         }
 
-        // Simpan data (tanpa total_nilai ke database)
+        // Tambahkan total nilai ke data
+        $data['total_nilai'] = $totalNilai;
+
+        // Simpan data
         $this->klaster3Model->insert($data);
 
         return redirect()->to('/klaster3/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
+
 
 
     public function form()
