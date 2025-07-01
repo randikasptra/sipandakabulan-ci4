@@ -54,10 +54,10 @@
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 antialiased ml-24">
+<body class="bg-gray-50 text-gray-800 antialiased  ml-64">
     <div class="flex min-h-screen">
         <?= $this->include('layouts/sidenav_admin') ?>
-        <div class="flex-1 flex flex-col overflow-hidden mt-24">
+        <div class="flex-1 flex flex-col overflow-hidden  mt-24">
             <?= $this->include('layouts/header_admin') ?>
             <main class="flex-1 overflow-y-auto p-6">
                 <div class="max-w-5xl mx-auto">
@@ -123,38 +123,36 @@
                     </div>
 
                     <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi & Summary</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Tahun / Bulan -->
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
-                                <p class="text-xl font-semibold text-gray-800"><?= esc($klaster3['tahun']) ?> /
-                                    <?= esc($klaster3['bulan']) ?>
+                                <p class="text-xl font-semibold text-gray-800">
+                                    <?= esc($klaster3['tahun']) ?> / <?= esc($klaster3['bulan']) ?>
                                 </p>
                             </div>
+
+                            <!-- Total Nilai -->
                             <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Total Nilai</p>
+                                <p class="text-2xl font-bold text-gray-800">
+                                    <?= esc($klaster3['total_nilai']) ?>
+                                </p>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>
-                                <p
-                                    class="text-lg font-medium <?= $klaster3['status'] === 'pending' ? 'text-yellow-600' : ($klaster3['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                <p class="text-lg font-medium 
+                <?= $klaster3['status'] === 'pending' ? 'text-yellow-600' :
+                    ($klaster3['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
                                     <?= ucfirst($klaster3['status']) ?>
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <?php if (!empty($id)): ?>
-                        <?php $zipPath = 'uploads/klaster3/' . $id . '.zip'; ?>
-                        <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Download Semua File</h3>
-                            <?php if (file_exists(FCPATH . $zipPath)): ?>
-                                <a href="<?= base_url($zipPath) ?>"
-                                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                                    <i class="fas fa-file-archive mr-2"></i> Download Semua (ZIP)
-                                </a>
-                            <?php else: ?>
-                                <p class="text-sm text-gray-500 italic">Tidak ada arsip tersedia.</p>
-                            <?php endif ?>
-                        </div>
-                    <?php endif ?>
 
                     <form method="post" action="<?= base_url('dashboard/admin/klaster3/approve') ?>" class="mt-8">
                         <?= csrf_field() ?>

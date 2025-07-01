@@ -71,7 +71,8 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                                 <p class="mt-2 text-gray-600">Review dan verifikasi data indikator pada klaster 2</p>
                             </div>
                             <div>
-                                <span class="badge <?= $klaster2['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($klaster2['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
+                                <span
+                                    class="badge <?= $klaster2['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($klaster2['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
                                     <?= ucfirst($klaster2['status']) ?>
                                 </span>
                             </div>
@@ -89,7 +90,8 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
 
                     <div class="space-y-4 mb-8">
                         <?php foreach ($fields as $key => $field): ?>
-                            <div class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
+                            <div
+                                class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
                                 <div class="flex items-start">
                                     <div class="bg-blue-50 p-3 rounded-lg mr-4">
                                         <i class="fas <?= $field['icon'] ?> text-blue-600"></i>
@@ -99,7 +101,8 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                                         <div class="flex items-center justify-between">
                                             <div>
                                                 <p class="text-gray-600 mb-2">Nilai:
-                                                    <span class="font-medium text-gray-800"><?= esc($klaster2[$key]) ?></span>
+                                                    <span
+                                                        class="font-medium text-gray-800"><?= esc($klaster2[$key]) ?></span>
                                                 </p>
                                                 <?php if (!empty($klaster2[$key . '_file'])): ?>
                                                     <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($klaster2[$key . '_file']) . '&folder=klaster2') ?>"
@@ -118,36 +121,36 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                     </div>
 
                     <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi & Summary</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Tahun / Bulan -->
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
-                                <p class="text-xl font-semibold text-gray-800"><?= esc($klaster2['tahun']) ?> /
-                                    <?= esc($klaster2['bulan']) ?></p>
+                                <p class="text-xl font-semibold text-gray-800">
+                                    <?= esc($klaster2['tahun']) ?> / <?= esc($klaster2['bulan']) ?>
+                                </p>
                             </div>
+
+                            <!-- Total Nilai -->
                             <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Total Nilai</p>
+                                <p class="text-2xl font-bold text-gray-800">
+                                    <?= esc($klaster2['total_nilai']) ?>
+                                </p>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>
-                                <p class="text-lg font-medium <?= $klaster2['status'] === 'pending' ? 'text-yellow-600' : ($klaster2['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                <p class="text-lg font-medium 
+                <?= $klaster2['status'] === 'pending' ? 'text-yellow-600' :
+                    ($klaster2['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
                                     <?= ucfirst($klaster2['status']) ?>
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <?php if (!empty($user_id)): ?>
-                        <?php $zipPath = 'uploads/klaster2/' . $user_id . '.zip'; ?>
-                        <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Download Semua File</h3>
-                            <?php if (file_exists(FCPATH . $zipPath)): ?>
-                                <a href="<?= base_url($zipPath) ?>"
-                                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                                    <i class="fas fa-file-archive mr-2"></i> Download Semua (ZIP)
-                                </a>
-                            <?php else: ?>
-                                <p class="text-sm text-gray-500 italic">Tidak ada arsip tersedia.</p>
-                            <?php endif ?>
-                        </div>
-                    <?php endif ?>
 
                     <form method="post" action="<?= base_url('dashboard/admin/klaster2/approve') ?>" class="mt-8">
                         <?= csrf_field() ?>

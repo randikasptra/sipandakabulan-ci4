@@ -6,6 +6,7 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
 
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +18,10 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
             theme: {
                 extend: {
                     colors: {
-                        primary: {50: '#f0f9ff', 100: '#e0f2fe', 600: '#0284c7', 700: '#0369a1', 800: '#075985'},
-                        success: {500: '#10b981', 600: '#059669'},
-                        warning: {500: '#f59e0b', 600: '#d97706'},
-                        danger: {500: '#ef4444', 600: '#dc2626'}
+                        primary: { 50: '#f0f9ff', 100: '#e0f2fe', 600: '#0284c7', 700: '#0369a1', 800: '#075985' },
+                        success: { 500: '#10b981', 600: '#059669' },
+                        warning: { 500: '#f59e0b', 600: '#d97706' },
+                        danger: { 500: '#ef4444', 600: '#dc2626' }
                     },
                     boxShadow: {
                         'card': '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)',
@@ -32,17 +33,21 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
         }
+
         .card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .card:hover {
             transform: translateY(-2px);
             box-shadow: var(--tw-shadow) !important;
         }
+
         .badge {
             display: inline-flex;
             align-items: center;
@@ -55,120 +60,126 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
 </head>
 
 <body class="bg-gray-50 text-gray-800 antialiased ml-64">
-<div class="flex min-h-screen">
-    <?= $this->include('layouts/sidenav_admin') ?>
-    <div class="flex-1 flex flex-col overflow-hidden mt-24">
-        <?= $this->include('layouts/header_admin') ?>
-        <main class="flex-1 overflow-y-auto p-6">
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-8">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-900">Review Data Kelembagaan</h1>
-                            <p class="mt-2 text-gray-600">Review and approve institutional data submissions</p>
+    <div class="flex min-h-screen">
+        <?= $this->include('layouts/sidenav_admin') ?>
+        <div class="flex-1 flex flex-col overflow-hidden mt-24">
+            <?= $this->include('layouts/header_admin') ?>
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">Review Data Kelembagaan</h1>
+                                <p class="mt-2 text-gray-600">Review and approve institutional data submissions</p>
+                            </div>
+                            <span
+                                class="badge <?= $kelembagaan['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($kelembagaan['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
+                                <?= ucfirst($kelembagaan['status']) ?>
+                            </span>
                         </div>
-                        <span class="badge <?= $kelembagaan['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : ($kelembagaan['status'] === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') ?>">
-                            <?= ucfirst($kelembagaan['status']) ?>
-                        </span>
+                        <div class="mt-4 border-b border-gray-200"></div>
                     </div>
-                    <div class="mt-4 border-b border-gray-200"></div>
-                </div>
 
-                <?php
-                $fields = [
-                    'peraturan' => ['label' => 'Peraturan', 'icon' => 'fa-file-contract'],
-                    'anggaran' => ['label' => 'Anggaran', 'icon' => 'fa-money-bill-wave'],
-                    'forum_anak' => ['label' => 'Forum Anak', 'icon' => 'fa-users'],
-                    'data_terpilah' => ['label' => 'Data Terpilah', 'icon' => 'fa-database'],
-                    'dunia_usaha' => ['label' => 'Dunia Usaha', 'icon' => 'fa-building'],
-                ];
-                ?>
+                    <?php
+                    $fields = [
+                        'peraturan' => ['label' => 'Peraturan', 'icon' => 'fa-file-contract'],
+                        'anggaran' => ['label' => 'Anggaran', 'icon' => 'fa-money-bill-wave'],
+                        'forum_anak' => ['label' => 'Forum Anak', 'icon' => 'fa-users'],
+                        'data_terpilah' => ['label' => 'Data Terpilah', 'icon' => 'fa-database'],
+                        'dunia_usaha' => ['label' => 'Dunia Usaha', 'icon' => 'fa-building'],
+                    ];
+                    ?>
 
-                <div class="space-y-4 mb-8">
-                    <?php foreach ($fields as $key => $field): ?>
-                        <div class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
-                            <div class="flex items-start">
-                                <div class="bg-blue-50 p-3 rounded-lg mr-4">
-                                    <i class="fas <?= $field['icon'] ?> text-blue-600"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <h2 class="text-lg font-semibold text-gray-800 mb-1"><?= $field['label'] ?></h2>
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="text-gray-600 mb-2">
-                                                Nilai:
-                                                <span class="font-medium text-gray-800"><?= esc($kelembagaan[$key . '_value']) ?></span>
-                                            </p>
-                                            <?php if (!empty($kelembagaan[$key . '_file'])): ?>
-                                                <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($kelembagaan[$key . '_file']) . '&folder=kelembagaan') ?>"
-                                                    class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
-                                                    <i class="fas fa-download mr-2"></i> Download File
-                                                </a>
-                                            <?php else: ?>
-                                                <span class="text-sm text-gray-400 italic">No file uploaded</span>
-                                            <?php endif ?>
+                    <div class="space-y-4 mb-8">
+                        <?php foreach ($fields as $key => $field): ?>
+                            <div
+                                class="card bg-white p-5 rounded-lg shadow-card border border-gray-100 hover:shadow-card-hover">
+                                <div class="flex items-start">
+                                    <div class="bg-blue-50 p-3 rounded-lg mr-4">
+                                        <i class="fas <?= $field['icon'] ?> text-blue-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h2 class="text-lg font-semibold text-gray-800 mb-1"><?= $field['label'] ?></h2>
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-gray-600 mb-2">
+                                                    Nilai:
+                                                    <span
+                                                        class="font-medium text-gray-800"><?= esc($kelembagaan[$key . '_value']) ?></span>
+                                                </p>
+                                                <?php if (!empty($kelembagaan[$key . '_file'])): ?>
+                                                    <a href="<?= base_url('dashboard/admin/download_file?file=' . urlencode($kelembagaan[$key . '_file']) . '&folder=kelembagaan') ?>"
+                                                        class="inline-flex items-center text-sm bg-green-50 text-green-700 px-3 py-1 rounded hover:bg-green-100 transition-colors">
+                                                        <i class="fas fa-download mr-2"></i> Download File
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="text-sm text-gray-400 italic">No file uploaded</span>
+                                                <?php endif ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    <?php endforeach ?>
-                </div>
-
-                <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Summary</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <p class="text-sm text-gray-500 mb-1">Total Nilai</p>
-                            <p class="text-2xl font-bold text-gray-800"><?= esc($kelembagaan['total_nilai']) ?></p>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <p class="text-sm text-gray-500 mb-1">Status</p>
-                            <p class="text-lg font-medium <?= $kelembagaan['status'] === 'pending' ? 'text-yellow-600' : ($kelembagaan['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
-                                <?= ucfirst($kelembagaan['status']) ?>
-                            </p>
-                        </div>
+                        <?php endforeach ?>
                     </div>
-                </div>
 
-                <?php if (!empty($user_id)): ?>
-                    <?php $zipPath = 'uploads/kelembagaan/' . $user_id . '.zip'; ?>
                     <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Download All Files</h3>
-                        <?php if (file_exists(FCPATH . $zipPath)): ?>
-                            <a href="<?= base_url($zipPath) ?>"
-                                class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                                <i class="fas fa-file-archive mr-2"></i> Download All Files (ZIP)
-                            </a>
-                        <?php else: ?>
-                            <p class="text-sm text-gray-500 italic">Archive not available for this submission.</p>
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi & Summary</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Tahun / Bulan -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
+                                <p class="text-xl font-semibold text-gray-800">
+                                    <?= esc($kelembagaan['tahun']) ?> / <?= esc($kelembagaan['bulan']) ?>
+                                </p>
+                            </div>
 
-                <form method="post" action="<?= base_url('dashboard/admin/admin-berkas/store') ?>" class="mt-8">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
-                    <input type="hidden" name="klaster" value="kelembagaan">
-                    <input type="hidden" name="tahun" value="<?= esc($kelembagaan['tahun']) ?>">
-                    <input type="hidden" name="bulan" value="<?= esc($kelembagaan['bulan']) ?>">
-                    <input type="hidden" name="total_nilai" value="<?= esc($kelembagaan['total_nilai']) ?>">
-                    <input type="hidden" name="catatan" value="">
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button type="submit" name="status" value="approved"
-                            class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
-                            <i class="fas fa-check-circle"></i> Approve
-                        </button>
-                        <button type="submit" name="status" value="rejected"
-                            class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
-                            <i class="fas fa-times-circle"></i> Reject
-                        </button>
-                    </div>
-                </form>
+                            <!-- Total Nilai -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Total Nilai</p>
+                                <p class="text-2xl font-bold text-gray-800">
+                                    <?= esc($kelembagaan['total_nilai']) ?>
+                                </p>
+                            </div>
 
-            </div>
-        </main>
+                            <!-- Status -->
+                            <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
+                                <p class="text-sm text-gray-500 mb-1">Status</p>
+                                <p class="text-lg font-medium 
+                <?= $kelembagaan['status'] === 'pending' ? 'text-yellow-600' :
+                    ($kelembagaan['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                    <?= ucfirst($kelembagaan['status']) ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                
+                    <form method="post" action="<?= base_url('dashboard/admin/admin-berkas/store') ?>" class="mt-8">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                        <input type="hidden" name="klaster" value="kelembagaan">
+                        <input type="hidden" name="tahun" value="<?= esc($kelembagaan['tahun']) ?>">
+                        <input type="hidden" name="bulan" value="<?= esc($kelembagaan['bulan']) ?>">
+                        <input type="hidden" name="total_nilai" value="<?= esc($kelembagaan['total_nilai']) ?>">
+                        <input type="hidden" name="catatan" value="">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button type="submit" name="status" value="approved"
+                                class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                                <i class="fas fa-check-circle"></i> Approve
+                            </button>
+                            <button type="submit" name="status" value="rejected"
+                                class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
+                                <i class="fas fa-times-circle"></i> Reject
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </main>
+        </div>
     </div>
-</div>
 </body>
+
 </html>

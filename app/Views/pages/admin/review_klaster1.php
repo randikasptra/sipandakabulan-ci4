@@ -120,23 +120,36 @@
                     </div>
 
                     <div class="bg-white p-6 rounded-lg shadow-card border border-gray-100 mb-8">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Informasi & Summary</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Tahun / Bulan -->
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
-                                <p class="text-xl font-semibold text-gray-800"><?= esc($klaster1['tahun']) ?> /
-                                    <?= esc($klaster1['bulan']) ?>
+                                <p class="text-xl font-semibold text-gray-800">
+                                    <?= esc($klaster1['tahun']) ?> / <?= esc($klaster1['bulan']) ?>
                                 </p>
                             </div>
+
+                            <!-- Total Nilai -->
                             <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-500 mb-1">Total Nilai</p>
+                                <p class="text-2xl font-bold text-gray-800">
+                                    <?= esc($klaster1['total_nilai']) ?>
+                                </p>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>
-                                <p
-                                    class="text-lg font-medium <?= $klaster1['status'] === 'pending' ? 'text-yellow-600' : ($klaster1['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                <p class="text-lg font-medium 
+                <?= $klaster1['status'] === 'pending' ? 'text-yellow-600' :
+                    ($klaster1['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
                                     <?= ucfirst($klaster1['status']) ?>
                                 </p>
                             </div>
                         </div>
                     </div>
+
 
                     <form method="post" action="<?= base_url('dashboard/admin/klaster1/approve') ?>" class="mt-8">
                         <?= csrf_field() ?>
