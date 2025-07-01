@@ -92,12 +92,8 @@
                     </button>
                 </div>
 
-                <!-- User Table Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <!-- Table Header -->
-                    <!-- ... head tetap seperti yang kamu punya ... -->
 
-                    <!-- Tambahkan ini di bagian table header -->
                     <div
                         class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                         <div class="flex items-center gap-2">
@@ -208,31 +204,6 @@
                         </table>
                     </div>
 
-
-
-                  
-
-                    <!-- Table Footer -->
-                    <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">10</span>
-                            dari <span class="font-medium">25</span> hasil
-                        </div>
-                        <div class="flex space-x-2">
-                            <button
-                                class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                Sebelumnya
-                            </button>
-                            <button
-                                class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-white bg-primary-600 hover:bg-primary-700">
-                                1
-                            </button>
-                            <button
-                                class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                Selanjutnya
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
             </main>

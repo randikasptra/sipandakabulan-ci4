@@ -72,10 +72,10 @@
                 Login
             </button>
 
-            <div class="text-center text-sm mt-4 space-x-2">
+            <!-- <div class="text-center text-sm mt-4 space-x-2">
                 <a href="#" class="text-blue-700 hover:underline font-medium">Lupa Password</a> |
                 <a href="#" class="text-blue-700 hover:underline font-medium">Hubungi Kami</a>
-            </div>
+            </div> -->
         </form>
     </div>
 

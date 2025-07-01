@@ -148,7 +148,8 @@ $formReadonly = in_array($status, ['pending', 'approved']);
             ];
 
                        foreach ($klaster as $k):
-        $selected = old($k['nama'], $existing[$k['nama'] . '_value'] ?? null);
+        // $selected = old($k['nama'], $existing[$k['nama'] . '_value'] ?? null);
+         $selected = $existing[$k['nama'] . '_value'] ?? old($k['nama']);
         $readonly = $formReadonly ? 'disabled' : '';
         $fileUploaded = $existing[$k['nama'] . '_file'] ?? null;
     ?>
@@ -192,14 +193,15 @@ $formReadonly = in_array($status, ['pending', 'approved']);
                     <span><?= $selected ? "Nilai terpilih: $selected poin" : 'Belum memilih nilai' ?></span>
                 </p>
             </div>
-        <?php else: ?>
-            <div class="bg-green-50 border border-green-100 rounded-lg px-4 py-2 text-green-800">
-                <p class="text-sm font-medium flex items-center gap-2">
-                    <i class="ph ph-check-circle"></i>
-                    Nilai yang dipilih: <?= $selected ?> poin
-                </p>
-            </div>
-        <?php endif; ?>
+       <?php else: ?>
+  <div class="bg-green-50 border border-green-100 rounded-lg px-4 py-2 text-green-800">
+    <p class="text-sm font-medium flex items-center gap-2">
+      <i class="ph ph-check-circle"></i>
+      Nilai yang dipilih: <?= isset($selected) ? $selected . ' poin' : 'Belum memilih nilai' ?>
+    </p>
+  </div>
+<?php endif; ?>
+
 
         <?php if ($k['file']): ?>
             <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download

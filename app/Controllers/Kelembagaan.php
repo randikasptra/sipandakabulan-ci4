@@ -21,8 +21,9 @@ class Kelembagaan extends BaseController
     {
         $userId = session()->get('id');
         $tahun = date('Y');
-        $bulan = date('F'); // gunakan 'm' kalau mau angka
+        $bulan = date('F'); // gunakan 'm' kalau format angka
 
+        // Cek apakah sudah pernah mengisi dan status masih 'pending' atau 'approved'
         $existing = $this->kelembagaanModel
             ->where('user_id', $userId)
             ->where('tahun', $tahun)
@@ -34,6 +35,7 @@ class Kelembagaan extends BaseController
             return redirect()->back()->with('error', 'Kamu sudah mengisi form untuk bulan ini dan sedang menunggu atau sudah disetujui.');
         }
 
+        // Ambil nilai dari radio
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
@@ -45,6 +47,7 @@ class Kelembagaan extends BaseController
             'dunia_usaha_value' => (int) $this->request->getPost('dunia_usaha'),
         ];
 
+        // Hitung total nilai
         $data['total_nilai'] = array_sum([
             $data['peraturan_value'],
             $data['anggaran_value'],
@@ -53,16 +56,17 @@ class Kelembagaan extends BaseController
             $data['dunia_usaha_value'],
         ]);
 
+        // Proses upload file .zip per field
         $fields = ['peraturan', 'anggaran', 'forum_anak', 'data_terpilah', 'dunia_usaha'];
         foreach ($fields as $field) {
             $file = $this->request->getFile("{$field}_file");
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                if ($file->getSize() > 1024 * 1024 * 1024) {
+                if ($file->getSize() > 1024 * 1024 * 1024) { // 1GB
                     return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 1GB.');
                 }
 
-                if ($file->getExtension() !== 'zip') {
+                if (strtolower($file->getExtension()) !== 'zip') {
                     return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
                 }
 
@@ -74,11 +78,14 @@ class Kelembagaan extends BaseController
             }
         }
 
+        // Set status awal sebagai 'pending'
         $data['status'] = 'pending';
 
+        // Simpan ke database
         $this->kelembagaanModel->save($data);
 
-        return redirect()->to('/kelembagaan/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+        return redirect()->to('/dashboard/kelembagaan/' . $userId)
+            ->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
 
     public function form()

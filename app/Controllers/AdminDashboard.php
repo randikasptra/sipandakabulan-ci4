@@ -69,6 +69,7 @@ class AdminDashboard extends BaseController
 
         $userModel = new UserModel();
         $users = $userModel->findAll();
+        
 
         $data = [
             'users' => $users,
@@ -241,7 +242,7 @@ class AdminDashboard extends BaseController
 
     public function submitReviewKelembagaan()
     {
-        $model = new \App\Models\KelembagaanModel();
+        $model = new KelembagaanModel();
 
         $user_id = $this->request->getPost('user_id');
         $status = $this->request->getPost('status'); // approved / rejected
@@ -331,7 +332,7 @@ class AdminDashboard extends BaseController
     public function downloadFile()
     {
         $filename = $this->request->getGet('file');
-        $folder = $this->request->getGet('folder'); 
+        $folder = $this->request->getGet('folder');
 
         // Validasi folder agar hanya yang diizinkan
         $allowedFolders = ['kelembagaan', 'klaster1', 'klaster2', 'klaster3', 'klaster4', 'klaster5']; // tambahkan sesuai kebutuhan
@@ -371,10 +372,12 @@ class AdminDashboard extends BaseController
     public function approveList()
     {
         $userModel = new UserModel();
-        $data['users'] = $userModel->findAll();
+
+        $data['users'] = $userModel->where('role', 'operator')->findAll();
 
         return view('pages/admin/approve_list', $data);
     }
+
 
     public function settings()
     {

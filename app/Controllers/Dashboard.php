@@ -38,6 +38,12 @@ class Dashboard extends BaseController
         $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
         $zipAvailable = file_exists($zipFilePath);
 
+        // Default status jika belum ada data
+        $status = $kelembagaan['status'] ?? 'draft';
+
+        // Tentukan apakah form readonly berdasarkan status
+        $formReadonly = in_array($status, ['pending', 'approved']);
+
         $data = [
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
@@ -53,13 +59,15 @@ class Dashboard extends BaseController
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
 
-            // Ini yang dibutuhkan di view:
+            // Data utama untuk view
             'existing' => $kelembagaan ?? [],
-            'status' => $kelembagaan['status'] ?? null
+            'status' => $status,
+            'formReadonly' => $formReadonly
         ];
 
         return view('pages/operator/kelembagaan', $data);
     }
+
 
 
     public function pengumuman_user()
@@ -162,7 +170,7 @@ class Dashboard extends BaseController
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
-             'status' => $klaster2['status'] ?? null,
+            'status' => $klaster2['status'] ?? null,
             'existing' => $klaster2 ?? []
         ];
 
@@ -198,6 +206,8 @@ class Dashboard extends BaseController
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+            'status' => $klaster2['status'] ?? null,
+            'existing' => $klaster2 ?? []
         ];
 
         return view('pages/operator/klaster3', $data);
@@ -232,6 +242,8 @@ class Dashboard extends BaseController
             'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
             'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
             'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+            'status' => $klaster2['status'] ?? null,
+            'existing' => $klaster2 ?? []
         ];
 
         return view('pages/operator/klaster4', $data);
