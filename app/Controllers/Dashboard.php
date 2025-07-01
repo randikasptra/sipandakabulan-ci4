@@ -65,6 +65,7 @@ class Dashboard extends BaseController
 
     public function pengumuman_user()
     {
+
         $session = session();
         if (!$session->get('logged_in')) {
             return redirect()->to('/login');
@@ -84,6 +85,7 @@ class Dashboard extends BaseController
             ->findAll();
 
         $data = [
+            'title' => 'Pengumuman',
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),
@@ -367,6 +369,7 @@ class Dashboard extends BaseController
         }
 
         $data = [
+            'title' => 'Tutorial',
             'user_email' => $session->get('email'),
             'user_role' => $session->get('role'),
             'username' => $session->get('username'),

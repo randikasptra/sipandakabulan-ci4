@@ -7,8 +7,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Form Klaster Kelembagaan</title>
+    <link rel="shortcut icon" href="<?= base_url('assets/img/LogoKKLA.png') ?>" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
 
     <script>
         tailwind.config = {
@@ -92,7 +95,6 @@
         }
     </style>
 
-    <link rel="icon" type="image/png" href="<?= base_url('assets/img/LogoKKLA.png') ?>">
 
 </head>
 

@@ -115,7 +115,7 @@
                                                 <?= $desa['klaster_isi'] !== '-' ? esc($desa['klaster_isi']) : '<span class="text-gray-400 italic">Belum ada</span>' ?>
                                             </td>
                                             <td class="px-4 py-3">
-                                                <a href="<?= base_url('dashboard/admin/approve/' . $desa['id']) ?>"
+                                                <a href="<?= base_url('dashboard/admin/appr/' . $desa['id']) ?>"
                                                     class="text-blue-600 hover:underline text-sm">Lihat Detail</a>
                                             </td>
                                         </tr>

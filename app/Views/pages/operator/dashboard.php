@@ -4,9 +4,21 @@
 <!-- Hero Section -->
 <section class="p-6 pt-24">
 
+    <?php
+    $totalEm = 0;
+    $totalMax = 0;
+
+    foreach ($klasters as $klaster) {
+        $totalEm += $klaster['nilai_em'] ?? 0;
+        $totalMax += $klaster['nilai_maksimal'] ?? 0;
+    }
+
+    $totalProgres = $totalMax > 0 ? round(($totalEm / $totalMax) * 100) : 0;
+    ?>
+
     <div class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center mb-8">
         <div>
-            <h2 class="text-2xl font-bold mb-2">Selamat Datang,<?= esc(session()->get('desa')) ?>!</h2>
+            <h2 class="text-2xl font-bold mb-2">Selamat Datang, <?= esc(session()->get('desa')) ?>!</h2>
             <p class="text-gray-600">
                 Email: <?= esc($user_email) ?> |
                 Tipe User: <span class="font-semibold text-blue-800"><?= esc($user_role) ?></span>
@@ -14,10 +26,16 @@
         </div>
 
         <div class="mt-4 md:mt-0 text-center">
-            <p class="text-green-600 font-bold text-lg">Evaluasi SIPANDAKABULAN sudah di Approve</p>
-            <p class="text-gray-700">Nilai EM <span class="font-bold">805.2</span> | Nilai Maksimal 1000</p>
+            <p class="text-green-600 font-bold text-lg">
+                Evaluasi SIPANDAKABULAN sudah <?= $totalProgres >= 100 ? 'Selesai' : 'Berlangsung' ?>
+            </p>
+            <p class="text-gray-700">
+                Nilai EM <span class="font-bold"><?= number_format($totalEm, 1) ?></span>
+                | Nilai Maksimal <?= number_format($totalMax, 1) ?>
+            </p>
             <div class="w-48 bg-gray-300 rounded-full h-4 mt-2">
-                <div class="bg-green-500 h-4 rounded-full" style="width: 80%"></div>
+                <div class="bg-green-500 h-4 rounded-full transition-all duration-500"
+                     style="width: <?= $totalProgres ?>%"></div>
             </div>
         </div>
     </div>
@@ -28,18 +46,23 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <?php foreach ($klasters as $klaster): ?>
+            <?php
+            $nilaiEm = $klaster['nilai_em'] ?? 0;
+            $nilaiMax = $klaster['nilai_maksimal'] ?? 100;
+            $progres = $nilaiMax > 0 ? round(($nilaiEm / $nilaiMax) * 100) : 0;
+            ?>
             <?= view('components/card_klaster', [
                 'klaster' => $klaster['slug'],
                 'id' => $klaster['id'],
                 'title' => $klaster['title'],
-                'nilaiEm' => $klaster['nilai_em'],
-                'nilaiMaksimal' => $klaster['nilai_maksimal'],
-                'progres' => $klaster['progres'],
+                'nilaiEm' => $nilaiEm,
+                'nilaiMaksimal' => $nilaiMax,
+                'progres' => $progres,
             ]) ?>
         <?php endforeach; ?>
     </div>
+
 </section>
+
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-
 <?= $this->include('layouts/footer') ?>

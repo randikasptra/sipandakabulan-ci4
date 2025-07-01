@@ -1,26 +1,27 @@
 <?php
 $slug = getKlasterSlug($klaster);
 $urlKlaster = getKlasterSlug($klaster);
+
+// fallback jika belum ada data
+$nilaiEm = $nilaiEm ?? 0;
+$nilaiMaksimal = $nilaiMaksimal ?? 100;
+$progres = $progres ?? 0;
 ?>
 
 <a href="<?= site_url('dashboard/' . $urlKlaster . '/' . intval($id)) ?>"
    class="flex flex-col h-full bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:border-sky-400 group overflow-hidden">
 
-    <!-- Header with improved gradient -->
+    <!-- Header -->
     <div class="px-6 py-5 min-h-[110px] bg-gradient-to-br from-sky-500 via-sky-600 to-blue-600 text-white group-hover:from-sky-600 group-hover:via-blue-600 group-hover:to-blue-700 transition-all duration-500">
         <div class="flex justify-between items-start">
             <div>
-                <h3 class="text-xl font-bold tracking-tight line-clamp-2"><?= esc($title) ?></h3>
-                <div class="flex items-center mt-2 space-x-3 text-sky-100">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/20">
-                        <?= esc($progres) ?>% Complete
+                <h3 class="text-xl font-bold tracking-tight"><?= esc($title) ?></h3>
+                <div class="flex items-center mt-2 space-x-3 text-sky-100 text-sm">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 font-medium">
+                        <?= $progres ?>% Complete
                     </span>
-                    <span class="text-sm">
-                        EM <span class="font-bold"><?= number_format($nilaiEm, 2) ?></span>
-                    </span>
-                    <span class="text-sm">
-                        Max <span class="font-medium"><?= number_format($nilaiMaksimal, 2) ?></span>
-                    </span>
+                    <span>EM: <strong><?= number_format($nilaiEm, 2) ?></strong></span>
+                    <span>Max: <strong><?= number_format($nilaiMaksimal, 2) ?></strong></span>
                 </div>
             </div>
             <div class="bg-white/20 rounded-full p-2 group-hover:rotate-12 transition-transform">
@@ -31,13 +32,13 @@ $urlKlaster = getKlasterSlug($klaster);
         </div>
     </div>
 
-    <!-- Animated Progress Bar -->
+    <!-- Progress Bar -->
     <div class="h-1.5 bg-gray-100 overflow-hidden">
         <div class="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-1000 ease-out" 
-             style="width: <?= esc($progres) ?>%"></div>
+             style="width: <?= $progres ?>%"></div>
     </div>
 
-    <!-- Button with improved styling -->
+    <!-- Button -->
     <div class="px-6 py-4 mt-auto">
         <div class="relative inline-flex w-full items-center justify-center">
             <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-blue-500 opacity-0 group-hover:opacity-20 blur-sm transition-all duration-300"></div>

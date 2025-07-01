@@ -1,17 +1,7 @@
+
+<?= $this->include('layouts/header') ?>
 <?= $this->include('layouts/navbar') ?>
-
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pengumuman</title>
-    <link rel="icon" type="image/png" href="/assets/img/LogoKKLA.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
+    <!-- <style>
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f8fafc;
@@ -26,10 +16,10 @@
             border-left-color: #2563eb;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
-    </style>
-</head>
+    </style> -->
 
-<body class="bg-gray-50">
+
+<section class="bg-gray-50">
     <div class="max-w-4xl mx-auto py-8 px-4 pt-24">
         <!-- Header Section -->
         <div class="mb-8 text-center">
@@ -76,6 +66,6 @@
             <?php endif ?>
         </div>
     </div>
-</body>
+</section>
 
-</html>
+<?= $this->include('layouts/footer') ?>
