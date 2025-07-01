@@ -26,6 +26,7 @@ class CreateKlaster5 extends Migration
             'programPencegahanPekerjaanAnak' => ['type' => 'INT', 'null' => true],
             'programPencegahanPekerjaanAnak_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
 
+            'total_nilai' => ['type' => 'INT', 'null' => true],
             // Status approval
             'status' => ['type' => 'ENUM', 'constraint' => ['pending', 'approved', 'rejected'], 'default' => 'pending'],
 
