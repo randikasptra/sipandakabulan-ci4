@@ -318,6 +318,21 @@ $formReadonly = in_array($status, ['pending', 'approved']);
         </div>
     <?php endif; ?>
 </form>
+
+<?php if ($formReadonly): ?>
+    <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
+        <form action="<?= site_url('klaster3/batal') ?>" method="post"
+              onsubmit="return confirm('Yakin ingin membatalkan pengiriman data ini?');">
+            <?= csrf_field() ?>
+
+            <button type="submit"
+                <?= $status !== 'pending' ? 'disabled class="cursor-not-allowed opacity-50 px-8 py-3 bg-gray-100 border border-gray-300 text-gray-500 font-semibold rounded-lg"' : 'class="px-8 py-3 bg-red-100 border border-red-300 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition duration-300 flex items-center justify-center gap-2"' ?>>
+                <i class="ph ph-x-circle"></i>
+                Batal Kirim
+            </button>
+        </form>
+    </div>
+<?php endif; ?>
     </div>
 
     <script>
