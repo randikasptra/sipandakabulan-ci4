@@ -63,20 +63,56 @@
 
 <body class="bg-gray-100 text-gray-800">
 
-    <div
-        class="bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center mb-8 mx-6 mt-6">
-        <div>
-            <h2 class="text-2xl font-bold mb-2">Form Klaster IV</h2>
-            <p class="text-gray-600">Silakan isi data dan unggah file dalam format chip-style jika tersedia.</p>
+   <div class="header-card p-8 rounded-2xl text-white mx-6 mt-6 mb-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                            <i class="ph ph-clipboard-text text-2xl"></i>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold">Form Klaster V</h2>
+                    </div>
+                    <p class="text-primary-100 opacity-90">Silakan isi data sesuai kondisi lapangan dan unggah dokumen
+                        pendukung.</p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:block h-12 w-px bg-white/30"></div>
+                    <div class="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/20">
+                        <p class="text-sm font-medium text-primary-100 flex items-center gap-2">
+                            <i class="ph ph-info"></i>
+                            <span>Pastikan data yang diisi valid</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-white/10">
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center gap-2 text-sm text-primary-100">
+                        <i class="ph ph-calendar-blank"></i>
+                        <span><?= date('d F Y') ?></span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-primary-100">
+                        <i class="ph ph-clock"></i>
+                        <span>Estimasi pengisian: 20 menit</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="max-w-5xl mx-auto px-6 py-10 mt-6 bg-white shadow-xl rounded-3xl space-y-12">
-        <div class="border-b pb-6 mb-6">
-            <h1 class="text-3xl font-bold text-[color:var(--primary)] flex items-center gap-2">
-                <i class="ph ph-list-check"></i> Penilaian Klaster V
+          <div class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-50 rounded-full mb-4">
+                <i class="ph ph-list-check text-3xl text-primary-700"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                Penilaian Klaster V
             </h1>
-            <p class="text-sm text-gray-500 mt-1">Pilih jawaban dan unggah file sesuai sub poin.</p>
+            <p class="text-gray-500 max-w-2xl mx-auto">Isi semua poin dengan cermat dan unggah file pendukung jika
+                tersedia.</p>
         </div>
 
         <form action="/submit-klaster5" method="POST" enctype="multipart/form-data" class="space-y-10">
@@ -238,10 +274,25 @@
         </div>
     <?php else: ?>
         <div class="pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
-            Form sudah dikirim dan sedang diproses, tidak bisa diubah.
+            Form sudah dikirim dan sedang diproses
         </div>
     <?php endif; ?>
 </form>
+
+<?php if ($formReadonly): ?>
+    <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
+        <form action="<?= site_url('klaster5/batal') ?>" method="post"
+              onsubmit="return confirm('Yakin ingin membatalkan pengiriman data ini?');">
+            <?= csrf_field() ?>
+
+            <button type="submit"
+                <?= $status !== 'pending' ? 'disabled class="cursor-not-allowed opacity-50 px-8 py-3 bg-gray-100 border border-gray-300 text-gray-500 font-semibold rounded-lg"' : 'class="px-8 py-3 bg-red-100 border border-red-300 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition duration-300 flex items-center justify-center gap-2"' ?>>
+                <i class="ph ph-x-circle"></i>
+                Batal Kirim
+            </button>
+        </form>
+    </div>
+<?php endif; ?>
     </div>
 
 
