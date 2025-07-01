@@ -72,12 +72,12 @@ class Klaster5Controller extends BaseController
             }
         }
 
-        $data['total_nilai'] = $totalNilai;
-
+        // Simpan tanpa total_nilai karena belum ada di tabel
         $this->klaster5Model->insert($data);
 
         return redirect()->to('/klaster5/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
+
 
     public function form()
     {
@@ -98,12 +98,18 @@ class Klaster5Controller extends BaseController
             'user_role' => session()->get('user_role'),
             'status' => $existing['status'] ?? null,
             'existing' => $existing ?? null,
-            'nilai_em' => $existing['total_nilai'] ?? 0,
-            'nilai_maksimal' => 100, // nilai maksimal sesuai jumlah indikator (misal 4 x 25)
+            'nilai_em' => isset($existing) ? array_sum([
+                $existing['laporanKekerasanAnak'] ?? 0,
+                $existing['mekanismePenanggulanganBencana'] ?? 0,
+                $existing['programPencegahanKekerasan'] ?? 0,
+                $existing['programPencegahanPekerjaanAnak'] ?? 0
+            ]) : 0,
+            'nilai_maksimal' => 100,
         ];
 
         return view('pages/operator/klaster5', $data);
     }
+
 
     public function approve()
     {
@@ -132,7 +138,7 @@ class Klaster5Controller extends BaseController
             'klaster' => $klasterData['id'],
             'tahun' => $klaster5['tahun'],
             'bulan' => $klaster5['bulan'],
-            'total_nilai' => $klaster5['total_nilai'] ?? 0,
+            'total_nilai' => 0, // Belum ada di tabel, default 0
             'status' => $status,
             'catatan' => $status === 'rejected' ? $catatan : null,
             'file_path' => 'klaster5/' . $userId . '.zip'
@@ -148,4 +154,5 @@ class Klaster5Controller extends BaseController
 
         return redirect()->back()->with('success', 'Status Klaster 5 berhasil diperbarui dan disimpan ke laporan.');
     }
+
 }

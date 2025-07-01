@@ -131,9 +131,8 @@
             ];
 
 
-                         foreach ($klaster as $k):
-        // $selected = old($k['nama'], $existing[$k['nama'] . '_value'] ?? null);
-         $selected = $existing[$k['nama'] . '_value'] ?? old($k['nama']);
+                 foreach ($klaster as $k):
+        $selected = isset($existing[$k['nama']]) ? $existing[$k['nama']] : old($k['nama']);
         $readonly = $formReadonly ? 'disabled' : '';
         $fileUploaded = $existing[$k['nama'] . '_file'] ?? null;
     ?>
@@ -150,42 +149,36 @@
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"><?= $k['nama'] ?></span>
         </div>
 
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            <?php foreach ($k['opsi'] as $val => $label): ?>
-                <label
-                    class="radio-option flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 <?= $readonly ? 'cursor-not-allowed' : 'cursor-pointer' ?>">
-                    <input
-                        type="radio"
-                        name="<?= $k['nama'] ?>"
-                        value="<?= $val ?>"
-                        <?= ($selected == $val) ? 'checked' : '' ?>
-                        <?= $readonly ?>
-                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
-                    />
-                    <div class="flex-1">
-                        <span class="block text-sm font-medium text-gray-700"><?= $label ?></span>
-                        <span class="block text-xs text-primary-600 font-semibold mt-1"><?= $val ?> poin</span>
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                        <?php foreach ($k['opsi'] as $val => $label): ?>
+                            <label
+                                class="radio-option flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 <?= $readonly ? 'cursor-not-allowed' : 'cursor-pointer' ?>">
+                                <input type="radio" name="<?= $k['nama'] ?>" value="<?= $val ?>" <?= ($selected == $val) ? 'checked' : '' ?>
+                                <?= $readonly ?>
+                                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
+                                <div class="flex-1">
+                                    <span class="block text-sm font-medium text-gray-700"><?= $label ?></span>
+                                    <span class="block text-xs text-primary-600 font-semibold mt-1"><?= $val ?> poin</span>
+                                </div>
+                            </label>
+                        <?php endforeach; ?>
                     </div>
-                </label>
-            <?php endforeach; ?>
-        </div>
 
         <?php if (!$formReadonly): ?>
             <div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2">
                 <p class="text-sm font-medium text-primary-800 flex items-center gap-2" id="<?= $k['nama'] ?>_selected">
                     <i class="ph ph-info text-lg"></i>
-                    <span><?= $selected ? "Nilai terpilih: $selected poin" : 'Belum memilih nilai' ?></span>
+                    <span><?= is_numeric($selected) ? "Nilai terpilih: $selected poin" : 'Belum memilih nilai' ?></span>
                 </p>
             </div>
-       <?php else: ?>
-  <div class="bg-green-50 border border-green-100 rounded-lg px-4 py-2 text-green-800">
-    <p class="text-sm font-medium flex items-center gap-2">
-      <i class="ph ph-check-circle"></i>
-      Nilai yang dipilih: <?= isset($selected) ? $selected . ' poin' : 'Belum memilih nilai' ?>
-    </p>
-  </div>
-<?php endif; ?>
-
+        <?php else: ?>
+            <div class="bg-green-50 border border-green-100 rounded-lg px-4 py-2 text-green-800">
+                <p class="text-sm font-medium flex items-center gap-2">
+                    <i class="ph ph-check-circle"></i>
+                    <?= is_numeric($selected) ? "Nilai yang dipilih: $selected poin" : "Belum memilih nilai" ?>
+                </p>
+            </div>
+        <?php endif; ?>
 
         <?php if ($k['file']): ?>
             <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download
@@ -197,7 +190,7 @@
 
         <?php if ($formReadonly): ?>
             <p class="text-sm mt-2 text-gray-600">
-                <i class="ph ph-paperclip"></i> File yang diunggah: 
+                <i class="ph ph-paperclip"></i> File yang diunggah:
                 <strong><?= $fileUploaded ?: 'Tidak ada file' ?></strong>
             </p>
         <?php else: ?>
@@ -210,7 +203,6 @@
                     <div class="mt-1 flex items-center">
                         <label
                             class="upload-wrapper flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition relative overflow-hidden">
-                            
                             <div class="upload-instruction flex flex-col items-center justify-center pt-5 pb-6 px-4">
                                 <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
                                 <p class="mb-2 text-sm text-gray-500">
@@ -218,12 +210,10 @@
                                 </p>
                                 <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
                             </div>
-
                             <div class="file-preview hidden flex-col items-center justify-center text-center p-5">
                                 <i class="ph ph-file-zip text-3xl text-primary-600 mb-2"></i>
                                 <p class="text-sm font-medium text-primary-700 filename-preview"></p>
                             </div>
-
                             <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
                         </label>
                     </div>
@@ -233,7 +223,6 @@
     </div>
     <?php endforeach; ?>
 
-    <!-- Tombol Submit dan Reset, sembunyikan jika readonly -->
     <?php if (!$formReadonly): ?>
         <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
             <button type="submit"
@@ -252,9 +241,7 @@
             Form sudah dikirim dan sedang diproses, tidak bisa diubah.
         </div>
     <?php endif; ?>
-
-            
-        </form>
+</form>
     </div>
 
 
