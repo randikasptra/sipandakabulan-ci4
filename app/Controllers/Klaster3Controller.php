@@ -35,7 +35,7 @@ class Klaster3Controller extends BaseController
             return redirect()->back()->with('error', 'Kamu sudah mengisi form bulan ini dan sedang diproses atau disetujui.');
         }
 
-        // Ambil nilai form
+        // Inisialisasi data
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
@@ -62,6 +62,7 @@ class Klaster3Controller extends BaseController
             $totalNilai += $value;
 
             $file = $this->request->getFile("{$field}_file");
+
             if ($file && $file->isValid() && !$file->hasMoved()) {
                 if ($file->getSize() > 10 * 1024 * 1024) {
                     return redirect()->back()->with('error', "Ukuran file {$field} melebihi 10MB.");
@@ -77,12 +78,12 @@ class Klaster3Controller extends BaseController
             }
         }
 
-        $data['total_nilai'] = $totalNilai;
-
+        // Simpan data (tanpa total_nilai ke database)
         $this->klaster3Model->insert($data);
 
         return redirect()->to('/klaster3/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
+
 
     public function form()
     {
