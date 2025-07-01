@@ -35,6 +35,7 @@ class CreateKlaster4 extends Migration
 
             'programPerjalanan' => ['type' => 'INT', 'constraint' => 11],
             'programPerjalanan_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'total_nilai' => ['type' => 'INT', 'null' => true],
 
             'status' => ['type' => 'ENUM', 'constraint' => ['pending', 'approved', 'rejected'], 'default' => 'pending'],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
