@@ -20,6 +20,7 @@ class Klaster2Model extends Model
         'pencegahanPernikahan_file',
         'lembagaKonsultasi',
         'lembagaKonsultasi_file',
+        'total_nilai',
         'created_at',
         'updated_at'
     ];

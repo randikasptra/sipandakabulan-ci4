@@ -38,6 +38,7 @@ class Klaster4Model extends Model
         'status',
         'created_at',
         'updated_at',
+        'total_nilai'
     ];
 
     protected $useTimestamps = true;

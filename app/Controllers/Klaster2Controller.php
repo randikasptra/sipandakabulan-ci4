@@ -17,70 +17,76 @@ class Klaster2Controller extends BaseController
         $this->berkasKlasterModel = new BerkasKlasterModel();
     }
 
-    public function submit()
-    {
-        $userId = session()->get('id');
-        $tahun = date('Y');
-        $bulan = date('F');
+ public function submit()
+{
+    $userId = session()->get('id');
+    $tahun = date('Y');
+    $bulan = date('F');
 
-        // Cek apakah data sudah ada dan statusnya tidak bisa input ulang
-        $existing = $this->klaster2Model
-            ->where('user_id', $userId)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->first();
+    // Cek apakah data sudah ada dan statusnya tidak bisa input ulang
+    $existing = $this->klaster2Model
+        ->where('user_id', $userId)
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
 
-        if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
-            return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
-        }
-
-        // Ambil nilai dari form (sesuai nama kolom di DB)
-        $data = [
-            'user_id' => $userId,
-            'tahun' => $tahun,
-            'bulan' => $bulan,
-            'perkawinanAnak' => (int) $this->request->getPost('perkawinanAnak'),
-            'pencegahanPernikahan' => (int) $this->request->getPost('pencegahanPernikahan'),
-            'lembagaKonsultasi' => (int) $this->request->getPost('lembagaKonsultasi'),
-            'status' => 'pending',
-        ];
-
-        // Upload file (ZIP) untuk masing-masing indikator
-        $fields = ['perkawinanAnak', 'pencegahanPernikahan', 'lembagaKonsultasi'];
-
-        foreach ($fields as $field) {
-            $file = $this->request->getFile("{$field}_file");
-
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                if ($file->getSize() > 10 * 1024 * 1024) {
-                    return redirect()->back()->with('error', "Ukuran file $field terlalu besar. Maksimum 10MB.");
-                }
-
-                if ($file->getExtension() !== 'zip') {
-                    return redirect()->back()->with('error', "File $field harus berformat ZIP.");
-                }
-
-                $newName = $field . '_' . time() . '_' . $file->getClientName();
-                $file->move(ROOTPATH . 'public/uploads/klaster2/', $newName);
-                $data["{$field}_file"] = $newName;
-            } else {
-                $data["{$field}_file"] = null; // opsional, tambahkan agar tidak error saat update
-            }
-        }
-
-        // Hitung total nilai (jika ingin simpan, tambahkan kolom di DB)
-        $total_nilai = $data['perkawinanAnak'] + $data['pencegahanPernikahan'] + $data['lembagaKonsultasi'];
-        $data['total_nilai'] = $total_nilai; // hanya jika kamu sudah menambahkan kolom ini di DB
-
-        // Simpan data
-        if ($existing && $existing['status'] === 'rejected') {
-            $this->klaster2Model->update($existing['id'], $data);
-        } else {
-            $this->klaster2Model->insert($data);
-        }
-
-        return redirect()->to('/klaster2/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+    if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
+        return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
     }
+
+    // Ambil nilai indikator
+    $perkawinanAnak = (int) $this->request->getPost('perkawinanAnak');
+    $pencegahanPernikahan = (int) $this->request->getPost('pencegahanPernikahan');
+    $lembagaKonsultasi = (int) $this->request->getPost('lembagaKonsultasi');
+
+    // Hitung total nilai
+    $total_nilai = $perkawinanAnak + $pencegahanPernikahan + $lembagaKonsultasi;
+
+    // Susun data awal
+    $data = [
+        'user_id' => $userId,
+        'tahun' => $tahun,
+        'bulan' => $bulan,
+        'perkawinanAnak' => $perkawinanAnak,
+        'pencegahanPernikahan' => $pencegahanPernikahan,
+        'lembagaKonsultasi' => $lembagaKonsultasi,
+        'total_nilai' => $total_nilai,
+        'status' => 'pending',
+    ];
+
+    // Upload file masing-masing indikator
+    $fields = ['perkawinanAnak', 'pencegahanPernikahan', 'lembagaKonsultasi'];
+
+    foreach ($fields as $field) {
+        $file = $this->request->getFile("{$field}_file");
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            if ($file->getSize() > 10 * 1024 * 1024) {
+                return redirect()->back()->with('error', "Ukuran file $field terlalu besar. Maksimum 10MB.");
+            }
+
+            if ($file->getExtension() !== 'zip') {
+                return redirect()->back()->with('error', "File $field harus berformat ZIP.");
+            }
+
+            $newName = $field . '_' . time() . '_' . $file->getClientName();
+            $file->move(ROOTPATH . 'public/uploads/klaster2/', $newName);
+            $data["{$field}_file"] = $newName;
+        } else {
+            $data["{$field}_file"] = null;
+        }
+    }
+
+    // Simpan data
+    if ($existing && $existing['status'] === 'rejected') {
+        $this->klaster2Model->update($existing['id'], $data);
+    } else {
+        $this->klaster2Model->insert($data);
+    }
+
+    return redirect()->to('/klaster2/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+}
+
 
 
     public function form()
@@ -141,6 +147,7 @@ class Klaster2Controller extends BaseController
             'status' => $status,
             'catatan' => ($status === 'rejected') ? $catatan : null,
             'file_path' => 'klaster2/' . $userId . '.zip',
+            
         ];
 
         $existingBerkas = $this->berkasKlasterModel

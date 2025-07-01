@@ -23,5 +23,6 @@ class Klaster5Model extends Model
         'programPencegahanPekerjaanAnak',
         'programPencegahanPekerjaanAnak_file',
         'status',
+        'total_nilai'
     ];
 }

@@ -75,8 +75,10 @@ class Klaster1Controller extends BaseController
             'AnakAktaKelahiran_file' => $files['AnakAktaKelahiran_file'],
             'anggaran' => $anggaran_value,
             'anggaran_file' => $files['anggaran_file'],
+            'total_nilai' => $total_nilai, // ✅ disimpan di sini
             'status' => 'pending',
         ]);
+
 
 
         return redirect()->to('/klaster1/form')->with('success', 'Data Klaster 1 berhasil disimpan dan menunggu persetujuan!');

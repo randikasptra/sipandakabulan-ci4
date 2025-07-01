@@ -30,6 +30,7 @@ class Klaster3Model extends Model
         'layananAnakMiskin_file',
         'kawasanTanpaRokok',
         'kawasanTanpaRokok_file',
+        'total_nilai'
     ];
 
     protected $useTimestamps = true;

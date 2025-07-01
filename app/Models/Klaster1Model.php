@@ -18,6 +18,7 @@ class Klaster1Model extends Model
         'anggaran',
         'anggaran_file',
         'status',
+        'total_nilai',
         'created_at',
         'updated_at'
     ];
