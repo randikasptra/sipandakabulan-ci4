@@ -34,25 +34,18 @@ class Klaster2Controller extends BaseController
             return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
         }
 
-        // Ambil nilai dari form
+        // Ambil nilai dari form (sesuai nama kolom di DB)
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
             'bulan' => $bulan,
-            'perkawinanAnak_value' => (int) $this->request->getPost('perkawinanAnak'),
-            'pencegahanPernikahan_value' => (int) $this->request->getPost('pencegahanPernikahan'),
-            'lembagaKonsultasi_value' => (int) $this->request->getPost('lembagaKonsultasi'),
+            'perkawinanAnak' => (int) $this->request->getPost('perkawinanAnak'),
+            'pencegahanPernikahan' => (int) $this->request->getPost('pencegahanPernikahan'),
+            'lembagaKonsultasi' => (int) $this->request->getPost('lembagaKonsultasi'),
             'status' => 'pending',
         ];
 
-        // Hitung total nilai
-        $data['total_nilai'] = array_sum([
-            $data['perkawinanAnak_value'],
-            $data['pencegahanPernikahan_value'],
-            $data['lembagaKonsultasi_value'],
-        ]);
-
-        // Handle upload ZIP untuk tiap field
+        // Upload file (ZIP) untuk masing-masing indikator
         $fields = ['perkawinanAnak', 'pencegahanPernikahan', 'lembagaKonsultasi'];
 
         foreach ($fields as $field) {
@@ -60,7 +53,7 @@ class Klaster2Controller extends BaseController
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
                 if ($file->getSize() > 10 * 1024 * 1024) {
-                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 10MB.');
+                    return redirect()->back()->with('error', "Ukuran file $field terlalu besar. Maksimum 10MB.");
                 }
 
                 if ($file->getExtension() !== 'zip') {
@@ -70,10 +63,16 @@ class Klaster2Controller extends BaseController
                 $newName = $field . '_' . time() . '_' . $file->getClientName();
                 $file->move(ROOTPATH . 'public/uploads/klaster2/', $newName);
                 $data["{$field}_file"] = $newName;
+            } else {
+                $data["{$field}_file"] = null; // opsional, tambahkan agar tidak error saat update
             }
         }
 
-        // Update jika sebelumnya reject, atau insert baru
+        // Hitung total nilai (jika ingin simpan, tambahkan kolom di DB)
+        $total_nilai = $data['perkawinanAnak'] + $data['pencegahanPernikahan'] + $data['lembagaKonsultasi'];
+        $data['total_nilai'] = $total_nilai; // hanya jika kamu sudah menambahkan kolom ini di DB
+
+        // Simpan data
         if ($existing && $existing['status'] === 'rejected') {
             $this->klaster2Model->update($existing['id'], $data);
         } else {
@@ -82,6 +81,7 @@ class Klaster2Controller extends BaseController
 
         return redirect()->to('/klaster2/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
+
 
     public function form()
     {
