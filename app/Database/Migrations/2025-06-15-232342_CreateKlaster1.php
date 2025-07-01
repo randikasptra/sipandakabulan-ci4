@@ -11,7 +11,7 @@ class CreateKlaster1 extends Migration
         $this->forge->addField([
             'id' => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
             'user_id' => ['type' => 'INT', 'unsigned' => true],
-            
+
             'tahun' => ['type' => 'INT', 'constraint' => 4],
             'bulan' => ['type' => 'VARCHAR', 'constraint' => 20],
 
@@ -19,7 +19,8 @@ class CreateKlaster1 extends Migration
             'AnakAktaKelahiran_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
             'anggaran' => ['type' => 'INT', 'constraint' => 11],
             'anggaran_file' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
-            
+            'total_nilai' => ['type' => 'INT', 'null' => true],
+
             'status' => ['type' => 'ENUM', 'constraint' => ['pending', 'approved', 'rejected'], 'default' => 'pending'],
 
             'created_at' => ['type' => 'DATETIME', 'null' => true],
