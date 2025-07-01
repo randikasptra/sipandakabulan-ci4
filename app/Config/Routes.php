@@ -99,6 +99,10 @@ $routes->post('/kelembagaan/batal', 'Kelembagaan::batal');
 $routes->get('/klaster1', 'Klaster1Controller::index');
 $routes->get('/klaster1/form', 'Klaster1Controller::form'); 
 $routes->post('/klaster1/batal', 'Klaster1Controller::batal');
+$routes->post('/klaster2/batal', 'Klaster2Controller::batal');
+$routes->post('/klaster3/batal', 'Klaster3Controller::batal');
+$routes->post('/klaster4/batal', 'Klaster4Controller::batal');
+$routes->post('/klaster5/batal', 'Klaster5Controller::batal');
 
 $routes->get('/klaster2/form', 'Klaster2Controller::form'); 
 $routes->get('/klaster3/form', 'Klaster3Controller::form'); 

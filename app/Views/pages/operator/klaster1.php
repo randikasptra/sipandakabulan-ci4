@@ -61,7 +61,7 @@
 <body class="bg-gray-50 font-sans text-gray-800 antialiased">
 
     <!-- Header Card -->
-    <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mt-6 mb-10">
+    <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mt-24 mb-10">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
             <div class="mb-6 md:mb-0">
                 <h2 class="text-2xl md:text-3xl font-bold mb-2">Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!</h2>
