@@ -10,27 +10,34 @@ class AdminDashboard extends BaseController
     public function index()
     {
         $userModel = new \App\Models\UserModel();
+        $berkasModel = new \App\Models\BerkasKlasterModel();
 
-        // Load model klaster
+        // Klaster models
         $klaster1 = new \App\Models\Klaster1Model();
         $klaster2 = new \App\Models\Klaster2Model();
         $klaster3 = new \App\Models\Klaster3Model();
         $klaster4 = new \App\Models\Klaster4Model();
         $klaster5 = new \App\Models\Klaster5Model();
 
-        // Ambil semua user dengan role operator (desa)
         $desaList = $userModel->where('role', 'operator')->findAll();
 
         foreach ($desaList as &$desa) {
             $userId = $desa['id'];
-
-            // Status input dan approve langsung dari kolom users
             $desa['status_input'] = $desa['status_input'] ?? 'belum';
             $desa['status_approve'] = $desa['status_approve'] ?? 'pending';
             $desa['input_by'] = $desa['username'] ?? '-';
-            $desa['created_at'] = $desa['created_at'] ?? null;
 
-            // Cek klaster yang sudah diisi
+            // Ambil waktu input terakhir
+            $timestamps = [];
+            foreach ([$klaster1, $klaster2, $klaster3, $klaster4, $klaster5] as $klasterModel) {
+                $entry = $klasterModel->where('user_id', $userId)->orderBy('created_at', 'desc')->first();
+                if ($entry && isset($entry['created_at'])) {
+                    $timestamps[] = $entry['created_at'];
+                }
+            }
+            $desa['created_at'] = !empty($timestamps) ? max($timestamps) : null;
+
+            // Klaster terisi
             $klasterTerisi = [];
             if ($klaster1->where('user_id', $userId)->first())
                 $klasterTerisi[] = 'Klaster 1';
@@ -46,11 +53,24 @@ class AdminDashboard extends BaseController
             $desa['klaster_isi'] = !empty($klasterTerisi) ? implode(', ', $klasterTerisi) : '-';
         }
 
+        // Hitung status dari berkas_klaster
+        $approved = $berkasModel->where('status', 'approved')->countAllResults(false);
+        $rejected = $berkasModel->where('status', 'rejected')->countAllResults(false);
+
+        // ✅ Hitung “perlu approve” dari semua klaster yang statusnya "pending"
+        $perluApproveCount = $klaster1->where('status', 'pending')->countAllResults(false)
+            + $klaster2->where('status', 'pending')->countAllResults(false)
+            + $klaster3->where('status', 'pending')->countAllResults(false)
+            + $klaster4->where('status', 'pending')->countAllResults(false)
+            + $klaster5->where('status', 'pending')->countAllResults(false);
+
         $data = [
             'totalDesa' => count($desaList),
             'sudahInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'sudah')),
             'belumInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'belum')),
-            'perluApprove' => count(array_filter($desaList, fn($d) => $d['status_approve'] === 'pending')),
+            'perluApprove' => $perluApproveCount,
+            'totalApproved' => $approved,
+            'totalRejected' => $rejected,
             'desaList' => $desaList,
         ];
 
@@ -69,7 +89,7 @@ class AdminDashboard extends BaseController
 
         $userModel = new UserModel();
         $users = $userModel->findAll();
-        
+
 
         $data = [
             'users' => $users,
@@ -288,36 +308,74 @@ class AdminDashboard extends BaseController
     }
 
     public function approve($id)
-    {
-        // Panggil semua model klaster
-        $kelembagaanModel = new \App\Models\KelembagaanModel();
-        $klaster1Model = new \App\Models\Klaster1Model();
-        $klaster2Model = new \App\Models\Klaster2Model();
-        $klaster3Model = new \App\Models\Klaster3Model();
-        $klaster4Model = new \App\Models\Klaster4Model();
-        $klaster5Model = new \App\Models\Klaster5Model();
+{
+    // Panggil semua model klaster
+    $kelembagaanModel = new \App\Models\KelembagaanModel();
+    $klaster1Model = new \App\Models\Klaster1Model();
+    $klaster2Model = new \App\Models\Klaster2Model();
+    $klaster3Model = new \App\Models\Klaster3Model();
+    $klaster4Model = new \App\Models\Klaster4Model();
+    $klaster5Model = new \App\Models\Klaster5Model();
 
-        // Ambil data masing-masing klaster berdasarkan user_id
-        $kelembagaanData = $kelembagaanModel->where('user_id', $id)->first();
-        $klaster1Data = $klaster1Model->where('user_id', $id)->first();
-        $klaster2Data = $klaster2Model->where('user_id', $id)->first();
-        $klaster3Data = $klaster3Model->where('user_id', $id)->first();
-        $klaster4Data = $klaster4Model->where('user_id', $id)->first();
-        $klaster5Data = $klaster5Model->where('user_id', $id)->first();
+    // Ambil data masing-masing klaster berdasarkan user_id
+    $kelembagaanData = $kelembagaanModel->where('user_id', $id)->first();
+    $klaster1Data = $klaster1Model->where('user_id', $id)->first();
+    $klaster2Data = $klaster2Model->where('user_id', $id)->first();
+    $klaster3Data = $klaster3Model->where('user_id', $id)->first();
+    $klaster4Data = $klaster4Model->where('user_id', $id)->first();
+    $klaster5Data = $klaster5Model->where('user_id', $id)->first();
 
-        // Siapkan data array untuk view
-        $data = [
-            'user_id' => $id,
-            'kelembagaan' => $kelembagaanData ? [$kelembagaanData] : [],
-            'klaster1' => $klaster1Data ? [$klaster1Data] : [],
-            'klaster2' => $klaster2Data ? [$klaster2Data] : [],
-            'klaster3' => $klaster3Data ? [$klaster3Data] : [],
-            'klaster4' => $klaster4Data ? [$klaster4Data] : [],
-            'klaster5' => $klaster5Data ? [$klaster5Data] : [],
-        ];
+    // Siapkan struktur data klaster untuk ditampilkan di view
+    $data = [
+        'user_id' => $id,
+        'kelembagaan' => [],
+        'klaster1' => [],
+        'klaster2' => [],
+        'klaster3' => [],
+        'klaster4' => [],
+        'klaster5' => [],
+        'status' => [], // akan diisi berdasarkan masing-masing data
+    ];
 
-        return view('pages/admin/approve', $data);
+    // Kelembagaan
+    if (!empty($kelembagaanData) && is_array($kelembagaanData)) {
+        $data['kelembagaan'][] = $kelembagaanData;
+        $data['status']['kelembagaan'] = $kelembagaanData['status'] ?? 'pending';
     }
+
+    // Klaster 1
+    if (!empty($klaster1Data) && is_array($klaster1Data)) {
+        $data['klaster1'][] = $klaster1Data;
+        $data['status']['klaster1'] = $klaster1Data['status'] ?? 'pending';
+    }
+
+    // Klaster 2
+    if (!empty($klaster2Data) && is_array($klaster2Data)) {
+        $data['klaster2'][] = $klaster2Data;
+        $data['status']['klaster2'] = $klaster2Data['status'] ?? 'pending';
+    }
+
+    // Klaster 3
+    if (!empty($klaster3Data) && is_array($klaster3Data)) {
+        $data['klaster3'][] = $klaster3Data;
+        $data['status']['klaster3'] = $klaster3Data['status'] ?? 'pending';
+    }
+
+    // Klaster 4
+    if (!empty($klaster4Data) && is_array($klaster4Data)) {
+        $data['klaster4'][] = $klaster4Data;
+        $data['status']['klaster4'] = $klaster4Data['status'] ?? 'pending';
+    }
+
+    // Klaster 5
+    if (!empty($klaster5Data) && is_array($klaster5Data)) {
+        $data['klaster5'][] = $klaster5Data;
+        $data['status']['klaster5'] = $klaster5Data['status'] ?? 'pending';
+    }
+
+    return view('pages/admin/approve', $data);
+}
+
     public function setujui($id)
     {
         $userModel = new \App\Models\UserModel();

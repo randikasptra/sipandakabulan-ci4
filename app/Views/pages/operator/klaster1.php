@@ -164,24 +164,20 @@
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"><?= $k['nama'] ?></span>
         </div>
 
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            <?php foreach ($k['opsi'] as $val => $label): ?>
-                <label class="radio-option flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 <?= $readonly ? 'cursor-not-allowed' : 'cursor-pointer' ?>">
-                    <input
-                        type="radio"
-                        name="<?= $k['nama'] ?>"
-                        value="<?= $val ?>"
-                        <?= ($selected !== null && $selected == $val) ? 'checked' : '' ?>
-                        <?= $readonly ?>
-                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300"
-                    />
-                    <div class="flex-1">
-                        <span class="block text-sm font-medium text-gray-700"><?= $label ?></span>
-                        <span class="block text-xs text-primary-600 font-semibold mt-1"><?= $val ?> poin</span>
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                        <?php foreach ($k['opsi'] as $val => $label): ?>
+                            <label
+                                class="radio-option flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 <?= $readonly ? 'cursor-not-allowed' : 'cursor-pointer' ?>">
+                                <input type="radio" name="<?= $k['nama'] ?>" value="<?= $val ?>" <?= ($selected == $val) ? 'checked' : '' ?>
+                                <?= $readonly ?>
+                                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
+                                <div class="flex-1">
+                                    <span class="block text-sm font-medium text-gray-700"><?= $label ?></span>
+                                    <span class="block text-xs text-primary-600 font-semibold mt-1"><?= $val ?> poin</span>
+                                </div>
+                            </label>
+                        <?php endforeach; ?>
                     </div>
-                </label>
-            <?php endforeach; ?>
-        </div>
 
         <?php if (!$formReadonly): ?>
             <div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2">

@@ -347,7 +347,7 @@
 
     <script>
         // Update selected value text on radio change
-        document.querySelectorAll('form#formKelembagaan div[class*="space-y-5 bg-gray-50"]').forEach(section => {
+        document.querySelectorAll('form div[class*="space-y-5 bg-gray-50"]').forEach(section => {
             const name = section.querySelector('input[type="radio"]').name;
             const display = section.querySelector(`#${name}_selected span`);
             section.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
@@ -368,7 +368,7 @@
                 const preview = parent.querySelector('.file-name-preview');
                 if (input.files.length > 0) {
                     preview.innerHTML = `<span class="text-green-600 font-medium"><i class="ph ph-check-circle"></i> File dipilih:</span> ${input.files[0].name}`;
-
+                    
                     // Change upload box style
                     const uploadBox = input.previousElementSibling;
                     uploadBox.classList.remove('border-gray-300', 'bg-gray-50');
@@ -380,26 +380,25 @@
         });
 
 
-        // Menampilkan nama file ZIP yang diupload secara real-time
-        document.querySelectorAll('.upload-wrapper').forEach(wrapper => {
-            const input = wrapper.querySelector('input[type="file"]');
-            const instruction = wrapper.querySelector('.upload-instruction');
-            const preview = wrapper.querySelector('.file-preview');
-            const filename = wrapper.querySelector('.filename-preview');
+          // Menampilkan nama file ZIP yang diupload secara real-time
+    document.querySelectorAll('.upload-wrapper').forEach(wrapper => {
+    const input = wrapper.querySelector('input[type="file"]');
+    const instruction = wrapper.querySelector('.upload-instruction');
+    const preview = wrapper.querySelector('.file-preview');
+    const filename = wrapper.querySelector('.filename-preview');
 
-            input.addEventListener('change', () => {
-                if (input.files.length > 0) {
-                    instruction.classList.add('hidden');
-                    preview.classList.remove('hidden');
-                    filename.textContent = input.files[0].name;
-                } else {
-                    instruction.classList.remove('hidden');
-                    preview.classList.add('hidden');
-                    filename.textContent = '';
-                }
-            });
-        });
-
+    input.addEventListener('change', () => {
+        if (input.files.length > 0) {
+            instruction.classList.add('hidden');
+            preview.classList.remove('hidden');
+            filename.textContent = input.files[0].name;
+        } else {
+            instruction.classList.remove('hidden');
+            preview.classList.add('hidden');
+            filename.textContent = '';
+        }
+    });
+});
     </script>
 
 </body>

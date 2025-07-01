@@ -71,7 +71,6 @@
                       </div>
                       <div>
                         <h2 class="text-lg font-bold text-gray-800"><?= esc($user['username'] ?? 'Tanpa Nama') ?></h2>
-                        <p class="text-xs text-gray-500">ID: <?= esc($user['id']) ?></p>
                       </div>
                     </div>
                     <div class="flex items-center gap-1">

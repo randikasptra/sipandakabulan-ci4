@@ -23,6 +23,7 @@ class Klaster1Controller extends BaseController
         $tahun = date('Y');
         $bulan = date('F');
 
+        // Cek apakah user sudah submit bulan ini
         $existing = $this->klaster1Model
             ->where('user_id', $userId)
             ->where('tahun', $tahun)
@@ -31,7 +32,7 @@ class Klaster1Controller extends BaseController
             ->first();
 
         if ($existing) {
-            return redirect()->back()->with('error', 'Kamu sudah mengisi data Klaster 1 untuk bulan ini dan masih pending atau sudah disetujui.');
+            return redirect()->back()->with('error', 'Kamu sudah mengisi data Klaster 1 bulan ini dan masih pending atau sudah disetujui.');
         }
 
         // Ambil nilai input
@@ -41,7 +42,7 @@ class Klaster1Controller extends BaseController
         // Hitung total
         $total_nilai = $AnakAktaKelahiran_value + $anggaran_value;
 
-        // Upload file
+        // Proses file upload
         $fields = ['AnakAktaKelahiran', 'anggaran'];
         $files = [];
 
@@ -101,7 +102,7 @@ class Klaster1Controller extends BaseController
             'status' => $existing['status'] ?? null,
             'existing' => $existing ?? null,
             'nilai_em' => $existing['total_nilai'] ?? 0,
-            'nilai_maksimal' => 100, // contoh, sesuaikan dengan total nilai maksimal klaster1
+            'nilai_maksimal' => 120, // total maksimal nilai indikator klaster 1
         ];
 
         return view('pages/operator/klaster1', $data);
