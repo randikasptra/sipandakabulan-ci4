@@ -1,0 +1,88 @@
+[33m1e31db9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m bismilah
+[33m2f1d36d[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge branch 'feat-admin'
+[33m8bf3d75[m[33m ([m[1;32mfeat-admin[m[33m)[m fix-klaster5-form-batal
+[33mc93d451[m fix-klaster4-form-batal
+[33m0fbfb01[m fix-klaster3-form
+[33med45c20[m fix-klaster2-form
+[33m1b3ba67[m Merge branch 'feat-admin'
+[33m65c2886[m fix-klaster1-form
+[33mb434acb[m fix-kelembagaan-form
+[33macc8d64[m fix-code
+[33mbbcec91[m FIX_CODE_KLASTER_ALL
+[33m8e1d624[m fix-total-niali
+[33m5a7d276[m add/total-klaster5
+[33m8605221[m add/total-klaster4
+[33m7c14fa0[m add/total-klaster3
+[33m9b562a8[m add/total-klaster2
+[33m22d532c[m add/total-klaster1
+[33m94e5ed2[m fix-all-klaster
+[33m6f45a8d[m fix-code-klaster4
+[33m2d42ffa[m fix-code-klaster3
+[33m70ff0c1[m fix-code-klaster1-2
+[33m9810fe4[m rev-favicons
+[33m1129fa9[m rev-dashboard-adm
+[33m30b05f8[m revisi-semua=klaster-fix-code
+[33m12ab961[m fix-controller-3-4
+[33m71eaf8e[m[33m ([m[1;32mrevisi-akumulasi-nilai[m[33m)[m revisi-controller-klaster
+[33mbe6790f[m error-status
+[33mbae0d2d[m data-kalster-readonly-belum-fix
+[33m08006b9[m rev-readonly-klaster1
+[33m674638d[m rev-readonly-kelembagaan
+[33m727873e[m fix/status-klaster
+[33m8f8202f[m fix-all-klaster
+[33m7089b20[m fix-approve-klaster1-2-5
+[33m039c0fe[m[33m ([m[1;32mbuat-sidang-rka[m[33m)[m rev/klaster-5-controller
+[33m3c76251[m rev/klaster-5
+[33mc733f68[m rev/klaster-4-part2
+[33m5a76ee5[m rev/klaster-4
+[33ma03d83b[m rev/klaster kelembagaan-klaster1-klaster2-klaster3
+[33m69f5fc3[m add/file berkas
+[33m178dd07[m[33m ([m[1;32mreview-klaster-all[m[33m)[m fix-review-all
+[33m38a06f8[m Merge branch 'disable-form'
+[33m1d10b66[m[33m ([m[1;32mdisable-form[m[33m)[m backto-file
+[33m6bbccfc[m rev-migrations-klaster1
+[33m3f0636d[m[33m ([m[1;32madd-klaster-MVC[m[33m)[m fix-review-cluster
+[33m787a0dd[m add/favicons
+[33m08e34ae[m rev-sidebar-admin
+[33m7aa350c[m add/feat-review-kelembagaan
+[33m35c4d93[m[33m ([m[1;32mfeat-full-klaster[m[33m)[m add/pages-klaster5
+[33m57d5cd2[m add/pages-klaster4
+[33m1ccf111[m add/pages-klaster3
+[33m748e10b[m add/pages-klaster2
+[33m28d94b3[m feat/announcement-fix
+[33m6d740b1[m add/feat-filter-admin-users
+[33macf5dec[m feat/edit-users-fix
+[33ma76ec59[m feat /delete user
+[33m4c5555f[m layout/deepsek
+[33mf152d7e[m feat filter desa annoucm=enemnt
+[33m631ff21[m add/feat pengumuman users
+[33md810894[m[33m ([m[1;32mdata-kelembagaan-new[m[33m)[m fix/session-navbar
+[33mdcc8289[m add/tutorial
+[33m2096e38[m adm-announcment
+[33mb216059[m feat/announcment
+[33m8530a5c[m add/feat announcement
+[33m2f57445[m data-tidak masuk
+[33mbec1ec4[m feat:add-users
+[33mbdc4280[m fix/bug-approval
+[33mde5f86a[m add:kelemabagaan-model
+[33m63488c1[m rev-page-kelembagaan
+[33m15fd0b3[m feat:admin-approval-data
+[33mb1e0537[m rev-controlller-admin-user-data
+[33ma522b2d[m add/feat-admin-2
+[33m38f969e[m add/kelembagaan-page-admin
+[33mbf1d187[m add/sidenav_admin
+[33me1565ed[m add/dashboaard-admin
+[33m4095d98[m fix/all-bug
+[33mc90c1e5[m add/excel-file
+[33m58b15e1[m add/excel
+[33m1a7dc57[m rev/kelembagaan
+[33m56143af[m add/pages-klaster1
+[33mbdb7efa[m add/pages-kelembagaan
+[33mdcd2b25[m add/insert-data-sariwangi
+[33m1a19a3e[m add/session-auth
+[33m47ab237[m note/belum-pake-session
+[33ma30b3a4[m revisi-navigasiklaster-fixCode
+[33m111e941[m add/seeds-klasterSeeder
+[33meb0897a[m add/migrate-Klaster
+[33mf8e931b[m add/file-CI4
+[33m5306d0a[m first commit

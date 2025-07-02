@@ -60,48 +60,58 @@
 
 <body class="bg-gray-50 font-sans text-gray-800 antialiased">
 
-    <!-- Header Card -->
-    <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mt-24 mb-10">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-6 md:mb-0">
-                <h2 class="text-2xl md:text-3xl font-bold mb-2">Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!</h2>
-                <p class="text-primary-100 flex flex-wrap gap-3 items-center text-sm md:text-base">
-                    <span class="flex items-center gap-1"><i class="ph ph-envelope-simple"></i> <?= esc($user_email ?? 'email@example.com'); ?></span>
-                    <span class="flex items-center gap-1"><i class="ph ph-user"></i> Tipe: <span class="font-semibold text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span></span>
+   <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mb-10">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+        <!-- Info User -->
+        <div>
+            <h2 class="text-2xl md:text-3xl font-bold mb-2">
+                Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!
+            </h2>
+            <p class="text-primary-100 flex flex-wrap gap-3 items-center text-sm md:text-base">
+                <span class="flex items-center gap-1">
+                    <i class="ph ph-envelope-simple"></i> <?= esc($user_email ?? 'email@example.com'); ?>
+                </span>
+                <span class="flex items-center gap-1">
+                    <i class="ph ph-user"></i> Tipe: <span class="font-semibold text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
+                </span>
+            </p>
+        </div>
+
+        <!-- Status & Nilai EM -->
+        <div class="text-center bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20 w-full md:w-auto">
+            <?php if (($status ?? '') === 'approved'): ?>
+                <p class="text-green-300 font-bold text-lg flex items-center gap-2 justify-center">
+                    <i class="ph ph-check-circle"></i> Evaluasi Disetujui
                 </p>
-            </div>
-            <div class="text-center bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
-                <?php if (($status ?? '') === 'approved'): ?>
-                    <p class="text-green-300 font-bold text-lg flex items-center gap-2 justify-center">
-                        <i class="ph ph-check-circle"></i> Evaluasi Disetujui
-                    </p>
-                <?php else: ?>
-                    <p class="text-yellow-300 font-bold text-lg flex items-center gap-2 justify-center">
-                        <i class="ph ph-clock"></i> Menunggu Persetujuan
-                    </p>
-                <?php endif; ?>
+            <?php else: ?>
+                <p class="text-yellow-300 font-bold text-lg flex items-center gap-2 justify-center">
+                    <i class="ph ph-clock"></i> Menunggu Persetujuan
+                </p>
+            <?php endif; ?>
 
-                <div class="mt-3">
-                    <p class="text-primary-100">
-                        Nilai EM: <span class="font-bold text-white"><?= esc($nilai_em ?? '0'); ?></span> | 
-                        Maks: <?= esc($nilai_maksimal ?? '1000'); ?>
-                    </p>
+            <?php
+                $nilaiEm = $nilai_em ?? 0;
+                $maks = $nilai_maksimal ?? 120;
+                $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
+            ?>
 
-                    <?php
-                    $presentase = 0;
-                    if (!empty($nilai_em) && !empty($nilai_maksimal) && $nilai_maksimal != 0) {
-                        $presentase = min(100, round(($nilai_em / $nilai_maksimal) * 100));
-                    }
-                    ?>
-                    <div class="w-48 bg-white/20 rounded-full h-2.5 mt-2 mx-auto">
-                        <div class="bg-green-300 h-2.5 rounded-full progress-bar"
-                            style="width: <?= $presentase ?>%"></div>
-                    </div>
-                    <p class="text-xs text-primary-100 mt-1"><?= $presentase ?>% Complete</p>
+            <div class="mt-3">
+                <p class="text-primary-100 text-sm">
+                    Nilai EM: <span class="font-bold text-white"><?= esc($nilaiEm); ?></span> /
+                    <span><?= esc($maks); ?></span>
+                </p>
+
+                <div class="w-48 bg-white/20 rounded-full h-2.5 mt-2 mx-auto">
+                    <div class="bg-green-300 h-2.5 rounded-full progress-bar" style="width: <?= $presentase ?>%"></div>
                 </div>
+
+                <p class="text-xs text-primary-100 mt-1"><?= $presentase ?>% Complete</p>
             </div>
         </div>
     </div>
+</div>
+
+
 
     <!-- Form Container -->
     <div class="max-w-5xl mx-auto px-6 py-10 bg-white rounded-2xl form-container mb-16">

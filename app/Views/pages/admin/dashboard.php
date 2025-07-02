@@ -22,18 +22,15 @@
             <main class="flex-1 p-8 mt-24">
 
                 <!-- Welcome -->
-                <div
-                    class="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row justify-between items-center mb-8">
-                    <div>
-                        <h2 class="text-2xl font-bold mb-2">Selamat Datang, Admin SIPANDAKABULAN!</h2>
-                        <p class="text-gray-600">
-                            Anda login sebagai <span class="font-semibold text-blue-800">Administrator</span>
-                        </p>
-                    </div>
-                    <div class="mt-4 md:mt-0 text-center">
-                        <p class="text-gray-700">Pantau progres pengisian data kelembagaan setiap desa.</p>
-                    </div>
-                </div>
+                <h2 class="text-2xl font-bold mb-2">
+                    Selamat Datang, <?= esc(session()->get('username') ?? 'Admin SIPANDAKABULAN'); ?>!
+                </h2>
+                <p class="text-gray-600">
+                    Anda login sebagai
+                    <span
+                        class="font-semibold text-blue-800"><?= ucfirst(esc(session()->get('role') ?? 'admin')); ?></span>
+                </p>
+
 
                 <!-- Statistik Dashboard -->
                 <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">

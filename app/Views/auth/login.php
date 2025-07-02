@@ -11,7 +11,8 @@
     <link rel="icon" type="image/png" href="<?= base_url('assets/img/LogoKKLA.png') ?>">
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-blue-400 via-blue-200 to-blue-400 flex flex-col items-center justify-center p-6">
+<body
+    class="min-h-screen bg-gradient-to-br from-blue-400 via-blue-200 to-blue-400 flex flex-col items-center justify-center p-6">
 
     <img src="<?= base_url('assets/img/LogoKKLA.png') ?>" alt="Logo" class="w-24 mb-4 drop-shadow-lg">
 
@@ -43,7 +44,8 @@
 
             <div>
                 <label for="role" class="block mb-1 font-semibold text-gray-700">Hak Akses</label>
-                <select id="role" name="role" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="role" name="role" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="operator">Operator</option>
                     <option value="admin">Verifikator Administrasi</option>
                 </select>
@@ -59,7 +61,8 @@
                 <label for="password" class="block mb-1 font-semibold text-gray-700">Password</label>
                 <input type="password" id="password" name="password" required
                     class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button type="button" onclick="togglePassword()" class="absolute top-10 right-4 text-gray-400">👁</button>
+                <button type="button" onclick="togglePassword()"
+                    class="absolute top-10 right-4 text-gray-400">👁</button>
             </div>
 
             <div class="flex items-center">
@@ -79,12 +82,15 @@
         </form>
     </div>
 
-    <div class="bg-white/80 backdrop-blur-md mt-8 p-6 rounded-2xl shadow-md w-full max-w-md text-center text-sm text-gray-700">
+    <div
+        class="bg-white/80 backdrop-blur-md mt-8 p-6 rounded-2xl shadow-md w-full max-w-md text-center text-sm text-gray-700">
         <p>Juknis 2023: <a href="#" class="font-bold text-blue-600 hover:underline">download-kepmenjuknik2023</a></p>
-        <p class="text-red-600 font-semibold mt-4">Jika mengalami masalah username atau password, silakan email ke cs@evaluasikla.id</p>
+        <p class="text-red-600 font-semibold mt-4">Jika mengalami masalah username atau password, silakan email ke
+            cs@evaluasikla.id</p>
     </div>
 
-    <div class="bg-white/80 backdrop-blur-md mt-6 p-6 rounded-2xl shadow-md w-full max-w-3xl text-center text-gray-700 text-sm leading-relaxed">
+    <div
+        class="bg-white/80 backdrop-blur-md mt-6 p-6 rounded-2xl shadow-md w-full max-w-3xl text-center text-gray-700 text-sm leading-relaxed">
         <strong class="block mb-3 text-gray-800 text-base">Pemerintah Daerah Berkewajiban dan Bertanggung Jawab</strong>
         Untuk melaksanakan dan mendukung kebijakan nasional dalam penyelenggaraan Perlindungan Anak melalui upaya daerah
         membangun <span class="font-bold text-blue-600">SIPANDAKABULAN</span>.<br><br>

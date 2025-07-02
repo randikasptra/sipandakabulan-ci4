@@ -84,31 +84,40 @@ class Klaster1Controller extends BaseController
         return redirect()->to('/klaster1/form')->with('success', 'Data Klaster 1 berhasil disimpan dan menunggu persetujuan!');
     }
 
-    public function form()
-    {
-        $userId = session()->get('id');
-        $tahun = date('Y');
-        $bulan = date('F');
+  public function form()
+{
+    $userId = session()->get('id');
+    $tahun = date('Y');
+    $bulan = date('F');
 
-        $existing = $this->klaster1Model
-            ->where('user_id', $userId)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->orderBy('created_at', 'desc')
-            ->first();
+    // Ambil data klaster 1 dari database
+    $existing = $this->klaster1Model
+        ->where('user_id', $userId)
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->orderBy('created_at', 'desc')
+        ->first();
 
-        $data = [
-            'user_name' => session()->get('user_name'),
-            'user_email' => session()->get('user_email'),
-            'user_role' => session()->get('user_role'),
-            'status' => $existing['status'] ?? null,
-            'existing' => $existing ?? null,
-            'nilai_em' => $existing['total_nilai'] ?? 0,
-            'nilai_maksimal' => 120, // total maksimal nilai indikator klaster 1
-        ];
-
-        return view('pages/operator/klaster1', $data);
+    // Ambil total_nilai jika ada
+    $nilaiEM = 0;
+    if ($existing && isset($existing['total_nilai']) && is_numeric($existing['total_nilai'])) {
+        $nilaiEM = (int) $existing['total_nilai'];
     }
+
+    // Kirim data ke view
+    $data = [
+        'user_name' => session()->get('user_name'),
+        'user_email' => session()->get('user_email'),
+        'user_role' => session()->get('user_role'),
+        'status' => $existing['status'] ?? null,
+        'existing' => $existing,
+        'nilai_em' => $nilaiEM,
+        'nilai_maksimal' => 120, // total maksimal nilai indikator klaster 1
+    ];
+
+    return view('pages/operator/klaster1', $data);
+}
+
 
     public function batal()
     {

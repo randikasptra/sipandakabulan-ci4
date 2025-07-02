@@ -17,37 +17,43 @@ class Auth extends BaseController
         return view('auth/login');
     }
 
-   public function login()
-{
-    $session = session();
-    $userModel = new \App\Models\UserModel();
+    public function login()
+    {
+        $session = session();
+        $userModel = new \App\Models\UserModel();
 
-    $email = $this->request->getPost('email');
-    $password = $this->request->getPost('password');
+        $email = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
 
-    $user = $userModel->where('email', $email)->first();
+        $user = $userModel->where('email', $email)->first();
 
-    if ($user) {
-        if (password_verify($password, $user['password'])) {
-            // Simpan semua data penting ke session termasuk 'desa'
-            $sessionData = [
-                'id'       => $user['id'],
-                'username' => $user['username'],
-                'email'    => $user['email'],
-                'role'     => $user['role'],
-                'desa'     => $user['desa'], // ✅ ini bagian penting
-                'logged_in'=> true
-            ];
-            $session->set($sessionData);
+        if ($user) {
+            if (password_verify($password, $user['password'])) {
+                $sessionData = [
+                    'id' => $user['id'],
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'role' => $user['role'],
+                    'logged_in' => true
+                ];
 
-            return redirect()->to('/dashboard/' . $user['role']);
+                // Kalau user operator, tambahkan data desa
+                if ($user['role'] === 'operator') {
+                    $sessionData['desa'] = $user['desa'];
+                }
+
+                // Set ke session
+                $session->set($sessionData);
+
+                return redirect()->to('/dashboard/' . $user['role']);
+            } else {
+                return redirect()->back()->with('error', 'Password salah');
+            }
         } else {
-            return redirect()->back()->with('error', 'Password salah');
+            return redirect()->back()->with('error', 'Email tidak ditemukan');
         }
-    } else {
-        return redirect()->back()->with('error', 'Email tidak ditemukan');
     }
-}
+
 
 
     public function logout()

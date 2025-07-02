@@ -9,6 +9,9 @@ class AdminDashboard extends BaseController
 {
     public function index()
     {
+        if (!session()->get('logged_in')) {
+            return redirect()->to('/login')->with('error', 'Silakan login untuk mengakses dashboard.');
+        }
         $userModel = new \App\Models\UserModel();
         $berkasModel = new \App\Models\BerkasKlasterModel();
 
@@ -310,73 +313,73 @@ class AdminDashboard extends BaseController
     }
 
     public function approve($id)
-{
-    // Panggil semua model klaster
-    $kelembagaanModel = new \App\Models\KelembagaanModel();
-    $klaster1Model = new \App\Models\Klaster1Model();
-    $klaster2Model = new \App\Models\Klaster2Model();
-    $klaster3Model = new \App\Models\Klaster3Model();
-    $klaster4Model = new \App\Models\Klaster4Model();
-    $klaster5Model = new \App\Models\Klaster5Model();
+    {
+        // Panggil semua model klaster
+        $kelembagaanModel = new \App\Models\KelembagaanModel();
+        $klaster1Model = new \App\Models\Klaster1Model();
+        $klaster2Model = new \App\Models\Klaster2Model();
+        $klaster3Model = new \App\Models\Klaster3Model();
+        $klaster4Model = new \App\Models\Klaster4Model();
+        $klaster5Model = new \App\Models\Klaster5Model();
 
-    // Ambil data masing-masing klaster berdasarkan user_id
-    $kelembagaanData = $kelembagaanModel->where('user_id', $id)->first();
-    $klaster1Data = $klaster1Model->where('user_id', $id)->first();
-    $klaster2Data = $klaster2Model->where('user_id', $id)->first();
-    $klaster3Data = $klaster3Model->where('user_id', $id)->first();
-    $klaster4Data = $klaster4Model->where('user_id', $id)->first();
-    $klaster5Data = $klaster5Model->where('user_id', $id)->first();
+        // Ambil data masing-masing klaster berdasarkan user_id
+        $kelembagaanData = $kelembagaanModel->where('user_id', $id)->first();
+        $klaster1Data = $klaster1Model->where('user_id', $id)->first();
+        $klaster2Data = $klaster2Model->where('user_id', $id)->first();
+        $klaster3Data = $klaster3Model->where('user_id', $id)->first();
+        $klaster4Data = $klaster4Model->where('user_id', $id)->first();
+        $klaster5Data = $klaster5Model->where('user_id', $id)->first();
 
-    // Siapkan struktur data klaster untuk ditampilkan di view
-    $data = [
-        'user_id' => $id,
-        'kelembagaan' => [],
-        'klaster1' => [],
-        'klaster2' => [],
-        'klaster3' => [],
-        'klaster4' => [],
-        'klaster5' => [],
-        'status' => [], // akan diisi berdasarkan masing-masing data
-    ];
+        // Siapkan struktur data klaster untuk ditampilkan di view
+        $data = [
+            'user_id' => $id,
+            'kelembagaan' => [],
+            'klaster1' => [],
+            'klaster2' => [],
+            'klaster3' => [],
+            'klaster4' => [],
+            'klaster5' => [],
+            'status' => [], // akan diisi berdasarkan masing-masing data
+        ];
 
-    // Kelembagaan
-    if (!empty($kelembagaanData) && is_array($kelembagaanData)) {
-        $data['kelembagaan'][] = $kelembagaanData;
-        $data['status']['kelembagaan'] = $kelembagaanData['status'] ?? 'pending';
+        // Kelembagaan
+        if (!empty($kelembagaanData) && is_array($kelembagaanData)) {
+            $data['kelembagaan'][] = $kelembagaanData;
+            $data['status']['kelembagaan'] = $kelembagaanData['status'] ?? 'pending';
+        }
+
+        // Klaster 1
+        if (!empty($klaster1Data) && is_array($klaster1Data)) {
+            $data['klaster1'][] = $klaster1Data;
+            $data['status']['klaster1'] = $klaster1Data['status'] ?? 'pending';
+        }
+
+        // Klaster 2
+        if (!empty($klaster2Data) && is_array($klaster2Data)) {
+            $data['klaster2'][] = $klaster2Data;
+            $data['status']['klaster2'] = $klaster2Data['status'] ?? 'pending';
+        }
+
+        // Klaster 3
+        if (!empty($klaster3Data) && is_array($klaster3Data)) {
+            $data['klaster3'][] = $klaster3Data;
+            $data['status']['klaster3'] = $klaster3Data['status'] ?? 'pending';
+        }
+
+        // Klaster 4
+        if (!empty($klaster4Data) && is_array($klaster4Data)) {
+            $data['klaster4'][] = $klaster4Data;
+            $data['status']['klaster4'] = $klaster4Data['status'] ?? 'pending';
+        }
+
+        // Klaster 5
+        if (!empty($klaster5Data) && is_array($klaster5Data)) {
+            $data['klaster5'][] = $klaster5Data;
+            $data['status']['klaster5'] = $klaster5Data['status'] ?? 'pending';
+        }
+
+        return view('pages/admin/approve', $data);
     }
-
-    // Klaster 1
-    if (!empty($klaster1Data) && is_array($klaster1Data)) {
-        $data['klaster1'][] = $klaster1Data;
-        $data['status']['klaster1'] = $klaster1Data['status'] ?? 'pending';
-    }
-
-    // Klaster 2
-    if (!empty($klaster2Data) && is_array($klaster2Data)) {
-        $data['klaster2'][] = $klaster2Data;
-        $data['status']['klaster2'] = $klaster2Data['status'] ?? 'pending';
-    }
-
-    // Klaster 3
-    if (!empty($klaster3Data) && is_array($klaster3Data)) {
-        $data['klaster3'][] = $klaster3Data;
-        $data['status']['klaster3'] = $klaster3Data['status'] ?? 'pending';
-    }
-
-    // Klaster 4
-    if (!empty($klaster4Data) && is_array($klaster4Data)) {
-        $data['klaster4'][] = $klaster4Data;
-        $data['status']['klaster4'] = $klaster4Data['status'] ?? 'pending';
-    }
-
-    // Klaster 5
-    if (!empty($klaster5Data) && is_array($klaster5Data)) {
-        $data['klaster5'][] = $klaster5Data;
-        $data['status']['klaster5'] = $klaster5Data['status'] ?? 'pending';
-    }
-
-    return view('pages/admin/approve', $data);
-}
 
     public function setujui($id)
     {
