@@ -88,7 +88,9 @@ class AdminDashboard extends BaseController
         }
 
         $userModel = new UserModel();
-        $users = $userModel->findAll();
+        // $users = $userModel->findAll();
+        $users = $userModel->where('role', 'operator')->findAll();
+
 
 
         $data = [

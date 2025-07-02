@@ -102,15 +102,10 @@
                         </div>
 
                         <div class="flex flex-col md:flex-row gap-3 items-center">
-                            <select id="filterRole"
-                                class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                                <option value="">Semua Role</option>
-                                <option value="admin">Admin</option>
-                                <option value="operator">Operator</option>
-                            </select>
+                           
 
                             <div class="relative">
-                                <input type="text" id="searchInput" placeholder="Cari pengguna..."
+                                <input type="text" id="searchInput" placeholder="Cari Nama Desa..."
                                     class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                                 <i class="fas fa-search absolute left-2.5 top-3 text-gray-400"></i>
                             </div>
@@ -446,6 +441,23 @@
         searchInput.addEventListener('input', filterTable);
         filterRole.addEventListener('change', filterTable);
     </script>
+
+    <script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const keyword = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#userTableBody tr');
+
+        rows.forEach(row => {
+            const desa = row.dataset.desa.toLowerCase();
+            if (desa.includes(keyword)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
 </body>
 
 </html>

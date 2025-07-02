@@ -12,11 +12,13 @@
       transition: all 0.3s ease;
       border-left: 4px solid transparent;
     }
+
     .card-hover:hover {
       transform: translateY(-5px);
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
       border-left-color: #1d4ed8;
     }
+
     .status-badge {
       padding: 0.25rem 0.5rem;
       border-radius: 9999px;
@@ -55,7 +57,10 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="ph ph-magnifying-glass text-gray-400"></i>
                 </div>
-                <input type="text" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Cari desa...">
+                <div class="relative">
+                  <input type="text" id="searchInput" placeholder="Cari Nama Desa..."
+                    class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                </div>
               </div>
             </div>
           </div>
@@ -63,7 +68,8 @@
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php if (!empty($users) && is_array($users)): ?>
               <?php foreach ($users as $user): ?>
-                <div class="card-hover bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md">
+                <div class="card-hover bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md"
+                  data-desa="<?= strtolower($user['desa'] ?? '') ?>">
                   <div class="flex justify-between items-start mb-4">
                     <div class="flex items-center gap-3">
                       <div class="bg-blue-100 p-3 rounded-full">
@@ -106,18 +112,6 @@
                         <p class="font-medium"><?= esc($user['email']) ?></p>
                       </div>
                     </div>
-
-                    <div class="flex items-center gap-3 text-sm">
-                      <div class="bg-blue-50 p-2 rounded-lg">
-                        <i class="ph ph-file-text text-blue-700"></i>
-                      </div>
-                      <div>
-                        <p class="text-gray-500">Status Input</p>
-                        <p class="font-medium <?= $user['status_input'] === 'sudah' ? 'text-green-600' : 'text-red-600' ?>">
-                          <?= esc(ucfirst($user['status_input'])) ?>
-                        </p>
-                      </div>
-                    </div>
                   </div>
 
                   <div class="flex justify-between items-center pt-4 border-t border-gray-100">
@@ -146,6 +140,22 @@
       </main>
     </div>
   </div>
+
+  <script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+      const keyword = this.value.toLowerCase();
+      const cards = document.querySelectorAll('.card-hover');
+
+      cards.forEach(card => {
+        const desa = card.dataset.desa?.toLowerCase() || '';
+        if (desa.includes(keyword)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
 
 </body>
 
