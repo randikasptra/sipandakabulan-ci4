@@ -63,18 +63,33 @@
    <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mb-10">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
         <!-- Info User -->
-        <div>
-            <h2 class="text-2xl md:text-3xl font-bold mb-2">
-                Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!
-            </h2>
-            <p class="text-primary-100 flex flex-wrap gap-3 items-center text-sm md:text-base">
-                <span class="flex items-center gap-1">
-                    <i class="ph ph-envelope-simple"></i> <?= esc($user_email ?? 'email@example.com'); ?>
-                </span>
-                <span class="flex items-center gap-1">
-                    <i class="ph ph-user"></i> Tipe: <span class="font-semibold text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
-                </span>
-            </p>
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                            <i class="ph ph-clipboard-text text-2xl"></i>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-bold">Form Kelembagaan</h2>
+                    </div>
+                    <p class="text-primary-100 opacity-90">Silakan isi data berikut sesuai kondisi di lapangan.</p>
+                </div>
+
+               
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-white/10">
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center gap-2 text-sm text-primary-100">
+                        <i class="ph ph-calendar-blank"></i>
+                        <span><?= date('d F Y') ?></span>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-primary-100">
+                        <i class="ph ph-clock"></i>
+                        <span>Estimasi pengisian: 15 menit</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Status & Nilai EM -->
