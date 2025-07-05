@@ -16,6 +16,57 @@ class Klaster4Controller extends BaseController
         $this->klaster4Model = new Klaster4Model();
         $this->berkasKlasterModel = new BerkasKlasterModel();
     }
+    public function klaster4($id = null)
+    {
+        $session = session();
+
+        // Cek login
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $userModel = new UserModel();
+        $klaster4Model = new \App\Models\Klaster4Model();
+
+        $userId = $session->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        // Ambil data klaster4 berdasarkan session user ID
+        $klaster4 = $klaster4Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        // Cek file ZIP
+        $zipFilePath = FCPATH . 'uploads/klaster4/' . ($id ?? $userId) . '.zip';
+        $zipAvailable = file_exists($zipFilePath);
+
+        $data = [
+            'user_email' => $session->get('email'),
+            'user_role' => $session->get('role'),
+            'username' => $session->get('username'),
+            'id' => $id ?? $userId,
+            'user_id' => $userId,
+
+            // Statistik
+            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+
+            // Form data
+            'klaster4' => $klaster4,
+            'existing' => $klaster4 ?? [],
+            'status' => $klaster4['status'] ?? null,
+            'zipAvailable' => $zipAvailable,
+             'nilai_em' => $klaster3['total_nilai'] ?? 0,
+            'nilai_maksimal' => 180,
+        ];
+
+        return view('pages/operator/klaster4', $data);
+    }
 
     public function submit()
     {
