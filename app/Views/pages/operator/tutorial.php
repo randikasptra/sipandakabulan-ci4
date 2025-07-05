@@ -1,5 +1,5 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
 
 <!-- AOS CSS -->
 <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
@@ -58,34 +58,31 @@
             ],
         ];
         foreach ($steps as $index => $step): ?>
-        <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
-            <div class="md:w-1/3 md:sticky top-24">
-                <div class="flex items-center mb-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mr-3">
-                        <?= $index + 1 ?>
+            <div class="flex flex-col md:flex-row gap-8 items-start" data-aos="fade-up">
+                <div class="md:w-1/3 md:sticky top-24">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mr-3">
+                            <?= $index + 1 ?>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-900"><?= $step['judul'] ?></h2>
                     </div>
-                    <h2 class="text-xl font-semibold text-gray-900"><?= $step['judul'] ?></h2>
+                    <p class="text-gray-600 pl-2 mb-2">
+                        <?= $step['deskripsi'] ?>
+                    </p>
+                    <?php if (!empty($step['link'])): ?>
+                        <div class="mt-4 pl-2">
+                            <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition">
+                                <i class="ph ph-download mr-2"></i> Download Template
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <p class="text-gray-600 pl-2 mb-2">
-                    <?= $step['deskripsi'] ?>
-                </p>
-                <?php if (!empty($step['link'])): ?>
-                    <div class="mt-4 pl-2">
-                        <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition">
-                            <i class="ph ph-download mr-2"></i> Download Template
-                        </a>
-                    </div>
-                <?php endif; ?>
+                <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <img src="<?= base_url('assets/tutorial/' . $step['img']) ?>" alt="Langkah <?= $index + 1 ?>" class="w-full h-auto object-cover">
+                </div>
             </div>
-            <div class="md:w-2/3 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-                <img src="<?= base_url('assets/tutorial/' . $step['img']) ?>" alt="Langkah <?= $index + 1 ?>" class="w-full h-auto object-cover">
-            </div>
-        </div>
         <?php endforeach; ?>
     </div>
-
-    <!-- Tombol ke Dashboard -->
-    
 </section>
 
 <!-- Tombol Kembali ke Atas -->
@@ -105,4 +102,4 @@
     btn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 </script>
 
-<?= $this->include('layouts/footer') ?>
+<?= $this->endSection() ?>

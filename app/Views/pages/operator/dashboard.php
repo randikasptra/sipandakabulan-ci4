@@ -1,8 +1,7 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
 
-<!-- Hero Section -->
-<section class="p-6 pt-24">
+<section class="p-6">
 
     <?php
     $totalEm = 0;
@@ -41,7 +40,6 @@
     </div>
 </section>
 
-<!-- Card Klaster Section -->
 <section class="px-6 pb-6">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <?php foreach ($klasters as $klaster): ?>
@@ -62,5 +60,4 @@
     </div>
 </section>
 
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-<?= $this->include('layouts/footer') ?>
+<?= $this->endSection() ?>

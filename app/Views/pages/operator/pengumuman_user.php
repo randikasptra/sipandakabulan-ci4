@@ -1,8 +1,9 @@
-<?= $this->include('layouts/header') ?>
-<?= $this->include('layouts/navbar') ?>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
 
-<section class="bg-gray-50 min-h-screen pt-24">
+<section class="bg-gray-50 min-h-screen ">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
         <!-- Header Section -->
         <div class="text-center mb-10" data-aos="zoom-in">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
@@ -47,7 +48,8 @@
                 <?php endforeach ?>
             <?php endif ?>
         </div>
+
     </div>
 </section>
 
-<?= $this->include('layouts/footer') ?>
+<?= $this->endSection() ?>
