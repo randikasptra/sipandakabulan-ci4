@@ -58,75 +58,52 @@
     </style>
 </head>
 
-<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+<body class="bg-gray-50 font-sans text-gray-800 antialiased pt-24">
 
-   <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mb-10">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-        <!-- Info User -->
-        <div>
-            <h2 class="text-2xl md:text-3xl font-bold mb-2">
-                Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!
+  <div class="mx-28 mb-6">
+    <div class="bg-gradient-to-br from-blue-900 to-blue-700 p-6 rounded-2xl text-white shadow-lg flex flex-col lg:flex-row gap-5 items-start">
+        <!-- User Info -->
+        <div class="flex-1 space-y-1.5">
+            <h2 class="text-xl font-bold truncate">
+                Selamat Datang, <?= esc($user_name ?? 'Pengguna'); ?>!
             </h2>
-            <p class="text-primary-100 flex flex-wrap gap-3 items-center text-sm md:text-base">
-                <span class="flex items-center gap-1">
-                    <i class="ph ph-envelope-simple"></i> <?= esc($user_email ?? 'email@example.com'); ?>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-blue-100">
+                <span class="flex items-center gap-1.5">
+                    <i class="ph ph-envelope-simple text-blue-200"></i>
+                    <?= esc($user_email ?? 'email@example.com'); ?>
                 </span>
-                <span class="flex items-center gap-1">
-                    <i class="ph ph-user"></i> Tipe: <span class="font-semibold text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
+                <span class="flex items-center gap-1.5">
+                    <i class="ph ph-user text-blue-200"></i>
+                    Tipe: <span class="font-medium text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
                 </span>
-            </p>
+            </div>
         </div>
 
-        <!-- Status & Progress EM -->
-        <div class="text-center bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20 w-full md:w-auto">
-            <!-- Status -->
-            <?php if (($status ?? '') === 'approved'): ?>
-                <p class="text-green-300 font-bold text-lg flex items-center gap-2 justify-center">
-                    <i class="ph ph-check-circle"></i> Evaluasi Disetujui
-                </p>
-            <?php else: ?>
-                <p class="text-yellow-300 font-bold text-lg flex items-center gap-2 justify-center">
-                    <i class="ph ph-clock"></i> Menunggu Persetujuan
-                </p>
-            <?php endif; ?>
+        <!-- Evaluation Status -->
+        <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-lg p-4 w-full lg:w-64 space-y-2.5">
+            <p class="<?= ($status ?? '') === 'approved' ? 'text-green-300' : 'text-yellow-300' ?> font-medium flex items-center justify-center gap-1.5">
+                <i class="ph <?= ($status ?? '') === 'approved' ? 'ph-check-circle' : 'ph-clock' ?>"></i>
+                <?= ($status ?? '') === 'approved' ? 'Evaluasi Disetujui' : 'Menunggu Persetujuan' ?>
+            </p>
 
             <?php
                 $nilaiEm = $nilai_em ?? 0;
-                $maks = $nilai_maksimal ?? 120; // total maksimal EM
+                $maks = $nilai_maksimal ?? 120;
                 $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
-
-                // Level badge
-                if ($presentase >= 85) {
-                    $badge = ['Paripurna', 'bg-green-400 text-green-900'];
-                } elseif ($presentase >= 60) {
-                    $badge = ['Madya', 'bg-yellow-300 text-yellow-900'];
-                } elseif ($presentase > 0) {
-                    $badge = ['Dasar', 'bg-red-300 text-red-900'];
-                } else {
-                    $badge = ['Belum Ada', 'bg-gray-300 text-gray-800'];
-                }
             ?>
 
-            <!-- Progress -->
-            <div class="mt-3">
-                <p class="text-primary-100 text-sm">Progress EM Klaster 1</p>
-                <p class="font-bold text-white text-lg"><?= esc($nilaiEm); ?> / <?= esc($maks); ?> Poin</p>
-
-                <div class="w-48 bg-white/20 rounded-full h-2.5 mt-2 mx-auto">
-                    <div class="h-2.5 rounded-full <?= $badge[1] ?>" style="width: <?= $presentase ?>%"></div>
+            <div class="space-y-1 text-center">
+                <p class="text-xs text-blue-100">
+                    Nilai EM: <span class="font-semibold text-white"><?= esc($nilaiEm); ?></span>/<?= esc($maks); ?>
+                </p>
+                <div class="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div class="bg-green-300 h-full transition-all duration-500" style="width: <?= $presentase ?>%"></div>
                 </div>
-
-                <div class="mt-2 flex flex-col items-center">
-                    <p class="text-xs text-primary-100"><?= $presentase ?>% Complete</p>
-                    <span class="mt-1 text-xs font-semibold px-2 py-1 rounded-full <?= $badge[1] ?>">
-                        Level: <?= $badge[0]; ?>
-                    </span>
-                </div>
+                <p class="text-xs text-blue-100"><?= $presentase ?>% Complete</p>
             </div>
         </div>
     </div>
 </div>
-
 
 
 
@@ -359,6 +336,10 @@
     });
 });
     </script>
+
+
+
+
 
 </body>
 

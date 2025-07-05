@@ -88,7 +88,9 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('tutorial', 'Dashboard::tutorial');
     $routes->get('operator', 'Dashboard::index/operator');
     $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
-    $routes->get('klaster1/(:num)', 'Dashboard::klaster1/$1');
+    $routes->get('klaster1/(:num)', 'Klaster1Controller::klaster1/$1');
+    $routes->post('klaster1/save-temp', 'Klaster1Controller::saveTemp');
+
     $routes->get('klaster2/(:num)', 'Dashboard::klaster2/$1');
     $routes->get('klaster3/(:num)', 'Dashboard::klaster3/$1');
     $routes->get('klaster4/(:num)', 'Dashboard::klaster4/$1');

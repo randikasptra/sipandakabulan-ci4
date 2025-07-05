@@ -57,47 +57,47 @@
 <body class="bg-gray-50 font-sans text-gray-800 antialiased">
 
     <!-- Modern Header Card -->
-   <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mb-10">
-    <div>
-        <h2 class="text-2xl md:text-3xl font-bold mb-2">
-            Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!
-        </h2>
-        <p class="text-primary-100 flex flex-wrap gap-3 items-center text-sm md:text-base">
-            <span class="flex items-center gap-1">
-                <i class="ph ph-envelope-simple"></i> <?= esc($user_email ?? 'email@example.com'); ?>
-            </span>
-            <span class="flex items-center gap-1">
-                <i class="ph ph-user"></i> Tipe: <span class="font-semibold text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
-            </span>
-        </p>
-    </div>
-
-    <!-- Status & Nilai EM -->
-    <div class="text-center bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20 w-full md:w-auto">
-        <?php if (($status ?? '') === 'approved'): ?>
-            <p class="text-green-300 font-bold text-lg flex items-center gap-2 justify-center">
-                <i class="ph ph-check-circle"></i> Evaluasi Disetujui
-            </p>
-        <?php else: ?>
-            <p class="text-yellow-300 font-bold text-lg flex items-center gap-2 justify-center">
-                <i class="ph ph-clock"></i> Menunggu Persetujuan
-            </p>
-        <?php endif; ?>
-
-        <?php
-            $nilaiEm = $nilai_em ?? 0;
-            $maks = $nilai_maksimal ?? 100;
-            $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
-        ?>
-
-        <div class="mt-3">
-            <p class="text-primary-100 text-sm">
-                Nilai EM: <span class="font-bold text-white"><?= esc($nilaiEm); ?></span> / <span><?= esc($maks); ?></span>
-            </p>
-            <div class="w-48 bg-white/20 rounded-full h-2.5 mt-2 mx-auto">
-                <div class="bg-green-300 h-2.5 rounded-full" style="width: <?= $presentase ?>%"></div>
+ <div class="mx-28 my-24">
+    <div class="bg-gradient-to-br from-blue-900 to-blue-700 p-6 rounded-2xl text-white shadow-lg flex flex-col lg:flex-row gap-5 items-start">
+        <!-- User Info -->
+        <div class="flex-1 space-y-1.5">
+            <h2 class="text-xl font-bold truncate">
+                Selamat Datang, <?= esc($user_name ?? 'Pengguna'); ?>!
+            </h2>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-blue-100">
+                <span class="flex items-center gap-1.5">
+                    <i class="ph ph-envelope-simple text-blue-200"></i>
+                    <?= esc($user_email ?? 'email@example.com'); ?>
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <i class="ph ph-user text-blue-200"></i>
+                    Tipe: <span class="font-medium text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
+                </span>
             </div>
-            <p class="text-xs text-primary-100 mt-1"><?= $presentase ?>% Complete</p>
+        </div>
+
+        <!-- Evaluation Status -->
+        <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-lg p-4 w-full lg:w-64 space-y-2.5">
+            <p class="<?= ($status ?? '') === 'approved' ? 'text-green-300' : 'text-yellow-300' ?> font-medium flex items-center justify-center gap-1.5">
+                <i class="ph <?= ($status ?? '') === 'approved' ? 'ph-check-circle' : 'ph-clock' ?>"></i>
+                <?= ($status ?? '') === 'approved' ? 'Evaluasi Disetujui' : 'Menunggu Persetujuan' ?>
+            </p>
+
+            <?php
+                $nilaiEm = $nilai_em ?? 0;
+                $maks = $nilai_maksimal ?? 100;
+                $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
+            ?>
+
+            <div class="space-y-1 text-center">
+                <p class="text-xs text-blue-100">
+                    Nilai EM: <span class="font-semibold text-white"><?= esc($nilaiEm); ?></span>/<?= esc($maks); ?>
+                </p>
+                <div class="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div class="bg-green-300 h-full transition-all duration-500" style="width: <?= $presentase ?>%"></div>
+                </div>
+                <p class="text-xs text-blue-100"><?= $presentase ?>% Complete</p>
+            </div>
         </div>
     </div>
 </div>

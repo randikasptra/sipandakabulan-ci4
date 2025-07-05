@@ -63,46 +63,50 @@
 
 <body class="bg-gray-100 text-gray-800">
 
-   <div class="header-card p-8 rounded-2xl text-white mx-6 mt-6 mb-10">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                            <i class="ph ph-clipboard-text text-2xl"></i>
-                        </div>
-                        <h2 class="text-2xl md:text-3xl font-bold">Form Klaster V</h2>
-                    </div>
-                    <p class="text-primary-100 opacity-90">Silakan isi data sesuai kondisi lapangan dan unggah dokumen
-                        pendukung.</p>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:block h-12 w-px bg-white/30"></div>
-                    <div class="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/20">
-                        <p class="text-sm font-medium text-primary-100 flex items-center gap-2">
-                            <i class="ph ph-info"></i>
-                            <span>Pastikan data yang diisi valid</span>
-                        </p>
-                    </div>
-                </div>
+  <div class="mx-28 my-24">
+    <div class="bg-gradient-to-br from-blue-900 to-blue-700 p-6 rounded-2xl text-white shadow-lg flex flex-col lg:flex-row gap-5 items-start">
+        <!-- User Info -->
+        <div class="flex-1 space-y-1.5">
+            <h2 class="text-xl font-bold truncate">
+                Selamat Datang, <?= esc($user_name ?? 'Pengguna'); ?>!
+            </h2>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-blue-100">
+                <span class="flex items-center gap-1.5">
+                    <i class="ph ph-envelope-simple text-blue-200"></i>
+                    <?= esc($user_email ?? 'email@example.com'); ?>
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <i class="ph ph-user text-blue-200"></i>
+                    Tipe: <span class="font-medium text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
+                </span>
             </div>
+        </div>
 
-            <div class="mt-6 pt-6 border-t border-white/10">
-                <div class="flex flex-wrap gap-4">
-                    <div class="flex items-center gap-2 text-sm text-primary-100">
-                        <i class="ph ph-calendar-blank"></i>
-                        <span><?= date('d F Y') ?></span>
-                    </div>
-                    <div class="flex items-center gap-2 text-sm text-primary-100">
-                        <i class="ph ph-clock"></i>
-                        <span>Estimasi pengisian: 20 menit</span>
-                    </div>
+        <!-- Evaluation Status -->
+        <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-lg p-4 w-full lg:w-64 space-y-2.5">
+            <p class="<?= ($status ?? '') === 'approved' ? 'text-green-300' : 'text-yellow-300' ?> font-medium flex items-center justify-center gap-1.5">
+                <i class="ph <?= ($status ?? '') === 'approved' ? 'ph-check-circle' : 'ph-clock' ?>"></i>
+                <?= ($status ?? '') === 'approved' ? 'Evaluasi Disetujui' : 'Menunggu Persetujuan' ?>
+            </p>
+
+            <?php
+                $nilaiEm = $nilai_em ?? 0;
+                $maks = $nilai_maksimal ?? 130;
+                $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
+            ?>
+
+            <div class="space-y-1 text-center">
+                <p class="text-xs text-blue-100">
+                    Nilai EM: <span class="font-semibold text-white"><?= esc($nilaiEm); ?></span>/<?= esc($maks); ?>
+                </p>
+                <div class="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div class="bg-green-300 h-full transition-all duration-500" style="width: <?= $presentase ?>%"></div>
                 </div>
+                <p class="text-xs text-blue-100"><?= $presentase ?>% Complete</p>
             </div>
         </div>
     </div>
-
+</div>
     <div class="max-w-5xl mx-auto px-6 py-10 mt-6 bg-white shadow-xl rounded-3xl space-y-12">
           <div class="text-center mb-10">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-50 rounded-full mb-4">
