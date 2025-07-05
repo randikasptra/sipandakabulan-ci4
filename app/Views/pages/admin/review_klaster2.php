@@ -164,8 +164,22 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                                 class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
                                 <i class="fas fa-times-circle"></i> Reject
                             </button>
+
+                            
                         </div>
                     </form>
+                    <?php if ($klaster2['status'] === 'rejected'): ?>
+    <form action="<?= base_url('dashboard/admin/klaster2/delete') ?>" method="post" class="mt-8">
+        <?= csrf_field() ?>
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <button type="submit"
+            onclick="return confirm('Yakin ingin menghapus data Klaster 2 ini? Data akan hilang permanen.')"
+            class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+            <i class="fas fa-trash"></i> Hapus Form
+        </button>
+    </form>
+<?php endif; ?>
+
                 </div>
             </main>
         </div>

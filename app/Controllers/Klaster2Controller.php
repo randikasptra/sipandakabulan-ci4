@@ -203,4 +203,38 @@ class Klaster2Controller extends BaseController
         return redirect()->to('/klaster2/form')->with('success', 'Pengiriman data dibatalkan. Silakan isi ulang formulir.');
     }
 
+    public function delete()
+{
+    $userId = $this->request->getPost('user_id');
+    $tahun = date('Y');
+    $bulan = date('F');
+
+    $existing = $this->klaster2Model
+        ->where('user_id', $userId)
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
+
+    if (!$existing || $existing['status'] !== 'rejected') {
+        return redirect()->back()->with('error', 'Data tidak ditemukan atau belum ditolak.');
+    }
+
+    // Hapus file jika ada
+    $fields = ['perkawinanAnak_file', 'pencegahanPernikahan_file', 'lembagaKonsultasi_file'];
+    foreach ($fields as $fileField) {
+        if (!empty($existing[$fileField])) {
+            $filePath = ROOTPATH . 'public/uploads/klaster2/' . $existing[$fileField];
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+    }
+
+    // Hapus data
+    $this->klaster2Model->delete($existing['id']);
+
+    return redirect()->to('/dashboard/admin')->with('success', 'Data Klaster 2 berhasil dihapus.');
+}
+
+
 }

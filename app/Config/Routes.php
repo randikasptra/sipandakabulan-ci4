@@ -35,6 +35,9 @@ $routes->group('dashboard', function ($routes) {
         $routes->get('review_kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
         $routes->post('delete_kelembagaan', 'AdminDashboard::deleteKelembagaan');
         $routes->post('delete_klaster1', 'AdminDashboard::deleteKlaster1');
+        $routes->post('klaster2/delete', 'Klaster2Controller::delete');
+        $routes->post('klaster3/delete', 'Klaster3Controller::delete');
+
 
 
         // Review Klaster 1 - 5

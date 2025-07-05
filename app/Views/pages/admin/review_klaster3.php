@@ -168,6 +168,17 @@
                             </button>
                         </div>
                     </form>
+                    <?php if ($klaster3['status'] === 'rejected'): ?>
+    <form action="<?= base_url('dashboard/admin/klaster3/delete') ?>" method="post" class="mt-4">
+        <?= csrf_field() ?>
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <button type="submit"
+            class="flex items-center gap-2 bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors">
+            <i class="fas fa-trash-alt"></i> Hapus Data Klaster 3
+        </button>
+    </form>
+<?php endif ?>
+
                 </div>
             </main>
         </div>
