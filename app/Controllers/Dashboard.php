@@ -127,55 +127,7 @@ class Dashboard extends BaseController
 
 
 
-    public function klaster5($id = null)
-    {
-        $session = session();
-
-        // Cek login
-        if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
-        }
-
-        $userModel = new UserModel();
-        $klaster5Model = new \App\Models\Klaster5Model();
-
-        $userId = $session->get('id');
-        $tahun = date('Y');
-        $bulan = date('F');
-
-        // Ambil data klaster5 berdasarkan user, tahun, dan bulan
-        $klaster5 = $klaster5Model
-            ->where('user_id', $userId)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->first();
-
-        // Cek file ZIP
-        $zipFilePath = FCPATH . 'uploads/klaster5/' . ($id ?? $userId) . '.zip';
-        $zipAvailable = file_exists($zipFilePath);
-
-        $data = [
-            'user_email' => $session->get('email'),
-            'user_role' => $session->get('role'),
-            'username' => $session->get('username'),
-            'id' => $id ?? $userId,
-            'user_id' => $userId,
-
-            // Statistik
-            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
-            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
-            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
-            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
-
-            // Form data
-            'klaster5' => $klaster5,
-            'existing' => $klaster5 ?? [],
-            'status' => $klaster5['status'] ?? null,
-            'zipAvailable' => $zipAvailable,
-        ];
-
-        return view('pages/operator/klaster5', $data);
-    }
+   
 
 
 

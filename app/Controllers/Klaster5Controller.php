@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Klaster5Model;
 use App\Models\BerkasKlasterModel;
 use App\Models\KlasterFormModel;
+use App\Models\UserModel;
 
 class Klaster5Controller extends BaseController
 {
@@ -15,6 +16,51 @@ class Klaster5Controller extends BaseController
     {
         $this->klaster5Model = new Klaster5Model();
         $this->berkasKlasterModel = new BerkasKlasterModel();
+    }
+
+    public function klaster5($id = null)
+    {
+        $session = session();
+
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+        }
+
+        $userModel = new UserModel();
+        $userId = $session->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
+
+        $klaster5 = $this->klaster5Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
+
+        $zipFilePath = FCPATH . 'uploads/klaster5/' . ($id ?? $userId) . '.zip';
+        $zipAvailable = file_exists($zipFilePath);
+
+        $data = [
+            'user_email' => $session->get('email'),
+            'user_role' => $session->get('role'),
+            'username' => $session->get('username'),
+            'id' => $id ?? $userId,
+            'user_id' => $userId,
+
+            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+
+            'klaster5' => $klaster5,
+            'existing' => $klaster5 ?? [],
+            'status' => $klaster5['status'] ?? null,
+            'zipAvailable' => $zipAvailable,
+            'nilai_em' => (int) ($klaster5['total_nilai'] ?? 0),
+            'nilai_maksimal' => 130,
+        ];
+
+        return view('pages/operator/klaster5', $data);
     }
 
     public function submit()
@@ -31,7 +77,7 @@ class Klaster5Controller extends BaseController
             ->first();
 
         if ($existing) {
-            return redirect()->back()->with('error', 'Kamu sudah mengisi form Klaster 5 untuk bulan ini dan sedang menunggu atau sudah disetujui.');
+            return redirect()->back()->with('error', 'Kamu sudah mengisi form Klaster 5 untuk bulan ini.');
         }
 
         $fields = [
@@ -45,18 +91,17 @@ class Klaster5Controller extends BaseController
             'user_id' => $userId,
             'tahun' => $tahun,
             'bulan' => $bulan,
-            'status' => 'pending'
+            'status' => 'pending',
         ];
 
         $totalNilai = 0;
 
         foreach ($fields as $field) {
-            $value = (int) $this->request->getPost($field);
-            $data[$field] = $value;
-            $totalNilai += $value;
+            $nilai = (int) $this->request->getPost($field);
+            $data[$field] = $nilai;
+            $totalNilai += $nilai;
 
             $file = $this->request->getFile("{$field}_file");
-
             if ($file && $file->isValid() && !$file->hasMoved()) {
                 if ($file->getSize() > 10 * 1024 * 1024) {
                     return redirect()->back()->with('error', "Ukuran file {$field} melebihi 10MB.");
@@ -69,19 +114,16 @@ class Klaster5Controller extends BaseController
                 $newName = $field . '_' . time() . '_' . $file->getClientName();
                 $file->move(ROOTPATH . 'public/uploads/klaster5/', $newName);
                 $data["{$field}_file"] = $newName;
+            } else {
+                $data["{$field}_file"] = null;
             }
         }
 
-        // Masukkan total nilai
         $data['total_nilai'] = $totalNilai;
-
-        // Simpan data
         $this->klaster5Model->insert($data);
 
         return redirect()->to('/klaster5/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
-
-
 
     public function form()
     {
@@ -102,18 +144,12 @@ class Klaster5Controller extends BaseController
             'user_role' => session()->get('user_role'),
             'status' => $existing['status'] ?? null,
             'existing' => $existing ?? null,
-            'nilai_em' => isset($existing) ? array_sum([
-                $existing['laporanKekerasanAnak'] ?? 0,
-                $existing['mekanismePenanggulanganBencana'] ?? 0,
-                $existing['programPencegahanKekerasan'] ?? 0,
-                $existing['programPencegahanPekerjaanAnak'] ?? 0
-            ]) : 0,
-            'nilai_maksimal' => 100,
+            'nilai_em' => $existing['total_nilai'] ?? 0,
+            'nilai_maksimal' => 130,
         ];
 
         return view('pages/operator/klaster5', $data);
     }
-
 
     public function approve()
     {
@@ -142,10 +178,10 @@ class Klaster5Controller extends BaseController
             'klaster' => $klasterData['id'],
             'tahun' => $klaster5['tahun'],
             'bulan' => $klaster5['bulan'],
-            'total_nilai' => 0, // Belum ada di tabel, default 0
+            'total_nilai' => $klaster5['total_nilai'] ?? 0,
             'status' => $status,
             'catatan' => $status === 'rejected' ? $catatan : null,
-            'file_path' => 'klaster5/' . $userId . '.zip'
+            'file_path' => 'klaster5/' . $userId . '.zip',
         ];
 
         if ($existing) {
@@ -154,7 +190,10 @@ class Klaster5Controller extends BaseController
             $this->berkasKlasterModel->insert($dataBerkas);
         }
 
-        $this->klaster5Model->where('user_id', $userId)->set(['status' => $status])->update();
+        $this->klaster5Model
+            ->where('user_id', $userId)
+            ->set(['status' => $status])
+            ->update();
 
         return redirect()->back()->with('success', 'Status Klaster 5 berhasil diperbarui dan disimpan ke laporan.');
     }
@@ -176,7 +215,6 @@ class Klaster5Controller extends BaseController
             return redirect()->back()->with('error', 'Tidak ada data yang bisa dibatalkan.');
         }
 
-        // Daftar nama field yang punya file
         $fileFields = [
             'laporanKekerasanAnak_file',
             'mekanismePenanggulanganBencana_file',
@@ -187,52 +225,45 @@ class Klaster5Controller extends BaseController
         foreach ($fileFields as $field) {
             if (!empty($existing[$field])) {
                 $filePath = ROOTPATH . 'public/uploads/klaster5/' . $existing[$field];
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
+                if (file_exists($filePath)) unlink($filePath);
             }
         }
 
-        // Hapus data dari database
         $this->klaster5Model->delete($existing['id']);
 
         return redirect()->to('/klaster5/form')->with('success', 'Pengiriman data Klaster 5 berhasil dibatalkan.');
     }
 
     public function delete()
-{
-    $userId = $this->request->getPost('user_id');
+    {
+        $userId = $this->request->getPost('user_id');
 
-    $klaster5 = $this->klaster5Model
-        ->where('user_id', $userId)
-        ->where('status', 'rejected')
-        ->orderBy('created_at', 'desc')
-        ->first();
+        $klaster5 = $this->klaster5Model
+            ->where('user_id', $userId)
+            ->where('status', 'rejected')
+            ->orderBy('created_at', 'desc')
+            ->first();
 
-    if (!$klaster5) {
-        return redirect()->back()->with('error', 'Data tidak ditemukan atau status bukan rejected.');
-    }
+        if (!$klaster5) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan atau status bukan rejected.');
+        }
 
-    $fileFields = [
-        'laporanKekerasanAnak_file',
-        'mekanismePenanggulanganBencana_file',
-        'programPencegahanKekerasan_file',
-        'programPencegahanPekerjaanAnak_file',
-    ];
+        $fileFields = [
+            'laporanKekerasanAnak_file',
+            'mekanismePenanggulanganBencana_file',
+            'programPencegahanKekerasan_file',
+            'programPencegahanPekerjaanAnak_file',
+        ];
 
-    foreach ($fileFields as $field) {
-        if (!empty($klaster5[$field])) {
-            $filePath = ROOTPATH . 'public/uploads/klaster5/' . $klaster5[$field];
-            if (file_exists($filePath)) {
-                unlink($filePath);
+        foreach ($fileFields as $field) {
+            if (!empty($klaster5[$field])) {
+                $filePath = ROOTPATH . 'public/uploads/klaster5/' . $klaster5[$field];
+                if (file_exists($filePath)) unlink($filePath);
             }
         }
+
+        $this->klaster5Model->delete($klaster5['id']);
+
+        return redirect()->back()->with('success', 'Data Klaster 5 berhasil dihapus.');
     }
-
-    $this->klaster5Model->delete($klaster5['id']);
-
-    return redirect()->back()->with('success', 'Data Klaster 5 berhasil dihapus.');
-}
-
-
 }
