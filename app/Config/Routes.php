@@ -37,6 +37,9 @@ $routes->group('dashboard', function ($routes) {
         $routes->post('delete_klaster1', 'AdminDashboard::deleteKlaster1');
         $routes->post('klaster2/delete', 'Klaster2Controller::delete');
         $routes->post('klaster3/delete', 'Klaster3Controller::delete');
+        $routes->post('klaster4/delete', 'Klaster4Controller::delete');
+        $routes->post('klaster5/delete', 'Klaster5Controller::delete');
+
 
 
 
