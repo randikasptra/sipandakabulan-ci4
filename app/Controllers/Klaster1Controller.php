@@ -23,7 +23,6 @@ class Klaster1Controller extends BaseController
         $tahun = date('Y');
         $bulan = date('F');
 
-        // Cek apakah sudah submit
         $existing = $this->klaster1Model
             ->where('user_id', $userId)
             ->where('tahun', $tahun)
@@ -35,12 +34,10 @@ class Klaster1Controller extends BaseController
             return redirect()->back()->with('error', 'Kamu sudah mengisi data Klaster 1 bulan ini dan masih pending atau sudah disetujui.');
         }
 
-        // Ambil nilai input
         $AnakAktaKelahiran_value = (int) $this->request->getPost('AnakAktaKelahiran');
         $anggaran_value = (int) $this->request->getPost('anggaran');
         $total_nilai = $AnakAktaKelahiran_value + $anggaran_value;
 
-        // Upload file
         $fields = ['AnakAktaKelahiran', 'anggaran'];
         $files = [];
 
@@ -64,7 +61,6 @@ class Klaster1Controller extends BaseController
             }
         }
 
-        // Simpan
         $this->klaster1Model->save([
             'user_id' => $userId,
             'tahun' => $tahun,
@@ -80,43 +76,34 @@ class Klaster1Controller extends BaseController
         return redirect()->to('/klaster1/form')->with('success', 'Data Klaster 1 berhasil disimpan dan menunggu persetujuan!');
     }
 
- public function form()
-{
-    $userId = session()->get('id');
-    $tahun = date('Y');
-    $bulan = date('F');
+    public function form()
+    {
+        $userId = session()->get('id');
+        $tahun = date('Y');
+        $bulan = date('F');
 
-    // Ambil data berdasarkan bulan & tahun yang aktif
-    $existing = $this->klaster1Model
-        ->where('user_id', $userId)
-        ->where('tahun', $tahun)
-        ->where('bulan', $bulan)
-        ->orderBy('created_at', 'desc')
-        ->first();
+        $existing = $this->klaster1Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->orderBy('created_at', 'desc')
+            ->first();
 
-    $nilaiEM = 0;
-    $totalNilai = null;
+        $nilaiEM = isset($existing['total_nilai']) ? (int) $existing['total_nilai'] : 0;
 
-    if (!empty($existing) && isset($existing['total_nilai']) && is_numeric($existing['total_nilai'])) {
-        $nilaiEM = (int) $existing['total_nilai'];
-        $totalNilai = $existing['total_nilai']; // ✅ SIMPAN SEBAGAI DEBUG
+        $data = [
+            'user_name' => session()->get('user_name'),
+            'user_email' => session()->get('user_email'),
+            'user_role' => session()->get('user_role'),
+            'status' => $existing['status'] ?? null,
+            'existing' => $existing,
+            'nilai_em' => $nilaiEM,
+            'nilai_maksimal' => 120,
+            'total_nilai' => $existing['total_nilai'] ?? null,
+        ];
+
+        return view('pages/operator/klaster1', $data);
     }
-
-    $data = [
-        'user_name'      => session()->get('user_name'),
-        'user_email'     => session()->get('user_email'),
-        'user_role'      => session()->get('user_role'),
-        'status'         => $existing['status'] ?? null,
-        'existing'       => $existing,
-        'nilai_em'       => $nilaiEM,
-        'nilai_maksimal' => 120,
-        'total_nilai'    => $totalNilai, // ✅ tambahkan ini
-    ];
-
-    return view('pages/operator/klaster1', $data);
-}
-
-
 
     public function batal()
     {
@@ -135,7 +122,6 @@ class Klaster1Controller extends BaseController
             return redirect()->back()->with('error', 'Tidak ada data yang bisa dibatalkan.');
         }
 
-        // Hapus file
         $files = ['AnakAktaKelahiran_file', 'anggaran_file'];
         foreach ($files as $fileField) {
             if (!empty($existing[$fileField])) {
@@ -155,8 +141,15 @@ class Klaster1Controller extends BaseController
     {
         $userId = $this->request->getPost('user_id');
         $status = $this->request->getPost('status');
+        $tahun = $this->request->getPost('tahun');
+        $bulan = $this->request->getPost('bulan');
+        $catatan = $this->request->getPost('catatan');
 
-        $klaster1 = $this->klaster1Model->where('user_id', $userId)->first();
+        $klaster1 = $this->klaster1Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
 
         if (!$klaster1) {
             return redirect()->back()->with('error', 'Data klaster1 tidak ditemukan.');
@@ -172,16 +165,18 @@ class Klaster1Controller extends BaseController
         $existing = $this->berkasKlasterModel
             ->where('user_id', $userId)
             ->where('klaster', $klasterData['id'])
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
             ->first();
 
         $dataBerkas = [
             'user_id'     => $userId,
             'klaster'     => $klasterData['id'],
-            'tahun'       => $klaster1['tahun'],
-            'bulan'       => $klaster1['bulan'],
+            'tahun'       => $tahun,
+            'bulan'       => $bulan,
             'total_nilai' => $klaster1['total_nilai'] ?? 0,
             'status'      => $status,
-            'catatan'     => $status === 'rejected' ? $this->request->getPost('catatan') : null,
+            'catatan'     => $status === 'rejected' ? $catatan : null,
             'file_path'   => 'klaster1/' . $userId . '.zip'
         ];
 
@@ -191,8 +186,14 @@ class Klaster1Controller extends BaseController
             $this->berkasKlasterModel->insert($dataBerkas);
         }
 
-        $this->klaster1Model->where('user_id', $userId)->set(['status' => $status])->update();
+        // ✅ Update status di klaster1 (dengan syarat lengkap)
+        $this->klaster1Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->set(['status' => $status])
+            ->update();
 
-        return redirect()->back()->with('success', 'Status klaster1 berhasil diperbarui dan disimpan ke laporan.');
+        return redirect()->back()->with('success', 'Status Klaster 1 berhasil diperbarui.');
     }
 }

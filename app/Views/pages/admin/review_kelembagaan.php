@@ -156,23 +156,47 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
 
 
                 
-                    <form method="post" action="<?= base_url('dashboard/admin/admin-berkas/store') ?>" class="mt-8">
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-                        <input type="hidden" name="klaster" value="kelembagaan">
-                        <input type="hidden" name="tahun" value="<?= esc($kelembagaan['tahun']) ?>">
-                        <input type="hidden" name="bulan" value="<?= esc($kelembagaan['bulan']) ?>">
-                        <input type="hidden" name="total_nilai" value="<?= esc($kelembagaan['total_nilai']) ?>">
-                        <input type="hidden" name="catatan" value="">
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <button type="submit" name="status" value="approved"
-                                class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
-                                <i class="fas fa-check-circle"></i> Approve
-                            </button>
-                            <button type="submit" name="status" value="rejected"
-                                class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
-                                <i class="fas fa-times-circle"></i> Reject
-                            </button>
+                   <!-- Form Approve / Reject -->
+<?php if ($kelembagaan['status'] !== 'rejected'): ?>
+    <!-- Form Approve/Reject -->
+    <form method="post" action="<?= base_url('dashboard/admin/admin-berkas/store') ?>" class="mt-8">
+        <?= csrf_field() ?>
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <input type="hidden" name="klaster" value="kelembagaan">
+        <input type="hidden" name="tahun" value="<?= esc($kelembagaan['tahun']) ?>">
+        <input type="hidden" name="bulan" value="<?= esc($kelembagaan['bulan']) ?>">
+        <input type="hidden" name="total_nilai" value="<?= esc($kelembagaan['total_nilai']) ?>">
+        <input type="hidden" name="catatan" value="">
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <button type="submit" name="status" value="approved"
+                class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                <i class="fas fa-check-circle"></i> Approve
+            </button>
+            <button type="submit" name="status" value="rejected"
+                class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
+                <i class="fas fa-times-circle"></i> Reject
+            </button>
+        </div>
+    </form>
+<?php endif; ?>
+
+<?php if ($kelembagaan['status'] === 'rejected'): ?>
+    <!-- Form Hapus -->
+    <form action="<?= base_url('dashboard/admin/delete_kelembagaan') ?>" method="post" class="mt-8">
+        <?= csrf_field() ?>
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <button type="submit"
+            onclick="return confirm('Yakin ingin menghapus data kelembagaan ini? Data akan hilang permanen.')"
+            class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+            <i class="fas fa-trash"></i> Hapus Form
+        </button>
+    </form>
+<?php endif; ?>
+
+
+
+                            </div>
                         </div>
                     </form>
 

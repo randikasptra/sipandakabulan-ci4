@@ -33,6 +33,9 @@ $routes->group('dashboard', function ($routes) {
         $routes->get('approveAction/(:num)', 'AdminDashboard::approveAction');
         $routes->get('approve/confirm(:num)', 'AdminDashboard::setuju/$1');
         $routes->get('review_kelembagaan/(:num)', 'AdminDashboard::reviewKelembagaan/$1');
+        $routes->post('delete_kelembagaan', 'AdminDashboard::deleteKelembagaan');
+        $routes->post('delete_klaster1', 'AdminDashboard::deleteKlaster1');
+
 
         // Review Klaster 1 - 5
         $routes->get('review_klaster_1/(:num)', 'AdminDashboard::reviewKlaster1/$1');
