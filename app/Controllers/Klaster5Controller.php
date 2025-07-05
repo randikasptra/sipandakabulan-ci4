@@ -199,5 +199,40 @@ class Klaster5Controller extends BaseController
         return redirect()->to('/klaster5/form')->with('success', 'Pengiriman data Klaster 5 berhasil dibatalkan.');
     }
 
+    public function delete()
+{
+    $userId = $this->request->getPost('user_id');
+
+    $klaster5 = $this->klaster5Model
+        ->where('user_id', $userId)
+        ->where('status', 'rejected')
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+    if (!$klaster5) {
+        return redirect()->back()->with('error', 'Data tidak ditemukan atau status bukan rejected.');
+    }
+
+    $fileFields = [
+        'laporanKekerasanAnak_file',
+        'mekanismePenanggulanganBencana_file',
+        'programPencegahanKekerasan_file',
+        'programPencegahanPekerjaanAnak_file',
+    ];
+
+    foreach ($fileFields as $field) {
+        if (!empty($klaster5[$field])) {
+            $filePath = ROOTPATH . 'public/uploads/klaster5/' . $klaster5[$field];
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+    }
+
+    $this->klaster5Model->delete($klaster5['id']);
+
+    return redirect()->back()->with('success', 'Data Klaster 5 berhasil dihapus.');
+}
+
 
 }
