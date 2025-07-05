@@ -77,81 +77,51 @@
             <?= $this->include('layouts/header_admin') ?>
 
             <!-- Main Content Area -->
-            <main class="flex-1 overflow-y-auto p-6">
-                <h1 class="text-2xl font-bold text-gray-800 mb-6">Review Berkas Klaster</h1>
+           <main class="flex-1 overflow-y-auto p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Laporan Berkas Disetujui</h1>
 
-                <?php if (session()->getFlashdata('success')): ?>
-                    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-                        <?= session()->getFlashdata('success') ?>
-                    </div>
-                <?php elseif (session()->getFlashdata('error')): ?>
-                    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-                        <?= session()->getFlashdata('error') ?>
-                    </div>
-                <?php endif; ?>
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+            <?= session()->getFlashdata('success') ?>
+        </div>
+    <?php elseif (session()->getFlashdata('error')): ?>
+        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
-                        <thead class="bg-gray-100 text-gray-700">
-                            <tr>
-                                <th class="px-4 py-2 border-b text-left">No</th>
-                                <th class="px-4 py-2 border-b text-left">Nama Desa</th>
-                                <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
-                                <th class="px-4 py-2 border-b text-left">Berkas</th>
-                                <th class="px-4 py-2 border-b text-left">Status</th>
-                                <th class="px-4 py-2 border-b text-left">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $no = 1;
-                            foreach ($berkas as $b): ?>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-2 align-top"><?= $no++ ?></td>
-                                    <td class="px-4 py-2 align-top"><?= esc($b['desa']) ?></td>
-                                    <td class="px-4 py-2 align-top"><?= esc($b['nama_klaster']) ?></td>
-                                    <td class="px-4 py-2 align-top">
-                                        <a href="<?= base_url('uploads/' . $b['file_path']) ?>" target="_blank"
-                                            class="text-blue-600 underline hover:text-blue-800 transition">
-                                            Download
-                                        </a>
-                                    </td>
-                                    <td class="px-4 py-2 align-top">
-                                        <span class="px-2 py-1 rounded text-white text-xs
-                                            <?= $b['status'] === 'approved' ? 'bg-green-500' :
-                                                ($b['status'] === 'rejected' ? 'bg-red-500' : 'bg-yellow-500') ?>">
-                                            <?= ucfirst($b['status']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-2 align-top space-y-2">
-                                        <?php if ($b['status'] === 'pending'): ?>
-                                            <div class="flex flex-wrap gap-2">
-                                                <a href="<?= base_url('admin-berkas/approve/' . $b['id']) ?>"
-                                                    class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-xs">
-                                                    Approve
-                                                </a>
-                                                <form action="<?= base_url('admin-berkas/reject/' . $b['id']) ?>" method="post"
-                                                    class="flex flex-wrap gap-2">
-                                                    <?= csrf_field() ?>
-                                                    <input type="text" name="catatan" placeholder="Catatan"
-                                                        class="text-xs px-2 py-1 border rounded" required>
-                                                    <button type="submit"
-                                                        class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">
-                                                        Reject
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        <?php else: ?>
-                                            <?= $b['catatan']
-                                                ? '<div class="text-xs text-red-600">Catatan: ' . esc($b['catatan']) . '</div>'
-                                                : '<div class="text-xs text-gray-400 italic">Tidak ada catatan</div>' ?>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach ?>
-                        </tbody>
-                    </table>
-                </div>
-            </main>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
+            <thead class="bg-gray-100 text-gray-700">
+                <tr>
+                    <th class="px-4 py-2 border-b text-left">No</th>
+                    <th class="px-4 py-2 border-b text-left">Nama Desa</th>
+                    <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
+                    <th class="px-4 py-2 border-b text-left">Berkas</th>
+                    <th class="px-4 py-2 border-b text-left">Nilai Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1;
+                foreach ($berkas as $b): ?>
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-2 align-top"><?= $no++ ?></td>
+                        <td class="px-4 py-2 align-top"><?= esc($b['desa']) ?></td>
+                        <td class="px-4 py-2 align-top"><?= esc($b['nama_klaster']) ?></td>
+                        <td class="px-4 py-2 align-top">
+                            <a href="<?= base_url('uploads/' . $b['file_path']) ?>" target="_blank"
+                                class="text-blue-600 underline hover:text-blue-800 transition">
+                                Download
+                            </a>
+                        </td>
+                        <td class="px-4 py-2 align-top"><?= esc($b['total_nilai']) ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+    </div>
+</main>
+
         </div>
     </div>
 </body>

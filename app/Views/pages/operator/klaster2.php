@@ -57,228 +57,237 @@
 <body class="bg-gray-50 font-sans text-gray-800 antialiased">
 
     <!-- Modern Header Card -->
-    <div class="header-card p-8 rounded-2xl text-white mx-6 mt-6 mb-10">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                            <i class="ph ph-clipboard-text text-2xl"></i>
-                        </div>
-                        <h2 class="text-2xl md:text-3xl font-bold">Form Klaster II</h2>
-                    </div>
-                    <p class="text-primary-100 opacity-90">Silakan isi data berikut sesuai kondisi di lapangan.</p>
-                </div>
-                
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:block h-12 w-px bg-white/30"></div>
-                    <div class="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/20">
-                        <p class="text-sm font-medium text-primary-100 flex items-center gap-2">
-                            <i class="ph ph-info"></i>
-                            <span>Pastikan data yang diisi valid</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mt-6 pt-6 border-t border-white/10">
-                <div class="flex flex-wrap gap-4">
-                    <div class="flex items-center gap-2 text-sm text-primary-100">
-                        <i class="ph ph-calendar-blank"></i>
-                        <span><?= date('d F Y') ?></span>
-                    </div>
-                    <div class="flex items-center gap-2 text-sm text-primary-100">
-                        <i class="ph ph-clock"></i>
-                        <span>Estimasi pengisian: 15 menit</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+   <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mb-10">
+    <div>
+        <h2 class="text-2xl md:text-3xl font-bold mb-2">
+            Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!
+        </h2>
+        <p class="text-primary-100 flex flex-wrap gap-3 items-center text-sm md:text-base">
+            <span class="flex items-center gap-1">
+                <i class="ph ph-envelope-simple"></i> <?= esc($user_email ?? 'email@example.com'); ?>
+            </span>
+            <span class="flex items-center gap-1">
+                <i class="ph ph-user"></i> Tipe: <span class="font-semibold text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
+            </span>
+        </p>
     </div>
 
-    <!-- Form Container -->
-    <div class="max-w-5xl mx-auto px-6 py-10 bg-white rounded-2xl form-container mb-16">
-        <div class="text-center mb-10">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-50 rounded-full mb-4">
-                <i class="ph ph-list-check text-3xl text-primary-700"></i>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                Penilaian Klaster II
-            </h1>
-            <p class="text-gray-500 max-w-2xl mx-auto">Silakan pilih opsi dan unggah file pendukung jika ada untuk memastikan penilaian yang akurat.</p>
-        </div>
-
-        <form action="/submit-klaster2" method="POST" enctype="multipart/form-data" class="space-y-8">
-
-            <?php
-            // $formReadonly = in_array($status, ['pending', 'approved']);
-            $formReadonly = ($status === 'pending' || $status === 'approved');
-
-
-            $klaster = [
-                [
-                    'judul' => '1. Apakah Ada Perkawinan Anak (Total Nilai 25)',
-                    'nama' => 'perkawinanAnak',
-                    'nilai' => 25,
-                    'opsi' => [
-                        0 => 'Tidak Ada',
-                        10 => '≤ 10%',
-                        15 => '10% – 20%',
-                        25 => '50%',
-                    ],
-                    'file' => 'PerkawinanAnak.xlsx'
-                ],
-                [
-                    'judul' => '2. Upaya Yang Dilakukan Untuk Pencegahan Pernikahan Anak (Total Nilai 45)',
-                    'nama' => 'pencegahanPernikahan',
-                    'nilai' => 45,
-                    'opsi' => [
-                        0 => 'Tidak Ada',
-                        15 => '1 – 3 Program',
-                        45 => '≥ 4 Program',
-                    ],
-                    'file' => '' // tidak ada template excel
-                ],
-                [
-                    'judul' => '3. Tersedia Lembaga Konsultasi Bagi Keluarga (Total Nilai 30)',
-                    'nama' => 'lembagaKonsultasi',
-                    'nilai' => 30,
-                    'opsi' => [
-                        15 => 'Tersedia 1 Lembaga',
-                        25 => '> 3 Lembaga',
-                        30 => '≤ 5 Lembaga',
-                    ],
-                    'file' => 'LembagaKonsultasi.xlsx'
-                ],
-            ];
-
-     foreach ($klaster as $k):
-        $selected = isset($existing[$k['nama']]) ? $existing[$k['nama']] : old($k['nama']);
-        $readonly = $formReadonly ? 'disabled' : '';
-        $fileUploaded = $existing[$k['nama'] . '_file'] ?? null;
-    ?>
-    <div class="space-y-5 bg-gray-50 p-6 rounded-xl border border-gray-200 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500"></div>
-
-        <div class="flex justify-between items-start">
-            <div>
-                <h3 class="text-lg font-semibold text-gray-900"><?= $k['judul'] ?></h3>
-                <p class="text-sm text-gray-500 mt-1">
-                    Total Nilai: <span class="font-medium text-primary-700"><?= $k['nilai'] ?></span>
-                </p>
-            </div>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"><?= $k['nama'] ?></span>
-        </div>
-
-            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-                        <?php foreach ($k['opsi'] as $val => $label): ?>
-                            <label
-                                class="radio-option flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 <?= $readonly ? 'cursor-not-allowed' : 'cursor-pointer' ?>">
-                                <input type="radio" name="<?= $k['nama'] ?>" value="<?= $val ?>" <?= ($selected == $val) ? 'checked' : '' ?>
-                                <?= $readonly ?>
-                                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
-                                <div class="flex-1">
-                                    <span class="block text-sm font-medium text-gray-700"><?= $label ?></span>
-                                    <span class="block text-xs text-primary-600 font-semibold mt-1"><?= $val ?> poin</span>
-                                </div>
-                            </label>
-                        <?php endforeach; ?>
-                    </div>
-
-        <?php if (!$formReadonly): ?>
-            <div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2">
-                <p class="text-sm font-medium text-primary-800 flex items-center gap-2" id="<?= $k['nama'] ?>_selected">
-                    <i class="ph ph-info text-lg"></i>
-                    <span><?= is_numeric($selected) ? "Nilai terpilih: $selected poin" : 'Belum memilih nilai' ?></span>
-                </p>
-            </div>
-        <?php else: ?>
-            <div class="bg-green-50 border border-green-100 rounded-lg px-4 py-2 text-green-800">
-                <p class="text-sm font-medium flex items-center gap-2">
-                    <i class="ph ph-check-circle"></i>
-                    <?= is_numeric($selected) ? "Nilai yang dipilih: $selected poin" : "Belum memilih nilai" ?>
-                </p>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($k['file']): ?>
-            <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download
-                class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-primary-500 text-primary-600 text-sm font-medium rounded-lg transition duration-200 hover:bg-primary-50">
-                <i class="ph ph-download-simple text-lg"></i>
-                Download Template Excel
-            </a>
-        <?php endif; ?>
-
-        <?php if ($formReadonly): ?>
-            <p class="text-sm mt-2 text-gray-600">
-                <i class="ph ph-paperclip"></i> File yang diunggah:
-                <strong><?= $fileUploaded ?: 'Tidak ada file' ?></strong>
+    <!-- Status & Nilai EM -->
+    <div class="text-center bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20 w-full md:w-auto">
+        <?php if (($status ?? '') === 'approved'): ?>
+            <p class="text-green-300 font-bold text-lg flex items-center gap-2 justify-center">
+                <i class="ph ph-check-circle"></i> Evaluasi Disetujui
             </p>
         <?php else: ?>
-            <div class="mt-2">
-                <label class="block">
-                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2 mb-1">
-                        <i class="ph ph-paperclip"></i>
-                        Unggah Dokumen Pendukung
-                    </span>
-                    <div class="mt-1 flex items-center">
-                        <label
-                            class="upload-wrapper flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition relative overflow-hidden">
-                            <div class="upload-instruction flex flex-col items-center justify-center pt-5 pb-6 px-4">
-                                <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
-                                <p class="mb-2 text-sm text-gray-500">
-                                    <span class="font-semibold">Klik untuk upload</span> atau drag & drop
-                                </p>
-                                <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
-                            </div>
-                            <div class="file-preview hidden flex-col items-center justify-center text-center p-5">
-                                <i class="ph ph-file-zip text-3xl text-primary-600 mb-2"></i>
-                                <p class="text-sm font-medium text-primary-700 filename-preview"></p>
-                            </div>
-                            <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
-                        </label>
-                    </div>
-                </label>
-            </div>
+            <p class="text-yellow-300 font-bold text-lg flex items-center gap-2 justify-center">
+                <i class="ph ph-clock"></i> Menunggu Persetujuan
+            </p>
         <?php endif; ?>
+
+        <?php
+            $nilaiEm = $nilai_em ?? 0;
+            $maks = $nilai_maksimal ?? 100;
+            $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
+        ?>
+
+        <div class="mt-3">
+            <p class="text-primary-100 text-sm">
+                Nilai EM: <span class="font-bold text-white"><?= esc($nilaiEm); ?></span> / <span><?= esc($maks); ?></span>
+            </p>
+            <div class="w-48 bg-white/20 rounded-full h-2.5 mt-2 mx-auto">
+                <div class="bg-green-300 h-2.5 rounded-full" style="width: <?= $presentase ?>%"></div>
+            </div>
+            <p class="text-xs text-primary-100 mt-1"><?= $presentase ?>% Complete</p>
+        </div>
     </div>
-    <?php endforeach; ?>
+</div>
 
-    <?php if (!$formReadonly): ?>
-        <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
-            <button type="submit"
-                class="px-8 py-3 bg-gradient-to-r from-primary-700 to-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center justify-center gap-2">
-                <i class="ph ph-paper-plane-tilt"></i>
-                Submit Data
-            </button>
-            <button type="reset"
-                class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-300 flex items-center justify-center gap-2">
-                <i class="ph ph-arrow-counter-clockwise"></i>
-                Reset Form
-            </button>
-        </div>
-    <?php else: ?>
-        <div class="pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
-            Form sudah dikirim 
-        </div>
-    <?php endif; ?>
-</form>
-
-<?php if ($formReadonly): ?>
-    <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
-        <form action="<?= site_url('klaster2/batal') ?>" method="post"
-              onsubmit="return confirm('Yakin ingin membatalkan pengiriman data ini?');">
-            <?= csrf_field() ?>
-
-            <button type="submit"
-                <?= $status !== 'pending' ? 'disabled class="cursor-not-allowed opacity-50 px-8 py-3 bg-gray-100 border border-gray-300 text-gray-500 font-semibold rounded-lg"' : 'class="px-8 py-3 bg-red-100 border border-red-300 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition duration-300 flex items-center justify-center gap-2"' ?>>
-                <i class="ph ph-x-circle"></i>
-                Batal Kirim
-            </button>
-        </form>
+<!-- Flashdata -->
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="mx-6 mb-4 p-4 bg-green-100 text-green-800 rounded-lg">
+        <?= session()->getFlashdata('success') ?>
     </div>
 <?php endif; ?>
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="mx-6 mb-4 p-4 bg-red-100 text-red-800 rounded-lg">
+        <?= session()->getFlashdata('error') ?>
     </div>
+<?php endif; ?>
+
+<!-- Form Container -->
+<div class="max-w-5xl mx-auto px-6 py-10 bg-white rounded-2xl form-container mb-16">
+    <div class="text-center mb-10">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-50 rounded-full mb-4">
+            <i class="ph ph-list-check text-3xl text-primary-700"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+            Penilaian Klaster II
+        </h1>
+        <p class="text-gray-500 max-w-2xl mx-auto">Silakan pilih opsi dan unggah file pendukung jika ada untuk memastikan penilaian yang akurat.</p>
+    </div>
+
+    <form action="<?= site_url('/submit-klaster2') ?>" method="POST" enctype="multipart/form-data" class="space-y-8">
+        <?php
+        $formReadonly = ($status === 'pending' || $status === 'approved');
+
+        $klaster = [
+            [
+                'judul' => '1. Apakah Ada Perkawinan Anak (Total Nilai 25)',
+                'nama' => 'perkawinanAnak',
+                'nilai' => 25,
+                'opsi' => [
+                    0 => 'Tidak Ada',
+                    10 => '≤ 10%',
+                    15 => '10% – 20%',
+                    25 => '> 20%',
+                ],
+                'file' => 'PerkawinanAnak.xlsx'
+            ],
+            [
+                'judul' => '2. Upaya Untuk Pencegahan Pernikahan Anak (Total Nilai 45)',
+                'nama' => 'pencegahanPernikahan',
+                'nilai' => 45,
+                'opsi' => [
+                    0 => 'Tidak Ada',
+                    15 => '1 – 3 Program',
+                    45 => '≥ 4 Program',
+                ],
+                'file' => ''
+            ],
+            [
+                'judul' => '3. Tersedia Lembaga Konsultasi Bagi Keluarga (Total Nilai 30)',
+                'nama' => 'lembagaKonsultasi',
+                'nilai' => 30,
+                'opsi' => [
+                    15 => 'Tersedia 1 Lembaga',
+                    25 => '≤ 3 Lembaga',
+                    30 => '≥ 5 Lembaga',
+                ],
+                'file' => 'LembagaKonsultasi.xlsx'
+            ],
+        ];
+
+        foreach ($klaster as $k):
+            $selected = $existing[$k['nama']] ?? old($k['nama']);
+            $readonly = $formReadonly ? 'disabled' : '';
+            $fileUploaded = $existing[$k['nama'] . '_file'] ?? null;
+        ?>
+        <div class="space-y-5 bg-gray-50 p-6 rounded-xl border border-gray-200 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900"><?= $k['judul'] ?></h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Total Nilai: <span class="font-medium text-primary-700"><?= $k['nilai'] ?></span>
+                    </p>
+                </div>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800"><?= $k['nama'] ?></span>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                <?php foreach ($k['opsi'] as $val => $label): ?>
+                    <label class="radio-option flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 <?= $readonly ? 'cursor-not-allowed' : 'cursor-pointer' ?>">
+                        <input type="radio" name="<?= $k['nama'] ?>" value="<?= $val ?>" <?= ($selected == $val) ? 'checked' : '' ?> <?= $readonly ?>
+                               class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" />
+                        <div class="flex-1">
+                            <span class="block text-sm font-medium text-gray-700"><?= $label ?></span>
+                            <span class="block text-xs text-primary-600 font-semibold mt-1"><?= $val ?> poin</span>
+                        </div>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+
+            <?php if (!$formReadonly): ?>
+                <div class="bg-blue-50 border border-blue-100 rounded-lg px-4 py-2">
+                    <p class="text-sm font-medium text-primary-800 flex items-center gap-2">
+                        <i class="ph ph-info text-lg"></i>
+                        <?= is_numeric($selected) ? "Nilai terpilih: $selected poin" : 'Belum memilih nilai' ?>
+                    </p>
+                </div>
+            <?php else: ?>
+                <div class="bg-green-50 border border-green-100 rounded-lg px-4 py-2 text-green-800">
+                    <p class="text-sm font-medium flex items-center gap-2">
+                        <i class="ph ph-check-circle"></i>
+                        <?= is_numeric($selected) ? "Nilai yang dipilih: $selected poin" : "Belum memilih nilai" ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($k['file']): ?>
+                <a href="<?= site_url('download?file=' . $k['file']) ?>" target="_blank" download
+                   class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-primary-500 text-primary-600 text-sm font-medium rounded-lg hover:bg-primary-50 transition">
+                    <i class="ph ph-download-simple text-lg"></i>
+                    Download Template Excel
+                </a>
+            <?php endif; ?>
+
+            <?php if ($formReadonly): ?>
+                <p class="text-sm mt-2 text-gray-600">
+                    <i class="ph ph-paperclip"></i> File yang diunggah: <strong><?= $fileUploaded ?: 'Tidak ada file' ?></strong>
+                </p>
+            <?php else: ?>
+                <div class="mt-2">
+                    <label class="block">
+                        <span class="text-sm font-medium text-gray-700 flex items-center gap-2 mb-1">
+                            <i class="ph ph-paperclip"></i>
+                            Unggah Dokumen Pendukung
+                        </span>
+                        <div class="mt-1 flex items-center">
+                            <label class="upload-wrapper flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                                <div class="upload-instruction flex flex-col items-center justify-center pt-5 pb-6 px-4">
+                                    <i class="ph ph-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
+                                    <p class="mb-2 text-sm text-gray-500">
+                                        <span class="font-semibold">Klik untuk upload</span> atau drag & drop
+                                    </p>
+                                    <p class="text-xs text-gray-400">Format .ZIP (MAX. 10MB)</p>
+                                </div>
+                                <div class="file-preview hidden flex-col items-center justify-center text-center p-5">
+                                    <i class="ph ph-file-zip text-3xl text-primary-600 mb-2"></i>
+                                    <p class="text-sm font-medium text-primary-700 filename-preview"></p>
+                                </div>
+                                <input type="file" name="<?= $k['nama'] ?>_file" accept=".zip" class="hidden" />
+                            </label>
+                        </div>
+                    </label>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php endforeach; ?>
+
+        <?php if (!$formReadonly): ?>
+            <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
+                <button type="submit"
+                        class="px-8 py-3 bg-gradient-to-r from-primary-700 to-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center justify-center gap-2">
+                    <i class="ph ph-paper-plane-tilt"></i>
+                    Submit Data
+                </button>
+                <button type="reset"
+                        class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-300 flex items-center justify-center gap-2">
+                    <i class="ph ph-arrow-counter-clockwise"></i>
+                    Reset Form
+                </button>
+            </div>
+        <?php else: ?>
+            <div class="pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
+                Form sudah dikirim
+            </div>
+        <?php endif; ?>
+    </form>
+
+    <?php if ($formReadonly): ?>
+        <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-center gap-4">
+            <form action="<?= site_url('klaster2/batal') ?>" method="post" onsubmit="return confirm('Yakin ingin membatalkan pengiriman data ini?');">
+                <?= csrf_field() ?>
+                <button type="submit"
+                        <?= $status !== 'pending' ? 'disabled class="cursor-not-allowed opacity-50 px-8 py-3 bg-gray-100 border border-gray-300 text-gray-500 font-semibold rounded-lg"' : 'class="px-8 py-3 bg-red-100 border border-red-300 text-red-700 font-semibold rounded-lg hover:bg-red-200 transition duration-300 flex items-center justify-center gap-2"' ?>>
+                    <i class="ph ph-x-circle"></i>
+                    Batal Kirim
+                </button>
+            </form>
+        </div>
+    <?php endif; ?>
+</div>
+
 
     <script>
         // Show uploaded file name with better UI

@@ -92,7 +92,7 @@
 
             <?php
                 $nilaiEm = $nilai_em ?? 0;
-                $maks = $nilai_maksimal ?? 220; // total maksimal EM
+                $maks = $nilai_maksimal ?? 120; // total maksimal EM
                 $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
 
                 // Level badge
@@ -109,7 +109,7 @@
 
             <!-- Progress -->
             <div class="mt-3">
-                <p class="text-primary-100 text-sm">Progress EM Kelembagaan</p>
+                <p class="text-primary-100 text-sm">Progress EM Klaster 1</p>
                 <p class="font-bold text-white text-lg"><?= esc($nilaiEm); ?> / <?= esc($maks); ?> Poin</p>
 
                 <div class="w-48 bg-white/20 rounded-full h-2.5 mt-2 mx-auto">

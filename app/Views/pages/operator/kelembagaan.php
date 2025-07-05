@@ -149,7 +149,8 @@
                 <p class="text-xs text-primary-100 mt-1"><?= $presentase ?>% Complete</p>
             </div>
         </div>
-    </div></div>
+    </div>
+</div>
 
 
     <!-- Form Container -->

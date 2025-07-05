@@ -23,7 +23,6 @@ class Klaster2Controller extends BaseController
         $tahun = date('Y');
         $bulan = date('F');
 
-        // Cek apakah data sudah ada dan statusnya tidak bisa input ulang
         $existing = $this->klaster2Model
             ->where('user_id', $userId)
             ->where('tahun', $tahun)
@@ -34,15 +33,12 @@ class Klaster2Controller extends BaseController
             return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
         }
 
-        // Ambil nilai indikator
         $perkawinanAnak = (int) $this->request->getPost('perkawinanAnak');
         $pencegahanPernikahan = (int) $this->request->getPost('pencegahanPernikahan');
         $lembagaKonsultasi = (int) $this->request->getPost('lembagaKonsultasi');
 
-        // Hitung total nilai
         $total_nilai = $perkawinanAnak + $pencegahanPernikahan + $lembagaKonsultasi;
 
-        // Susun data awal
         $data = [
             'user_id' => $userId,
             'tahun' => $tahun,
@@ -54,7 +50,6 @@ class Klaster2Controller extends BaseController
             'status' => 'pending',
         ];
 
-        // Upload file masing-masing indikator
         $fields = ['perkawinanAnak', 'pencegahanPernikahan', 'lembagaKonsultasi'];
 
         foreach ($fields as $field) {
@@ -77,7 +72,6 @@ class Klaster2Controller extends BaseController
             }
         }
 
-        // Simpan data
         if ($existing && $existing['status'] === 'rejected') {
             $this->klaster2Model->update($existing['id'], $data);
         } else {
@@ -86,8 +80,6 @@ class Klaster2Controller extends BaseController
 
         return redirect()->to('/klaster2/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
     }
-
-
 
     public function form()
     {
@@ -109,7 +101,7 @@ class Klaster2Controller extends BaseController
             'status' => $existing['status'] ?? null,
             'existing' => $existing ?? null,
             'nilai_em' => $existing['total_nilai'] ?? 0,
-            'nilai_maksimal' => 180, // Total dari 3 indikator (misal)
+            'nilai_maksimal' => 100, // Nilai maksimal dari 3 indikator (misalnya)
         ];
 
         return view('pages/operator/klaster2', $data);
@@ -118,7 +110,7 @@ class Klaster2Controller extends BaseController
     public function approve()
     {
         $userId = $this->request->getPost('user_id');
-        $status = $this->request->getPost('status'); // approved atau rejected
+        $status = $this->request->getPost('status');
         $catatan = $this->request->getPost('catatan');
 
         $klasterFormModel = new KlasterFormModel();
@@ -147,7 +139,6 @@ class Klaster2Controller extends BaseController
             'status' => $status,
             'catatan' => ($status === 'rejected') ? $catatan : null,
             'file_path' => 'klaster2/' . $userId . '.zip',
-
         ];
 
         $existingBerkas = $this->berkasKlasterModel
@@ -186,7 +177,6 @@ class Klaster2Controller extends BaseController
             return redirect()->back()->with('error', 'Tidak ada data yang bisa dibatalkan.');
         }
 
-        // Hapus file jika ada
         $fields = ['perkawinanAnak_file', 'pencegahanPernikahan_file', 'lembagaKonsultasi_file'];
         foreach ($fields as $fileField) {
             if (!empty($existing[$fileField])) {
@@ -197,44 +187,39 @@ class Klaster2Controller extends BaseController
             }
         }
 
-        // Hapus data
         $this->klaster2Model->delete($existing['id']);
 
         return redirect()->to('/klaster2/form')->with('success', 'Pengiriman data dibatalkan. Silakan isi ulang formulir.');
     }
 
     public function delete()
-{
-    $userId = $this->request->getPost('user_id');
-    $tahun = date('Y');
-    $bulan = date('F');
+    {
+        $userId = $this->request->getPost('user_id');
+        $tahun = date('Y');
+        $bulan = date('F');
 
-    $existing = $this->klaster2Model
-        ->where('user_id', $userId)
-        ->where('tahun', $tahun)
-        ->where('bulan', $bulan)
-        ->first();
+        $existing = $this->klaster2Model
+            ->where('user_id', $userId)
+            ->where('tahun', $tahun)
+            ->where('bulan', $bulan)
+            ->first();
 
-    if (!$existing || $existing['status'] !== 'rejected') {
-        return redirect()->back()->with('error', 'Data tidak ditemukan atau belum ditolak.');
-    }
+        if (!$existing || $existing['status'] !== 'rejected') {
+            return redirect()->back()->with('error', 'Data tidak ditemukan atau belum ditolak.');
+        }
 
-    // Hapus file jika ada
-    $fields = ['perkawinanAnak_file', 'pencegahanPernikahan_file', 'lembagaKonsultasi_file'];
-    foreach ($fields as $fileField) {
-        if (!empty($existing[$fileField])) {
-            $filePath = ROOTPATH . 'public/uploads/klaster2/' . $existing[$fileField];
-            if (file_exists($filePath)) {
-                unlink($filePath);
+        $fields = ['perkawinanAnak_file', 'pencegahanPernikahan_file', 'lembagaKonsultasi_file'];
+        foreach ($fields as $fileField) {
+            if (!empty($existing[$fileField])) {
+                $filePath = ROOTPATH . 'public/uploads/klaster2/' . $existing[$fileField];
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
             }
         }
+
+        $this->klaster2Model->delete($existing['id']);
+
+        return redirect()->to('/dashboard/admin')->with('success', 'Data Klaster 2 berhasil dihapus.');
     }
-
-    // Hapus data
-    $this->klaster2Model->delete($existing['id']);
-
-    return redirect()->to('/dashboard/admin')->with('success', 'Data Klaster 2 berhasil dihapus.');
-}
-
-
 }

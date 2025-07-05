@@ -30,9 +30,10 @@ class Klaster1Controller extends BaseController
             ->whereIn('status', ['pending', 'approved'])
             ->first();
 
-        if ($existing) {
-            return redirect()->back()->with('error', 'Kamu sudah mengisi data Klaster 1 untuk bulan ini.');
+              if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
+            return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
         }
+
 
         $fields = ['AnakAktaKelahiran', 'anggaran'];
         $data = [
@@ -85,16 +86,16 @@ class Klaster1Controller extends BaseController
             ->where('bulan', $bulan)
             ->orderBy('created_at', 'desc')
             ->first();
+$data = [
+    'user_name' => session()->get('user_name') ?? 'User',
+    'user_email' => session()->get('user_email') ?? 'user@example.com',
+    'user_role' => session()->get('user_role') ?? 'user',
+    'status' => $existing['status'] ?? null,
+    'existing' => $existing,
+    'nilai_em' => $existing['total_nilai'] ?? 0,
+    'nilai_maksimal' => 120,
+];
 
-        $data = [
-            'user_name' => session()->get('user_name'),
-            'user_email' => session()->get('user_email'),
-            'user_role' => session()->get('user_role'),
-            'status' => $existing['status'] ?? null,
-            'existing' => $existing,
-            'nilai_em' => $existing['total_nilai'] ?? 0,
-            'nilai_maksimal' => 120,
-        ];
 
         return view('pages/operator/klaster1', $data);
     }

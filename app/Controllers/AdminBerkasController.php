@@ -10,19 +10,21 @@ use CodeIgniter\Database\BaseBuilder;
 class AdminBerkasController extends BaseController
 {
     public function index()
-    {
-        $db = \Config\Database::connect();
+{
+    $db = \Config\Database::connect();
 
-        $data['berkas'] = $db->table('berkas_klaster')
-            ->select('berkas_klaster.*, users.desa, klasters.title as nama_klaster')
-            ->join('users', 'users.id = berkas_klaster.user_id')
-            ->join('klasters', 'klasters.id = berkas_klaster.klaster') // JOIN ke klasters
-            ->orderBy('berkas_klaster.created_at', 'DESC')
-            ->get()
-            ->getResultArray();
+    $data['berkas'] = $db->table('berkas_klaster')
+        ->select('berkas_klaster.*, users.desa, klasters.title as nama_klaster')
+        ->join('users', 'users.id = berkas_klaster.user_id')
+        ->join('klasters', 'klasters.id = berkas_klaster.klaster')
+        ->where('berkas_klaster.status', 'approved') // ⬅️ hanya ambil yang approved
+        ->orderBy('berkas_klaster.created_at', 'DESC')
+        ->get()
+        ->getResultArray();
 
-        return view('pages/admin/berkas', $data);
-    }
+    return view('pages/admin/berkas', $data);
+}
+
 
     public function review($klaster)
     {

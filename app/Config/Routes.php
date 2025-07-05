@@ -102,7 +102,6 @@ $routes->get('download/kelembagaan/(:num)', 'DownloadController::kelembagaan/$1'
 
 // Form untuk operator (submit & form view)
 $routes->get('/kelembagaan/form', 'Kelembagaan::form');
-$routes->post('/submit-kelembagaan', 'Kelembagaan::submit');
 $routes->post('/kelembagaan/batal', 'Kelembagaan::batal');
 
 
@@ -114,6 +113,7 @@ $routes->post('/klaster3/batal', 'Klaster3Controller::batal');
 $routes->post('/klaster4/batal', 'Klaster4Controller::batal');
 $routes->post('/klaster5/batal', 'Klaster5Controller::batal');
 
+$routes->post('/submit-kelembagaan', 'Kelembagaan::submit');
 $routes->get('/klaster2/form', 'Klaster2Controller::form'); 
 $routes->get('/klaster3/form', 'Klaster3Controller::form'); 
 $routes->get('/klaster4/form', 'Klaster4Controller::form'); 
