@@ -74,6 +74,17 @@
                         <p class="text-sm font-medium text-gray-900 truncate"><?= esc(session()->get('email')) ?></p>
                         <p class="text-xs text-blue-600 font-semibold mt-0.5"><?= esc(session()->get('role')) ?></p>
                     </div>
+                    <!-- Tambahkan ini di dropdown akun -->
+<button type="button"
+    @click="showPasswordModal = true"
+    class="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 11c0-1.104.896-2 2-2s2 .896 2 2v1h-4v-1zM6 9v2c0 2.209 1.791 4 4 4h4c2.209 0 4-1.791 4-4V9c0-2.209-1.791-4-4-4H10C7.791 5 6 6.791 6 9z" />
+    </svg>
+    Ubah Password
+</button>
+
                     <form method="POST" action="<?= site_url('logout') ?>">
                         <?= csrf_field() ?>
                         <button type="submit"
@@ -152,3 +163,45 @@
         </div>
     </div>
 </nav>
+
+<!-- Modal Ubah Password -->
+<div x-data="{ showPasswordModal: false }" x-show="showPasswordModal"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+     style="display: none;">
+    <div @click.away="showPasswordModal = false"
+         class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+        <h2 class="text-lg font-semibold mb-4">Ubah Password</h2>
+        <form action="<?= site_url('ubah-password') ?>" method="POST" class="space-y-4">
+            <?= csrf_field() ?>
+
+            <div>
+                <label for="current_password" class="block text-sm font-medium text-gray-700">Password Lama</label>
+                <input type="password" name="current_password" id="current_password" required
+                       class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500">
+            </div>
+
+            <div>
+                <label for="new_password" class="block text-sm font-medium text-gray-700">Password Baru</label>
+                <input type="password" name="new_password" id="new_password" required
+                       class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500">
+            </div>
+
+            <div>
+                <label for="confirm_password" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
+                <input type="password" name="confirm_password" id="confirm_password" required
+                       class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500">
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+                <button type="button" @click="showPasswordModal = false"
+                        class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                    Batal
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 text-sm text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                    Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
