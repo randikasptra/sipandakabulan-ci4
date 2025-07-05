@@ -6,6 +6,11 @@ $urlKlaster = getKlasterSlug($klaster);
 $nilaiEm = $nilaiEm ?? 0;
 $nilaiMaksimal = $nilaiMaksimal ?? 100;
 $progres = ($nilaiMaksimal > 0) ? round(($nilaiEm / $nilaiMaksimal) * 100) : 0;
+
+// warna progres
+$warnaProgres = $progres >= 80 ? 'from-green-400 to-green-600'
+              : ($progres >= 50 ? 'from-yellow-400 to-yellow-600'
+              : 'from-red-400 to-red-600');
 ?>
 
 <a href="<?= site_url('dashboard/' . $urlKlaster . '/' . intval($id)) ?>"
@@ -32,14 +37,18 @@ $progres = ($nilaiMaksimal > 0) ? round(($nilaiEm / $nilaiMaksimal) * 100) : 0;
         </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="h-2 bg-gray-200 overflow-hidden">
-        <div class="h-full transition-all duration-1000 ease-out rounded-r-full"
-             style="width: <?= $progres ?>%; background: linear-gradient(to right, #22c55e, #16a34a);"></div>
+    <!-- Label nilai total -->
+    <div class="px-6 pt-4 text-sm text-gray-700 font-medium">
+        Nilai Total: <?= $nilaiEm ?> dari <?= $nilaiMaksimal ?>
     </div>
 
-    <!-- Button -->
-    <div class="px-6 py-4 mt-auto">
+    <!-- Progress Bar -->
+    <div class="h-3 mx-6 mt-2 mb-4 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-full rounded-full transition-all duration-1000 ease-out bg-gradient-to-r <?= $warnaProgres ?>" style="width: <?= $progres ?>%"></div>
+    </div>
+
+    <!-- Tombol -->
+    <div class="px-6 pb-6 mt-auto">
         <div class="relative inline-flex w-full items-center justify-center">
             <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-blue-500 opacity-0 group-hover:opacity-20 blur-sm transition-all duration-300"></div>
             <span class="relative w-full text-center bg-white border-2 border-sky-500 text-sky-600 font-semibold py-2.5 px-4 rounded-full transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-sky-500 group-hover:to-blue-600 group-hover:text-white group-hover:border-transparent group-hover:shadow-md">

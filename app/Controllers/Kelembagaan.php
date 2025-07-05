@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\KelembagaanModel;
 use App\Models\BerkasKlasterModel;
 use App\Models\KlasterFormModel;
+use App\Models\UserModel;
 
 class Kelembagaan extends BaseController
 {
@@ -17,6 +18,58 @@ class Kelembagaan extends BaseController
         $this->berkasKlasterModel = new BerkasKlasterModel();
     }
 
+
+     public function kelembagaan($id = null)
+{
+    $session = session();
+    if (!$session->get('logged_in')) {
+        return redirect()->to('/login');
+    }
+
+    $userModel = new UserModel();
+    $kelembagaanModel = new \App\Models\KelembagaanModel();
+
+    $tahun = date('Y');
+    $bulan = date('F'); // Sama dengan saat submit()
+
+    $kelembagaan = $kelembagaanModel
+        ->where('user_id', session()->get('id'))
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
+
+    $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
+    $zipAvailable = file_exists($zipFilePath);
+
+    // Default nilai EM & maksimal
+    $nilaiEm = $kelembagaan['total_nilai'] ?? 0;
+    $nilaiMaksimal = 220; // Kalau mau dinamis, hitung dari total skor maksimal tiap indikator
+
+    $data = [
+        'user_email' => $session->get('email'),
+        'user_role' => $session->get('role'),
+        'user_name' => $session->get('username'),
+        'id' => $id,
+        'kelembagaan' => $kelembagaan,
+        'zipAvailable' => $zipAvailable,
+        'user_id' => $id,
+
+        'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+        'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+        'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+        'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+
+        // penting untuk form
+        'existing' => $kelembagaan ?? [],
+        'status' => $kelembagaan['status'] ?? null,
+
+        // tambahan penting untuk progress
+        'nilai_em' => $nilaiEm,
+        'nilai_maksimal' => $nilaiMaksimal,
+    ];
+
+    return view('pages/operator/kelembagaan', $data);
+}
     public function submit()
     {
         $userId = session()->get('id');

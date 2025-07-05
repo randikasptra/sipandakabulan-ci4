@@ -87,7 +87,7 @@ $routes->group('dashboard', function ($routes) {
     // OPERATOR ROUTES
     $routes->get('tutorial', 'Dashboard::tutorial');
     $routes->get('operator', 'Dashboard::index/operator');
-    $routes->get('kelembagaan/(:num)', 'Dashboard::kelembagaan/$1');
+    $routes->get('kelembagaan/(:num)', 'Kelembagaan::kelembagaan/$1');
     $routes->get('klaster1/(:num)', 'Klaster1Controller::klaster1/$1');
     $routes->post('klaster1/save-temp', 'Klaster1Controller::saveTemp');
 
