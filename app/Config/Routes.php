@@ -93,8 +93,8 @@ $routes->group('dashboard', function ($routes) {
 
     $routes->get('klaster2/(:num)', 'Klaster2Controller::klaster2/$1');
     $routes->get('klaster3/(:num)', 'Klaster3Controller::klaster3/$1');
-    $routes->get('klaster4/(:num)', 'Dashboard::klaster4/$1');
-    $routes->get('klaster5/(:num)', 'Dashboard::klaster5/$1');
+    $routes->get('klaster4/(:num)', 'Klaster4Controller::klaster4/$1');
+    $routes->get('klaster5/(:num)', 'Klaster5Controller::klaster5/$1');
 });
 
 $routes->get('dashboard/admin/download_file', 'AdminDashboard::downloadFile');
