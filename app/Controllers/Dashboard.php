@@ -21,50 +21,57 @@ class Dashboard extends BaseController
         $this->announcementModel = new AnnouncementModel();
     }
 
-    public function kelembagaan($id = null)
-    {
-        $session = session();
-        if (!$session->get('logged_in')) {
-            return redirect()->to('/login');
-        }
-
-        $userModel = new UserModel();
-        $kelembagaanModel = new \App\Models\KelembagaanModel();
-
-        $tahun = date('Y');
-        $bulan = date('F'); // Pastikan sama dengan saat submit()
-
-        $kelembagaan = $kelembagaanModel
-            ->where('user_id', session()->get('id'))
-
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->first();
-
-        $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
-        $zipAvailable = file_exists($zipFilePath);
-
-        $data = [
-            'user_email' => $session->get('email'),
-            'user_role' => $session->get('role'),
-            'username' => $session->get('username'),
-            'id' => $id,
-            'kelembagaan' => $kelembagaan,
-            'zipAvailable' => $zipAvailable,
-            'user_id' => $id,
-
-            'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
-            'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
-            'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
-            'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
-
-            // penting
-            'existing' => $kelembagaan ?? [],
-            'status' => $kelembagaan['status'] ?? null,
-        ];
-
-        return view('pages/operator/kelembagaan', $data);
+   public function kelembagaan($id = null)
+{
+    $session = session();
+    if (!$session->get('logged_in')) {
+        return redirect()->to('/login');
     }
+
+    $userModel = new UserModel();
+    $kelembagaanModel = new \App\Models\KelembagaanModel();
+
+    $tahun = date('Y');
+    $bulan = date('F'); // Sama dengan saat submit()
+
+    $kelembagaan = $kelembagaanModel
+        ->where('user_id', session()->get('id'))
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
+
+    $zipFilePath = FCPATH . 'uploads/kelembagaan/' . $id . '.zip';
+    $zipAvailable = file_exists($zipFilePath);
+
+    // Default nilai EM & maksimal
+    $nilaiEm = $kelembagaan['total_nilai'] ?? 0;
+    $nilaiMaksimal = 220; // Kalau mau dinamis, hitung dari total skor maksimal tiap indikator
+
+    $data = [
+        'user_email' => $session->get('email'),
+        'user_role' => $session->get('role'),
+        'user_name' => $session->get('username'),
+        'id' => $id,
+        'kelembagaan' => $kelembagaan,
+        'zipAvailable' => $zipAvailable,
+        'user_id' => $id,
+
+        'totalDesa' => $userModel->where('role', 'operator')->countAllResults(),
+        'sudahInput' => $userModel->where(['role' => 'operator', 'status_input' => 'sudah'])->countAllResults(),
+        'belumInput' => $userModel->where(['role' => 'operator', 'status_input' => 'belum'])->countAllResults(),
+        'perluApprove' => $userModel->where(['role' => 'operator', 'status_approve' => 'pending'])->countAllResults(),
+
+        // penting untuk form
+        'existing' => $kelembagaan ?? [],
+        'status' => $kelembagaan['status'] ?? null,
+
+        // tambahan penting untuk progress
+        'nilai_em' => $nilaiEm,
+        'nilai_maksimal' => $nilaiMaksimal,
+    ];
+
+    return view('pages/operator/kelembagaan', $data);
+}
 
 
 

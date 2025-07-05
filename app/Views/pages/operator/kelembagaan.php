@@ -132,7 +132,7 @@
 
             <?php
                 $nilaiEm = $nilai_em ?? 0;
-                $maks = $nilai_maksimal ?? 120;
+                $maks = $nilai_maksimal ?? 220;
                 $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
             ?>
 

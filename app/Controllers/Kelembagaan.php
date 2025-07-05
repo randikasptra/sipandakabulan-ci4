@@ -76,14 +76,25 @@ class Kelembagaan extends BaseController
         }
 
         if ($existing && $existing['status'] === 'rejected') {
-            // update existing data (overwriting rejected)
-            $kelembagaanModel->update($existing['id'], $data);
-        } else {
-            // buat baru
-            $kelembagaanModel->insert($data);
-        }
+    $kelembagaanModel->update($existing['id'], $data);
+} else {
+    $kelembagaanModel->insert($data);
+}
 
-        return redirect()->to('/kelembagaan/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+// ✅ Refresh session biar data user update
+$userModel = new \App\Models\UserModel();
+$user = $userModel->find($userId);
+
+if ($user) {
+    session()->set([
+        'user_email' => $user['email'],
+        'user_name' => $user['username'],
+        'user_role' => $user['role'],
+    ]);
+}
+
+return redirect()->to('/kelembagaan/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+
     }
 
 
