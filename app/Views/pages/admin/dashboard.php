@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><?= esc($title ?? 'Dashboard') ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="<?= base_url('assets/img/LogoKKLA.png') ?>">
+
 </head>
 
 <body class="bg-gray-100">

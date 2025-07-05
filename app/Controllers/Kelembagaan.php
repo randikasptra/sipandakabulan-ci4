@@ -87,31 +87,37 @@ class Kelembagaan extends BaseController
     }
 
 
-    public function form()
-    {
-        $userId = session()->get('id');
-        $tahun = date('Y');
-        $bulan = date('F');
+  public function form()
+{
+    $userId = session()->get('id');
+    $tahun = date('Y');
+    $bulan = date('F');
 
-        $existing = $this->kelembagaanModel
-            ->where('user_id', $userId)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->orderBy('created_at', 'desc')
-            ->first();
+    $existing = $this->kelembagaanModel
+        ->where('user_id', $userId)
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->orderBy('created_at', 'desc')
+        ->first();
 
-        $data = [
-            'user_name' => session()->get('user_name'),
-            'user_email' => session()->get('user_email'),
-            'user_role' => session()->get('user_role'),
-            'status' => $existing['status'] ?? null,
-            'existing' => $existing ?? null,
-            'nilai_em' => $existing['total_nilai'] ?? 0,
-            'nilai_maksimal' => 220,
-        ];
+    // Debug log (jika dibutuhkan)
+    log_message('debug', 'Data kelembagaan ditemukan: ' . json_encode($existing));
 
-        return view('pages/operator/kelembagaan', $data);
-    }
+    // Nilai maksimal total dari 5 indikator (misalnya: 60+40+40+40+40 = 220)
+    $nilaiMaksimal = 220;
+
+    $data = [
+        'user_name' => session()->get('user_name'),
+        'user_email' => session()->get('user_email'),
+        'user_role' => session()->get('user_role'),
+        'status' => $existing['status'] ?? null,
+        'existing' => $existing ?? null,
+        'nilai_em' => isset($existing['total_nilai']) ? (int) $existing['total_nilai'] : 0,
+        'nilai_maksimal' => $nilaiMaksimal,
+    ];
+
+    return view('pages/operator/kelembagaan', $data);
+}
 
     public function updateStatus()
     {

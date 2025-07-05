@@ -23,7 +23,7 @@ class Klaster1Controller extends BaseController
         $tahun = date('Y');
         $bulan = date('F');
 
-        // Cek apakah user sudah submit bulan ini
+        // Cek apakah sudah submit
         $existing = $this->klaster1Model
             ->where('user_id', $userId)
             ->where('tahun', $tahun)
@@ -38,11 +38,9 @@ class Klaster1Controller extends BaseController
         // Ambil nilai input
         $AnakAktaKelahiran_value = (int) $this->request->getPost('AnakAktaKelahiran');
         $anggaran_value = (int) $this->request->getPost('anggaran');
-
-        // Hitung total
         $total_nilai = $AnakAktaKelahiran_value + $anggaran_value;
 
-        // Proses file upload
+        // Upload file
         $fields = ['AnakAktaKelahiran', 'anggaran'];
         $files = [];
 
@@ -66,7 +64,7 @@ class Klaster1Controller extends BaseController
             }
         }
 
-        // Simpan data
+        // Simpan
         $this->klaster1Model->save([
             'user_id' => $userId,
             'tahun' => $tahun,
@@ -75,22 +73,20 @@ class Klaster1Controller extends BaseController
             'AnakAktaKelahiran_file' => $files['AnakAktaKelahiran_file'],
             'anggaran' => $anggaran_value,
             'anggaran_file' => $files['anggaran_file'],
-            'total_nilai' => $total_nilai, // ✅ disimpan di sini
+            'total_nilai' => $total_nilai,
             'status' => 'pending',
         ]);
-
-
 
         return redirect()->to('/klaster1/form')->with('success', 'Data Klaster 1 berhasil disimpan dan menunggu persetujuan!');
     }
 
-  public function form()
+ public function form()
 {
     $userId = session()->get('id');
     $tahun = date('Y');
     $bulan = date('F');
 
-    // Ambil data klaster 1 dari database
+    // Ambil data berdasarkan bulan & tahun yang aktif
     $existing = $this->klaster1Model
         ->where('user_id', $userId)
         ->where('tahun', $tahun)
@@ -98,25 +94,28 @@ class Klaster1Controller extends BaseController
         ->orderBy('created_at', 'desc')
         ->first();
 
-    // Ambil total_nilai jika ada
     $nilaiEM = 0;
-    if ($existing && isset($existing['total_nilai']) && is_numeric($existing['total_nilai'])) {
+    $totalNilai = null;
+
+    if (!empty($existing) && isset($existing['total_nilai']) && is_numeric($existing['total_nilai'])) {
         $nilaiEM = (int) $existing['total_nilai'];
+        $totalNilai = $existing['total_nilai']; // ✅ SIMPAN SEBAGAI DEBUG
     }
 
-    // Kirim data ke view
     $data = [
-        'user_name' => session()->get('user_name'),
-        'user_email' => session()->get('user_email'),
-        'user_role' => session()->get('user_role'),
-        'status' => $existing['status'] ?? null,
-        'existing' => $existing,
-        'nilai_em' => $nilaiEM,
-        'nilai_maksimal' => 120, // total maksimal nilai indikator klaster 1
+        'user_name'      => session()->get('user_name'),
+        'user_email'     => session()->get('user_email'),
+        'user_role'      => session()->get('user_role'),
+        'status'         => $existing['status'] ?? null,
+        'existing'       => $existing,
+        'nilai_em'       => $nilaiEM,
+        'nilai_maksimal' => 120,
+        'total_nilai'    => $totalNilai, // ✅ tambahkan ini
     ];
 
     return view('pages/operator/klaster1', $data);
 }
+
 
 
     public function batal()
@@ -136,7 +135,7 @@ class Klaster1Controller extends BaseController
             return redirect()->back()->with('error', 'Tidak ada data yang bisa dibatalkan.');
         }
 
-        // Hapus file ZIP jika ada
+        // Hapus file
         $files = ['AnakAktaKelahiran_file', 'anggaran_file'];
         foreach ($files as $fileField) {
             if (!empty($existing[$fileField])) {
@@ -147,12 +146,10 @@ class Klaster1Controller extends BaseController
             }
         }
 
-        // Hapus data
         $this->klaster1Model->delete($existing['id']);
 
         return redirect()->to('/klaster1/form')->with('success', 'Data berhasil dibatalkan. Silakan isi ulang formulir.');
     }
-
 
     public function approve()
     {
@@ -178,14 +175,14 @@ class Klaster1Controller extends BaseController
             ->first();
 
         $dataBerkas = [
-            'user_id' => $userId,
-            'klaster' => $klasterData['id'],
-            'tahun' => $klaster1['tahun'],
-            'bulan' => $klaster1['bulan'],
+            'user_id'     => $userId,
+            'klaster'     => $klasterData['id'],
+            'tahun'       => $klaster1['tahun'],
+            'bulan'       => $klaster1['bulan'],
             'total_nilai' => $klaster1['total_nilai'] ?? 0,
-            'status' => $status,
-            'catatan' => $status === 'rejected' ? $this->request->getPost('catatan') : null,
-            'file_path' => 'klaster1/' . $userId . '.zip'
+            'status'      => $status,
+            'catatan'     => $status === 'rejected' ? $this->request->getPost('catatan') : null,
+            'file_path'   => 'klaster1/' . $userId . '.zip'
         ];
 
         if ($existing) {

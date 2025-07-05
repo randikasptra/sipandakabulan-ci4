@@ -122,19 +122,7 @@
                             <p class="mt-1 text-sm md:text-base text-gray-600">Review and approve pending submissions
                             </p>
                         </div>
-                        <!-- <div class="w-full md:w-auto">
-                            <label for="filterKlaster" class="sr-only">Filter Klaster</label>
-                            <select id="filterKlaster"
-                                class="w-full md:w-48 p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-100 focus:border-blue-500 text-sm">
-                                <option value="all">Semua Klaster</option>
-                                <option value="Kelembagaan">Kelembagaan</option>
-                                <option value="Klaster 1">Klaster 1</option>
-                                <option value="Klaster 2">Klaster 2</option>
-                                <option value="Klaster 3">Klaster 3</option>
-                                <option value="Klaster 4">Klaster 4</option>
-                                <option value="Klaster 5">Klaster 5</option>
-                            </select>
-                        </div> -->
+                        
                     </div>
 
                     <?php
@@ -149,146 +137,161 @@
                     ?>
 
                     <!-- Tab Navigation -->
-                    <div class="mb-6 border-b border-gray-200">
-                        <div class="flex space-x-4 overflow-x-auto pb-2">
-                            <button class="tab-button px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap"
-                                data-tab="all">All Pending</button>
-                            <?php foreach ($klasterData as $klaster => $items): ?>
-                                <?php if (!empty($items)): ?>
-                                    <button class="tab-button px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap"
-                                        data-tab="<?= strtolower(str_replace(' ', '-', $klaster)) ?>">
-                                        <?= esc($klaster) ?>
-                                        <span
-                                            class="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full">
-                                            <?= count(array_filter($items, fn($item) => ($item['status'] ?? '') === 'pending')) ?>
-                                        </span>
-                                    </button>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
+           <div class="mb-6 border-b border-gray-200">
+    <!-- Filter Tabs & Status -->
+    <div class="flex flex-wrap gap-3 overflow-x-auto pb-4">
+        <!-- Tab Filter by Klaster -->
+        <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300" data-tab="all">
+            Semua Klaster
+        </button>
+        <?php foreach (array_keys($klasterData) as $klaster): ?>
+            <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200" data-tab="<?= strtolower(str_replace(' ', '-', $klaster)) ?>">
+                <?= esc($klaster) ?>
+            </button>
+        <?php endforeach; ?>
+
+   
+    </div>
+</div>
+
+<!-- Main Grid Layout -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <?php foreach ($klasterData as $klaster => $items): ?>
+        <?php foreach ($items as $item): ?>
+            <div class="card bg-white rounded-xl shadow-card p-5 border border-gray-100 hover:shadow-card-hover transition-all duration-300 klaster-item"
+                data-klaster="<?= strtolower(str_replace(' ', '-', $klaster)) ?>"
+                data-status="<?= strtolower($item['status'] ?? '') ?>">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-gray-800 truncate mb-1">
+                            <?= $klaster === 'Kelembagaan'
+                                ? esc($item['nama_lembaga'] ?? 'Lembaga Baru')
+                                : esc($klaster) ?>
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-2 truncate">
+                            <?= $klaster === 'Kelembagaan'
+                                ? 'Lembaga Registration'
+                                : 'Pengguna: ' . esc($item['username'] ?? 'User') ?>
+                        </p>
+
+                        <!-- Badge Info -->
+                        <div class="flex flex-wrap items-center gap-2 text-xs">
+                            <span class="badge bg-gray-100 text-gray-600">
+                                Tahun: <?= esc($item['tahun'] ?? '-') ?>
+                            </span>
+                            <span class="badge bg-gray-100 text-gray-600">
+                                Bulan: <?= esc($item['bulan'] ?? '-') ?>
+                            </span>
+                            <span class="badge <?= 
+                                ($item['status'] ?? '') === 'approved' ? 'bg-green-100 text-green-700' :
+                                (($item['status'] ?? '') === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700')
+                            ?>">
+                                Status: <?= ucfirst(esc($item['status'] ?? '-')) ?>
+                            </span>
+                            <span class="badge bg-blue-50 text-blue-600">
+                                <?= date('d M Y', strtotime($item['created_at'] ?? 'now')) ?>
+                            </span>
+                            <span class="badge bg-gray-100 text-gray-600">
+                                <?= esc($klaster) ?>
+                            </span>
                         </div>
                     </div>
-
-                    <!-- Main Grid Layout -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        <?php foreach ($klasterData as $klaster => $items): ?>
-                            <?php foreach ($items as $item): ?>
-                                <?php if (($item['status'] ?? '') === 'pending'): ?>
-                                    <div class="card bg-white rounded-xl shadow-card p-5 border border-gray-100 hover:shadow-card-hover transition-all duration-300 klaster-item"
-                                        data-klaster="<?= strtolower(str_replace(' ', '-', $klaster)) ?>">
-                                        <div class="flex items-start justify-between">
-                                            <div class="flex-1 min-w-0">
-                                                <h3 class="font-semibold text-gray-800 truncate mb-1">
-                                                    <?= $klaster === 'Kelembagaan'
-                                                        ? esc($item['nama_lembaga'] ?? 'Lembaga Baru')
-                                                        : esc($klaster) ?>
-                                                </h3>
-                                                <p class="text-sm text-gray-500 mb-2 truncate">
-                                                    <?= $klaster === 'Kelembagaan'
-                                                        ? 'Lembaga Registration'
-                                                        : 'Pengguna: ' . esc($item['username'] ?? 'User') ?>
-                                                </p>
-                                                <div class="flex items-center space-x-2">
-                                                    <span class="badge bg-blue-50 text-blue-600 text-xs">
-                                                        <?= date('d M Y', strtotime($item['created_at'] ?? 'now')) ?>
-                                                    </span>
-                                                    <span class="badge bg-gray-100 text-gray-600 text-xs">
-                                                        <?= esc($klaster) ?>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="bg-blue-100 p-2 rounded-lg flex-shrink-0 ml-3">
-                                                <i class="fas fa-file-alt text-blue-600"></i>
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-                                            <?php $slug = strtolower(str_replace(' ', '_', $klaster)); ?>
-                                            <a href="<?= site_url('dashboard/admin/review_' . $slug . '/' . $item['user_id']) ?>"
-                                                class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium">
-                                                <i class="fas fa-eye mr-2"></i>
-                                                Review
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <!-- Empty State -->
-                    <div id="empty-state" class="hidden text-center py-12">
-                        <div class="mx-auto w-24 h-24 text-gray-300 mb-4">
-                            <i class="fas fa-inbox text-5xl"></i>
-                        </div>
-                        <h3 class="text-lg font-medium text-gray-500">No pending approvals</h3>
-                        <p class="mt-1 text-sm text-gray-400">All submissions have been processed</p>
+                    <div class="bg-blue-100 p-2 rounded-lg flex-shrink-0 ml-3">
+                        <i class="fas fa-file-alt text-blue-600"></i>
                     </div>
                 </div>
-            </main>
-        </div>
+
+                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+                    <?php $slug = strtolower(str_replace(' ', '_', $klaster)); ?>
+                    <a href="<?= site_url('dashboard/admin/review_' . $slug . '/' . $item['user_id']) ?>"
+                        class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium">
+                        <i class="fas fa-eye mr-2"></i>
+                        Review
+                    </a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php endforeach; ?>
+</div>
+
+<!-- Empty State -->
+<div id="empty-state" class="hidden text-center py-12">
+    <div class="mx-auto w-24 h-24 text-gray-300 mb-4">
+        <i class="fas fa-inbox text-5xl"></i>
     </div>
+    <h3 class="text-lg font-medium text-gray-500">Tidak ada data ditemukan</h3>
+    <p class="mt-1 text-sm text-gray-400">Coba ubah filter klaster atau status</p>
+</div>
 
-    <script>
-        // Tab Filter Functionality
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.addEventListener('click', function () {
-                const tab = this.getAttribute('data-tab');
+<script>
+    // State global
+    let currentTab = 'all';
+    let currentStatus = 'all';
 
-                // Update active tab style
-                document.querySelectorAll('.tab-button').forEach(btn => {
-                    btn.classList.remove('text-blue-600', 'border-blue-600');
-                    btn.classList.add('text-gray-500', 'hover:text-gray-700');
-                });
-                this.classList.add('text-blue-600', 'border-blue-600');
-                this.classList.remove('text-gray-500', 'hover:text-gray-700');
+    // Klik Tab (Klaster)
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function () {
+            currentTab = this.getAttribute('data-tab');
+            filterCards();
 
-                // Filter items
-                const allItems = document.querySelectorAll('.klaster-item');
-                let visibleItems = 0;
-
-                allItems.forEach(item => {
-                    if (tab === 'all' || item.getAttribute('data-klaster') === tab) {
-                        item.classList.remove('hidden');
-                        visibleItems++;
-                    } else {
-                        item.classList.add('hidden');
-                    }
-                });
-
-                // Show/hide empty state
-                const emptyState = document.getElementById('empty-state');
-                if (visibleItems === 0) {
-                    emptyState.classList.remove('hidden');
-                } else {
-                    emptyState.classList.add('hidden');
-                }
+            // Update styling tab aktif
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500', 'bg-blue-100', 'text-blue-700');
             });
+            this.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500', 'bg-blue-100', 'text-blue-700');
         });
+    });
 
-        // Initialize first tab as active
-        document.querySelector('.tab-button').click();
+    // Klik Status Filter
+    document.querySelectorAll('.status-filter').forEach(button => {
+        button.addEventListener('click', function () {
+            currentStatus = this.getAttribute('data-status');
+            filterCards();
 
-        // Select filter functionality
-        document.getElementById('filterKlaster').addEventListener('change', function () {
-            const filterValue = this.value.toLowerCase().replace(' ', '-');
-            const tabButtons = document.querySelectorAll('.tab-button');
-
-            // Find matching tab and click it
-            let found = false;
-            tabButtons.forEach(button => {
-                if (button.getAttribute('data-tab') === filterValue ||
-                    (this.value === 'all' && button.getAttribute('data-tab') === 'all')) {
-                    button.click();
-                    found = true;
-                }
+            // Update styling status aktif
+            document.querySelectorAll('.status-filter').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500', 'bg-blue-100', 'text-blue-700');
             });
+            this.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500', 'bg-blue-100', 'text-blue-700');
+        });
+    });
 
-            if (!found && this.value !== 'all') {
-                document.querySelector('[data-tab="all"]').click();
+    // Fungsi Filter
+    function filterCards() {
+        const allItems = document.querySelectorAll('.klaster-item');
+        let visibleItems = 0;
+
+        allItems.forEach(item => {
+            const klaster = item.getAttribute('data-klaster');
+            const status = item.getAttribute('data-status');
+
+            const matchTab = (currentTab === 'all' || klaster === currentTab);
+            const matchStatus = (currentStatus === 'all' || status === currentStatus);
+
+            if (matchTab && matchStatus) {
+                item.classList.remove('hidden');
+                visibleItems++;
+            } else {
+                item.classList.add('hidden');
             }
         });
-    </script>
+
+        // Empty State
+        const emptyState = document.getElementById('empty-state');
+        if (emptyState) {
+            emptyState.classList.toggle('hidden', visibleItems > 0);
+        }
+    }
+
+    // Inisialisasi awal saat halaman dimuat
+    window.addEventListener('DOMContentLoaded', () => {
+        // Trigger tab pertama (Semua Klaster)
+        document.querySelector('.tab-button[data-tab="all"]')?.click();
+        // Trigger status pertama (Semua Status)
+        document.querySelector('.status-filter[data-status="all"]')?.click();
+    });
+</script>
+
 </body>
 
 </html>

@@ -102,44 +102,54 @@
 
 
     <!-- Header Card -->
-    <div class="header-card p-8 rounded-2xl text-white mx-6 mt-6 mb-10">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                            <i class="ph ph-clipboard-text text-2xl"></i>
-                        </div>
-                        <h2 class="text-2xl md:text-3xl font-bold">Form Kelembagaan</h2>
-                    </div>
-                    <p class="text-primary-100 opacity-90">Silakan isi data berikut sesuai kondisi di lapangan.</p>
+        <!-- Info User -->
+         <div class="mt-24 header-card p-8 rounded-2xl text-white mx-6 mb-10">
+        <div>
+            <h2 class="text-2xl md:text-3xl font-bold mb-2">
+                Selamat Datang, <?= esc($user_name ?? 'Nama Pengguna'); ?>!
+            </h2>
+            <p class="text-primary-100 flex flex-wrap gap-3 items-center text-sm md:text-base">
+                <span class="flex items-center gap-1">
+                    <i class="ph ph-envelope-simple"></i> <?= esc($user_email ?? 'email@example.com'); ?>
+                </span>
+                <span class="flex items-center gap-1">
+                    <i class="ph ph-user"></i> Tipe: <span class="font-semibold text-white"><?= esc(ucfirst($user_role ?? 'User')); ?></span>
+                </span>
+            </p>
+        </div>
+
+        <!-- Status & Nilai EM -->
+        <div class="text-center bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20 w-full md:w-auto">
+            <?php if (($status ?? '') === 'approved'): ?>
+                <p class="text-green-300 font-bold text-lg flex items-center gap-2 justify-center">
+                    <i class="ph ph-check-circle"></i> Evaluasi Disetujui
+                </p>
+            <?php else: ?>
+                <p class="text-yellow-300 font-bold text-lg flex items-center gap-2 justify-center">
+                    <i class="ph ph-clock"></i> Menunggu Persetujuan
+                </p>
+            <?php endif; ?>
+
+            <?php
+                $nilaiEm = $nilai_em ?? 0;
+                $maks = $nilai_maksimal ?? 120;
+                $presentase = ($maks > 0) ? min(100, round(($nilaiEm / $maks) * 100)) : 0;
+            ?>
+
+            <div class="mt-3">
+                <p class="text-primary-100 text-sm">
+                    Nilai EM: <span class="font-bold text-white"><?= esc($nilaiEm); ?></span> /
+                    <span><?= esc($maks); ?></span>
+                </p>
+
+                <div class="w-48 bg-white/20 rounded-full h-2.5 mt-2 mx-auto">
+                    <div class="bg-green-300 h-2.5 rounded-full progress-bar" style="width: <?= $presentase ?>%"></div>
                 </div>
 
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:block h-12 w-px bg-white/30"></div>
-                    <div class="bg-white/10 backdrop-blur-sm p-3 rounded-xl border border-white/20">
-                        <p class="text-sm font-medium text-primary-100 flex items-center gap-2">
-                            <i class="ph ph-info"></i>
-                            <span>Pastikan data yang diisi valid</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-6 pt-6 border-t border-white/10">
-                <div class="flex flex-wrap gap-4">
-                    <div class="flex items-center gap-2 text-sm text-primary-100">
-                        <i class="ph ph-calendar-blank"></i>
-                        <span><?= date('d F Y') ?></span>
-                    </div>
-                    <div class="flex items-center gap-2 text-sm text-primary-100">
-                        <i class="ph ph-clock"></i>
-                        <span>Estimasi pengisian: 15 menit</span>
-                    </div>
-                </div>
+                <p class="text-xs text-primary-100 mt-1"><?= $presentase ?>% Complete</p>
             </div>
         </div>
-    </div>
+    </div></div>
 
 
     <!-- Form Container -->
