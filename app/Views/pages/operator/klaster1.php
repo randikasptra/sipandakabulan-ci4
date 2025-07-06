@@ -1,4 +1,4 @@
-<?= $this->include('layouts/navbar') ?>
+<?= $this->include('layouts/navbar_klaster') ?>
 
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">

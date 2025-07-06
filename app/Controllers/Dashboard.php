@@ -91,6 +91,8 @@ class Dashboard extends BaseController
     }
 
     $data = [
+            'title' => 'Dashboard SIPANDAKABULAN',
+
         'user_email' => $session->get('email'),
         'user_role' => $session->get('role'),
         'username' => $session->get('username'),
