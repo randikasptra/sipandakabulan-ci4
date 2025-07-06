@@ -109,15 +109,18 @@
 
     <!-- Form Container -->
     <div class="max-w-5xl mx-auto px-6 py-10 bg-white rounded-2xl form-container mb-16">
-        <div class="text-center mb-10">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-50 rounded-full mb-4">
-                <i class="ph ph-list-check text-3xl text-primary-700"></i>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                Form Penilaian Klaster 1
-            </h1>
-            <p class="text-gray-500 max-w-2xl mx-auto">Isi sesuai kondisi lapangan dan unggah dokumen pendukung untuk memastikan penilaian yang akurat dan transparan.</p>
-        </div>
+       <div class="text-center mb-10">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-50 rounded-full mb-4">
+        <!-- Ikon Form/Clipboard (Tailwind CSS Heroicons) -->
+        <svg class="inline-flex w-8 h-8 text-primary-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        Form Penilaian Klaster 1
+    </h1>
+    <p class="text-gray-500 max-w-2xl mx-auto">Isi sesuai kondisi lapangan dan unggah dokumen pendukung untuk memastikan penilaian yang akurat dan transparan.</p>
+</div>
 
      <form action="/submit-klaster1" method="POST" enctype="multipart/form-data" class="space-y-8">
     <?php
