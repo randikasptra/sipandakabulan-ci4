@@ -207,14 +207,25 @@ public function updatePassword($id)
         return redirect()->back()->with('error', 'Konfirmasi password tidak sesuai.');
     }
 
-    // Update
-    $userModel->update($id, [
+    // Cek apakah user-nya ada
+    $user = $userModel->find($id);
+    if (!$user) {
+        return redirect()->back()->with('error', 'User tidak ditemukan.');
+    }
+
+    // Coba update
+    $updated = $userModel->update($id, [
         'password' => password_hash($password, PASSWORD_DEFAULT),
         'updated_at' => date('Y-m-d H:i:s'),
     ]);
 
+    if (!$updated) {
+        return redirect()->back()->with('error', 'Gagal memperbarui password. Silakan coba lagi.');
+    }
+
     return redirect()->back()->with('success', 'Password berhasil diperbarui.');
 }
+
 
 
 
