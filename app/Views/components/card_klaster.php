@@ -2,34 +2,49 @@
 $slug = getKlasterSlug($klaster);
 $urlKlaster = getKlasterSlug($klaster);
 
-// fallback jika belum ada data
+// Fallback dengan null coalescing operator
 $nilaiEm = $nilaiEm ?? 0;
 $nilaiMaksimal = $nilaiMaksimal ?? 100;
 $progres = ($nilaiMaksimal > 0) ? round(($nilaiEm / $nilaiMaksimal) * 100) : 0;
 
-// warna progres
-$warnaProgres = $progres >= 80 ? 'from-green-400 to-green-600'
-              : ($progres >= 50 ? 'from-yellow-400 to-yellow-600'
-              : 'from-red-400 to-red-600');
+// Warna progres dengan gradient yang lebih modern
+$warnaProgres = match(true) {
+    $progres >= 80 => 'from-emerald-500 to-teal-600',
+    $progres >= 50 => 'from-amber-400 to-orange-500',
+    default => 'from-rose-500 to-pink-600'
+};
 ?>
 
-<a href="<?= site_url('dashboard/' . $urlKlaster . '/' . intval($id)) ?>"
-   class="flex flex-col h-full bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:border-sky-400 group overflow-hidden">
+<a href="<?= site_url('dashboard/' . $urlKlaster . '/' . intval($id)) ?>" 
+   class="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-md transition-all duration-300 hover:shadow-xl hover:border-sky-400 hover:-translate-y-1">
+   
+    <!-- Glow effect on hover -->
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-sky-100/50 to-blue-100/30 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
 
-    <!-- Header -->
-    <div class="px-6 py-5 min-h-[110px] bg-gradient-to-br from-sky-500 via-sky-600 to-blue-600 text-white group-hover:from-sky-600 group-hover:via-blue-600 group-hover:to-blue-700 transition-all duration-500">
-        <div class="flex justify-between items-start">
-            <div>
-                <h3 class="text-xl font-bold tracking-tight"><?= esc($title) ?></h3>
-                <div class="flex items-center mt-2 space-x-3 text-sky-100 text-sm">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/20 font-medium">
+    <!-- Header with animated gradient -->
+    <div class="px-6 py-5 min-h-[110px] bg-gradient-to-br from-sky-500 to-blue-600 text-white transition-all duration-700 group-hover:bg-gradient-to-br group-hover:from-sky-600 group-hover:to-blue-700">
+        <div class="flex justify-between items-start gap-4">
+            <div class="flex-1">
+                <h3 class="text-xl font-bold tracking-tight text-white/90"><?= esc($title) ?></h3>
+                <div class="mt-3 flex flex-wrap items-center gap-2 text-sm text-sky-100">
+                    <span class="inline-flex items-center rounded-full bg-white/20 px-3 py-1 font-medium backdrop-blur-sm">
                         <?= $progres ?>% Complete
                     </span>
-                    <span>EM: <strong><?= number_format($nilaiEm, 2) ?></strong></span>
-                    <span>Max: <strong><?= number_format($nilaiMaksimal, 2) ?></strong></span>
+                    <span class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        EM: <strong><?= number_format($nilaiEm, 2) ?></strong>
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        Max: <strong><?= number_format($nilaiMaksimal, 2) ?></strong>
+                    </span>
                 </div>
             </div>
-            <div class="bg-white/20 rounded-full p-2 group-hover:rotate-12 transition-transform">
+            <div class="flex-shrink-0 rounded-full bg-white/20 p-2 transition-all duration-300 group-hover:rotate-12 group-hover:bg-white/30">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
@@ -37,26 +52,39 @@ $warnaProgres = $progres >= 80 ? 'from-green-400 to-green-600'
         </div>
     </div>
 
-    <!-- Label nilai total -->
-    <div class="px-6 pt-4 text-sm text-gray-700 font-medium">
-        Nilai Total: <?= $nilaiEm ?> dari <?= $nilaiMaksimal ?>
+    <!-- Progress section -->
+    <div class="px-6 pt-5">
+        <div class="mb-1 flex justify-between text-sm font-medium text-gray-600">
+            <span>Nilai</span>
+            <span><?= $nilaiEm ?> / <?= $nilaiMaksimal ?></span>
+        </div>
+        
+        <!-- Animated progress bar -->
+        <div class="relative h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
+            <div class="absolute inset-0 h-full rounded-full bg-gradient-to-r <?= $warnaProgres ?> transition-all duration-1000 ease-out" 
+                 style="width: <?= $progres ?>%">
+                <div class="absolute inset-0 bg-white/20 mix-blend-overlay"></div>
+            </div>
+        </div>
+        
+        <!-- Progress indicators -->
+        <div class="mt-1.5 flex justify-between text-xs text-gray-500">
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
+        </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="h-3 mx-6 mt-2 mb-4 bg-gray-200 rounded-full overflow-hidden">
-        <div class="h-full rounded-full transition-all duration-1000 ease-out bg-gradient-to-r <?= $warnaProgres ?>" style="width: <?= $progres ?>%"></div>
-    </div>
-
-    <!-- Tombol -->
-    <div class="px-6 pb-6 mt-auto">
-        <div class="relative inline-flex w-full items-center justify-center">
-            <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-blue-500 opacity-0 group-hover:opacity-20 blur-sm transition-all duration-300"></div>
-            <span class="relative w-full text-center bg-white border-2 border-sky-500 text-sky-600 font-semibold py-2.5 px-4 rounded-full transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-sky-500 group-hover:to-blue-600 group-hover:text-white group-hover:border-transparent group-hover:shadow-md">
+    <!-- Button with glow effect -->
+    <div class="px-6 pb-6 pt-2 mt-auto">
+        <button type="button" class="relative w-full overflow-hidden rounded-full border-2 border-sky-500 bg-white py-2.5 px-4 font-semibold text-sky-600 shadow-sm transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-r group-hover:from-sky-500 group-hover:to-blue-600 group-hover:text-white group-hover:shadow-md">
+            <span class="relative z-10 flex items-center justify-center">
                 Proses Penilaian
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 inline opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4 -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
             </span>
-        </div>
+            <span class="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-sky-400 to-blue-500 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-20"></span>
+        </button>
     </div>
 </a>
