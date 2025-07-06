@@ -23,6 +23,11 @@
     <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl w-full max-w-md">
         <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">Login SIPANDAKABULAN</h2>
 
+        <?php if (session()->getFlashdata('error')): ?>
+    <div class="mb-4 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
+        <?= session()->getFlashdata('error') ?>
+    </div>
+<?php endif; ?>
         <!-- Session Status -->
         <?php if (session()->getFlashdata('status')): ?>
             <div class="mb-4 text-sm text-green-600">

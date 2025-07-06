@@ -10,6 +10,7 @@
     <!-- Tambahkan CSS -->
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="icon" type="image/png" href="<?= base_url('assets/img/LogoKKLA.png') ?>">
 
     <style>
         [x-cloak] { display: none !important; }
