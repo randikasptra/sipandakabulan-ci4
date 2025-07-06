@@ -54,10 +54,10 @@
     </style>
 </head>
 
-<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+<body class="bg-gray-50 font-sans text-gray-800 antialiased pt-44">
 
     <!-- Modern Header Card with 24px margin-top -->
- <div class="mx-28 my-24">
+ <div class="mx-28 mb-24 mt-12">
     <div class="bg-gradient-to-br from-blue-900 to-blue-700 p-6 rounded-2xl text-white shadow-lg flex flex-col lg:flex-row gap-5 items-start">
         <!-- User Info -->
         <div class="flex-1 space-y-1.5">

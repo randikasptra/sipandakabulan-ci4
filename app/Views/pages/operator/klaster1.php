@@ -58,7 +58,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 font-sans text-gray-800 antialiased pt-24">
+<body class="bg-gray-50 font-sans text-gray-800 antialiased pt-44">
 
   <div class="mx-28 mb-6">
     <div class="bg-gradient-to-br from-blue-900 to-blue-700 p-6 rounded-2xl text-white shadow-lg flex flex-col lg:flex-row gap-5 items-start">

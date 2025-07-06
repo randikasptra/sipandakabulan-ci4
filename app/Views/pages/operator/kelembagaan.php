@@ -98,7 +98,7 @@
 
 </head>
 
-<body class="font-sans text-gray-800 antialiased pt-24">
+<body class="font-sans text-gray-800 antialiased pt-44">
 
 
     <!-- Header Card -->
