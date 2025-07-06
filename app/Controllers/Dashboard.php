@@ -155,4 +155,65 @@ class Dashboard extends BaseController
 
         return view('pages/operator/tutorial', $data);
     }
+
+  public function ubahPassword()
+{
+    $session = session();
+    $userId = $session->get('id');
+
+    $current = $this->request->getPost('current_password');
+    $new = $this->request->getPost('new_password');
+    $confirm = $this->request->getPost('confirm_password');
+
+    $userModel = new \App\Models\UserModel();
+    $user = $userModel->find($userId);
+
+    // Validasi password lama
+    if (!$user || !password_verify($current, $user['password'])) {
+        return redirect()->back()->with('error', 'Password lama tidak cocok.');
+    }
+
+    // Validasi konfirmasi
+    if ($new !== $confirm) {
+        return redirect()->back()->with('error', 'Konfirmasi password tidak sesuai.');
+    }
+
+    // Update password
+    $userModel->update($userId, [
+        'password' => password_hash($new, PASSWORD_DEFAULT),
+        'updated_at' => date('Y-m-d H:i:s'),
+    ]);
+
+    return redirect()->back()->with('success', 'Password berhasil diubah.');
+}
+
+
+public function updatePassword($id)
+{
+    $userModel = new \App\Models\UserModel();
+
+    $password = $this->request->getPost('password');
+    $confirm = $this->request->getPost('confirm_password');
+
+    // Validasi kosong
+    if (empty($password) || empty($confirm)) {
+        return redirect()->back()->with('error', 'Password dan konfirmasi harus diisi.');
+    }
+
+    // Validasi cocok
+    if ($password !== $confirm) {
+        return redirect()->back()->with('error', 'Konfirmasi password tidak sesuai.');
+    }
+
+    // Update
+    $userModel->update($id, [
+        'password' => password_hash($password, PASSWORD_DEFAULT),
+        'updated_at' => date('Y-m-d H:i:s'),
+    ]);
+
+    return redirect()->back()->with('success', 'Password berhasil diperbarui.');
+}
+
+
+
 }

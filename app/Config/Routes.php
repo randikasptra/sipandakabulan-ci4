@@ -99,6 +99,10 @@ $routes->group('dashboard', function ($routes) {
 
 $routes->get('dashboard/admin/download_file', 'AdminDashboard::downloadFile');
 $routes->post('/dashboard/pengumuman_list/store', 'PengumumanController::store');
+$routes->post('/ubah-password', 'Dashboard::ubahPassword');
+$routes->post('update-password/(:num)', 'Dashboard::updatePassword/$1');
+
+
 
 $routes->get('download/kelembagaan/(:num)', 'DownloadController::kelembagaan/$1');
 

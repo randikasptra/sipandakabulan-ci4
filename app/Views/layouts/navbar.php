@@ -1,7 +1,8 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
-<nav x-data="{ open: false, dropdownOpen: false }"
+<nav
     class="bg-gradient-to-r from-blue-700 via-blue-800 to-blue-900 px-4 py-3 shadow-xl fixed w-full top-0 z-50 backdrop-blur-sm">
+
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <!-- Logo/Brand Section -->
         <div class="flex items-center space-x-3">
@@ -164,44 +165,7 @@
     </div>
 </nav>
 
-<!-- Modal Ubah Password -->
-<div x-data="{ showPasswordModal: false }" x-show="showPasswordModal"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-     style="display: none;">
-    <div @click.away="showPasswordModal = false"
-         class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-        <h2 class="text-lg font-semibold mb-4">Ubah Password</h2>
-        <form action="<?= site_url('ubah-password') ?>" method="POST" class="space-y-4">
-            <?= csrf_field() ?>
 
-            <div>
-                <label for="current_password" class="block text-sm font-medium text-gray-700">Password Lama</label>
-                <input type="password" name="current_password" id="current_password" required
-                       class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500">
-            </div>
 
-            <div>
-                <label for="new_password" class="block text-sm font-medium text-gray-700">Password Baru</label>
-                <input type="password" name="new_password" id="new_password" required
-                       class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500">
-            </div>
 
-            <div>
-                <label for="confirm_password" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
-                <input type="password" name="confirm_password" id="confirm_password" required
-                       class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500">
-            </div>
-
-            <div class="flex justify-end gap-2 mt-6">
-                <button type="button" @click="showPasswordModal = false"
-                        class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg">
-                    Batal
-                </button>
-                <button type="submit"
-                        class="px-4 py-2 text-sm text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
-                    Simpan
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+   
