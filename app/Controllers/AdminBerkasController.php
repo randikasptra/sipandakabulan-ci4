@@ -9,21 +9,39 @@ use CodeIgniter\Database\BaseBuilder;
 
 class AdminBerkasController extends BaseController
 {
-    public function index()
+   public function index()
 {
     $db = \Config\Database::connect();
 
-    $data['berkas'] = $db->table('berkas_klaster')
+    // Ambil data berkas yang disetujui
+    $berkas = $db->table('berkas_klaster')
         ->select('berkas_klaster.*, users.desa, klasters.title as nama_klaster')
         ->join('users', 'users.id = berkas_klaster.user_id')
         ->join('klasters', 'klasters.id = berkas_klaster.klaster')
-        ->where('berkas_klaster.status', 'approved') // ⬅️ hanya ambil yang approved
+        ->where('berkas_klaster.status', 'approved')
         ->orderBy('berkas_klaster.created_at', 'DESC')
         ->get()
         ->getResultArray();
 
+    // Hitung jumlah laporan per klaster (untuk Chart)
+    $jumlahPerKlaster = [];
+    foreach ($berkas as $b) {
+        $namaKlaster = $b['nama_klaster'];
+        if (!isset($jumlahPerKlaster[$namaKlaster])) {
+            $jumlahPerKlaster[$namaKlaster] = 0;
+        }
+        $jumlahPerKlaster[$namaKlaster]++;
+    }
+
+    $data = [
+        'title' => 'Laporan Berkas Disetujui',
+        'berkas' => $berkas,
+        'chart_data' => json_encode($jumlahPerKlaster),
+    ];
+
     return view('pages/admin/berkas', $data);
 }
+
 
 
     public function review($klaster)
