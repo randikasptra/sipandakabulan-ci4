@@ -104,51 +104,42 @@ $indikatorList = [
                 </div>
 
                 <!-- Tabel -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
-                        <thead class="bg-gray-100 text-gray-700">
-                            <tr>
-                                <th class="px-4 py-2 border-b text-left">No</th>
-                                <th class="px-4 py-2 border-b text-left">Nama Desa</th>
-                                <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
-                                <th class="px-4 py-2 border-b text-left">Berkas</th>
-                                <th class="px-4 py-2 border-b text-left">Nilai Total</th>
-                                <th class="px-4 py-2 border-b text-left">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $no = 1; foreach ($berkas as $b): 
-                                $folder = strtolower(str_replace(' ', '', $b['nama_klaster'])); // e.g., Klaster 1 -> klaster1
-                            ?>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-4 py-2"><?= $no++ ?></td>
-                                    <td class="px-4 py-2"><?= esc($b['desa']) ?></td>
-                                    <td class="px-4 py-2"><?= esc($b['nama_klaster']) ?></td>
-                                    <td class="px-4 py-2 space-y-1">
-                                        <?php foreach ($indikatorList as $key => $label): ?>
-                                            <?php $file = $b[$key . '_file'] ?? null; ?>
-                                            <?php if ($file): ?>
-                                                <div class="flex items-center gap-1">
-                                                    <i class="fas fa-file-archive text-blue-500"></i>
-                                                    <a href="<?= base_url('uploads/' . $folder . '/' . $file) ?>" target="_blank"
-                                                        class="text-blue-600 hover:text-blue-800 text-sm underline">
-                                                        <?= esc($label) ?>
-                                                    </a>
-                                                </div>
-                                            <?php else: ?>
-                                                <div class="text-gray-400 text-sm italic"><?= esc($label) ?>: Tidak ada file</div>
-                                            <?php endif ?>
-                                        <?php endforeach ?>
-                                    </td>
-                                    <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
-                                    <td class="px-4 py-2">
-                                        <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
-                                    </td>
-                                </tr>
-                            <?php endforeach ?>
-                        </tbody>
-                    </table>
-                </div>
+               <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
+        <thead class="bg-gray-100 text-gray-700">
+            <tr>
+                <th class="px-4 py-2 border-b text-left">No</th>
+                <th class="px-4 py-2 border-b text-left">Nama Desa</th>
+                <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
+                <th class="px-4 py-2 border-b text-left">Aksi</th>
+                <th class="px-4 py-2 border-b text-left">Nilai Total</th>
+                <th class="px-4 py-2 border-b text-left">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $no = 1; foreach ($berkas as $b): 
+                $klaster = strtolower(str_replace(' ', '', $b['nama_klaster'])); // contoh: Klaster 1 -> klaster1
+            ?>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-2"><?= $no++ ?></td>
+                    <td class="px-4 py-2"><?= esc($b['desa']) ?></td>
+                    <td class="px-4 py-2"><?= esc($b['nama_klaster']) ?></td>
+                    <td class="px-4 py-2">
+                        <a href="<?= base_url("dashboard/admin/laporan/detail/{$klaster}/{$b['user_id']}") ?>"
+                           class="text-blue-600 hover:text-blue-800 text-sm underline">
+                            <i class="fas fa-eye"></i> Lihat Detail
+                        </a>
+                    </td>
+                    <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
+                    <td class="px-4 py-2">
+                        <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+</div>
+
             </main>
         </div>
     </div>

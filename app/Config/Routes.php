@@ -41,6 +41,7 @@ $routes->group('dashboard', function ($routes) {
         $routes->post('klaster4/delete', 'Klaster4Controller::delete');
         $routes->post('klaster5/delete', 'Klaster5Controller::delete');
 
+$routes->get('laporan/detail/(:segment)/(:num)', 'Admin\LaporanDetailController::detail/$1/$2');
 
 
 
