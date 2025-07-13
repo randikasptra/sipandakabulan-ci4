@@ -9,7 +9,7 @@ use CodeIgniter\Database\BaseBuilder;
 
 class AdminBerkasController extends BaseController
 {
-   public function index()
+  public function index()
 {
     $db = \Config\Database::connect();
 
@@ -23,24 +23,36 @@ class AdminBerkasController extends BaseController
         ->get()
         ->getResultArray();
 
-    // Hitung jumlah laporan per klaster (untuk Chart)
-    $jumlahPerKlaster = [];
-    foreach ($berkas as $b) {
-        $namaKlaster = $b['nama_klaster'];
-        if (!isset($jumlahPerKlaster[$namaKlaster])) {
-            $jumlahPerKlaster[$namaKlaster] = 0;
+    // Buat chart_data: jumlah laporan dan total_nilai per klaster
+    $statistik = [];
+
+    foreach ($berkas as $item) {
+        $klaster = $item['nama_klaster'];
+
+        if (!isset($statistik[$klaster])) {
+            $statistik[$klaster] = [
+                'jumlah_laporan' => 0,
+                'total_nilai' => 0,
+            ];
         }
-        $jumlahPerKlaster[$namaKlaster]++;
+
+        $statistik[$klaster]['jumlah_laporan']++;
+        $statistik[$klaster]['total_nilai'] += (float) $item['total_nilai'];
     }
 
+    // Optional: urutkan berdasarkan nama klaster
+    ksort($statistik);
+
+    // Siapkan data ke view
     $data = [
         'title' => 'Laporan Berkas Disetujui',
         'berkas' => $berkas,
-        'chart_data' => json_encode($jumlahPerKlaster),
+        'chart_data' => json_encode($statistik), // akan dipakai di JS Chart.js
     ];
 
     return view('pages/admin/berkas', $data);
 }
+
 
 
 
@@ -110,7 +122,7 @@ class AdminBerkasController extends BaseController
         $kelembagaanModel = new \App\Models\KelembagaanModel();
         $klasterSlug = $this->request->getPost('klaster');
 
-        // Ambil ID klaster dari slug
+
         $klasterRow = (new \App\Models\KlasterFormModel())
             ->where('slug', $klasterSlug)
             ->first();
@@ -140,12 +152,12 @@ class AdminBerkasController extends BaseController
             $berkasModel->insert($data);
         }
 
-        // 🔁 Jika klaster adalah kelembagaan (id = 1), update juga tabel kelembagaan
+
         if ($data['klaster'] == 1) {
             $kelembagaan = $kelembagaanModel
                 ->where('user_id', $data['user_id'])
                 ->where('tahun', $data['tahun'])
-                ->where('bulan', $data['bulan']) // Pastikan format bulan cocok!
+                ->where('bulan', $data['bulan']) 
                 ->first();
 
             if ($kelembagaan) {

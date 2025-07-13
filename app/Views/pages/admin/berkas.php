@@ -133,52 +133,70 @@
 
     <!-- ✅ Chart.js Script -->
     <script>
-        const chartData = <?= $chart_data ?>;
-        const labels = Object.keys(chartData);
-        const values = Object.values(chartData);
+    const chartData = <?= $chart_data ?>;
+    const labels = Object.keys(chartData);
+    const jumlahLaporan = labels.map(label => chartData[label].jumlah_laporan);
+    const totalNilai = labels.map(label => chartData[label].total_nilai);
 
-        const ctx = document.getElementById('klasterChart').getContext('2d');
-        const klasterChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Jumlah Laporan Disetujui',
-                    data: values,
+    const ctx = document.getElementById('klasterChart').getContext('2d');
+    const klasterChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Jumlah Laporan',
+                    data: jumlahLaporan,
                     backgroundColor: 'rgba(59, 130, 246, 0.7)',
                     borderColor: 'rgba(37, 99, 235, 1)',
                     borderWidth: 1,
                     borderRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: context => `${context.raw} laporan`
-                        }
-                    }
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Jumlah Laporan'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Nama Klaster'
+                {
+                    label: 'Total Nilai',
+                    data: totalNilai,
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                    borderColor: 'rgba(5, 150, 105, 1)',
+                    borderWidth: 1,
+                    borderRadius: 6
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            if (context.dataset.label === 'Jumlah Laporan') {
+                                return `${context.raw} laporan`;
+                            } else {
+                                return `Total Nilai: ${context.raw}`;
+                            }
                         }
                     }
                 }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nilai / Laporan'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Nama Klaster'
+                    }
+                }
             }
-        });
-    </script>
+        }
+    });
+</script>
+
 </body>
 
 </html>
