@@ -70,85 +70,90 @@ class Kelembagaan extends BaseController
 
     return view('pages/operator/kelembagaan', $data);
 }
-    public function submit()
-    {
-        $userId = session()->get('id');
-        $tahun = date('Y');
-        $bulan = date('F');
+   public function submit()
+{
+    $userId = session()->get('id');
+    $tahun = date('Y');
+    $bulan = date('F');
 
-        $kelembagaanModel = new \App\Models\KelembagaanModel();
+    $kelembagaanModel = new \App\Models\KelembagaanModel();
 
-        $existing = $kelembagaanModel
-            ->where('user_id', $userId)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->first();
+    $existing = $kelembagaanModel
+        ->where('user_id', $userId)
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
 
-        // Jika statusnya pending/approved, tolak input baru
-        if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
-            return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
-        }
-
-        $data = [
-            'user_id' => $userId,
-            'tahun' => $tahun,
-            'bulan' => $bulan,
-            'peraturan_value' => (int) $this->request->getPost('peraturan'),
-            'anggaran_value' => (int) $this->request->getPost('anggaran'),
-            'forum_anak_value' => (int) $this->request->getPost('forum_anak'),
-            'data_terpilah_value' => (int) $this->request->getPost('data_terpilah'),
-            'dunia_usaha_value' => (int) $this->request->getPost('dunia_usaha'),
-            'status' => 'pending',
-        ];
-
-        $data['total_nilai'] = array_sum([
-            $data['peraturan_value'],
-            $data['anggaran_value'],
-            $data['forum_anak_value'],
-            $data['data_terpilah_value'],
-            $data['dunia_usaha_value'],
-        ]);
-
-        $fields = ['peraturan', 'anggaran', 'forum_anak', 'data_terpilah', 'dunia_usaha'];
-        foreach ($fields as $field) {
-            $file = $this->request->getFile("{$field}_file");
-
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                if ($file->getSize() > 10 * 1024 * 1024) {
-                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 10MB.');
-                }
-
-                if ($file->getExtension() !== 'zip') {
-                    return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
-                }
-
-                $newName = $field . '_' . time() . '_' . $file->getClientName();
-                $file->move(ROOTPATH . 'public/uploads/kelembagaan/', $newName);
-                $data["{$field}_file"] = $newName;
-            }
-        }
-
-        if ($existing && $existing['status'] === 'rejected') {
-    $kelembagaanModel->update($existing['id'], $data);
-} else {
-    $kelembagaanModel->insert($data);
-}
-
-// ✅ Refresh session biar data user update
-$userModel = new \App\Models\UserModel();
-$user = $userModel->find($userId);
-
-if ($user) {
-    session()->set([
-        'user_email' => $user['email'],
-        'user_name' => $user['username'],
-        'user_role' => $user['role'],
-    ]);
-}
-
-return redirect()->to('/kelembagaan/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
-
+    if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
+        return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
     }
+
+    $data = [
+        'user_id' => $userId,
+        'tahun' => $tahun,
+        'bulan' => $bulan,
+        'peraturan_value'     => (int) $this->request->getPost('peraturan'),
+        'anggaran_value'      => (int) $this->request->getPost('anggaran'),
+        'forum_anak_value'    => (int) $this->request->getPost('forum_anak'),
+        'data_terpilah_value' => (int) $this->request->getPost('data_terpilah'),
+        'dunia_usaha_value'   => (int) $this->request->getPost('dunia_usaha'),
+        'status' => 'pending',
+    ];
+
+    $data['total_nilai'] = array_sum([
+        $data['peraturan_value'],
+        $data['anggaran_value'],
+        $data['forum_anak_value'],
+        $data['data_terpilah_value'],
+        $data['dunia_usaha_value'],
+    ]);
+
+    $fields = ['peraturan', 'anggaran', 'forum_anak', 'data_terpilah', 'dunia_usaha'];
+
+    foreach ($fields as $field) {
+        $file = $this->request->getFile("{$field}_file");
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            if ($file->getSize() > 10 * 1024 * 1024) {
+                return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 10MB.');
+            }
+
+            if ($file->getExtension() !== 'zip') {
+                return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
+            }
+
+            $newName = $field . '_' . time() . '_' . $file->getClientName();
+            $file->move(ROOTPATH . 'public/uploads/kelembagaan/', $newName);
+            $data["{$field}_file"] = $newName;
+        }
+    }
+
+    try {
+        if ($existing && $existing['status'] === 'rejected') {
+            $kelembagaanModel->update($existing['id'], $data);
+        } else {
+            $kelembagaanModel->insert($data);
+        }
+
+        // Refresh session
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find($userId);
+
+        if ($user) {
+            session()->set([
+                'user_email' => $user['email'],
+                'user_name' => $user['username'],
+                'user_role' => $user['role'],
+            ]);
+        }
+
+        return redirect()->to('/kelembagaan/form')->with('success', 'Data berhasil dikirim. Menunggu persetujuan admin.');
+
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+    }
+}
+
 
 
   public function form()
