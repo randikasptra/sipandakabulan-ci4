@@ -9,19 +9,36 @@ use CodeIgniter\Database\BaseBuilder;
 
 class AdminBerkasController extends BaseController
 {
-  public function index()
+public function index()
 {
     $db = \Config\Database::connect();
 
-    // Ambil data berkas yang disetujui
-    $berkas = $db->table('berkas_klaster')
+    // Ambil input filter dari query string
+    $desaFilter = $this->request->getGet('desa');
+    $klasterFilter = $this->request->getGet('klaster');
+    $searchDesa = $this->request->getGet('search_desa');
+
+    // Query awal untuk ambil berkas yang disetujui
+    $builder = $db->table('berkas_klaster')
         ->select('berkas_klaster.*, users.desa, klasters.title as nama_klaster')
         ->join('users', 'users.id = berkas_klaster.user_id')
         ->join('klasters', 'klasters.id = berkas_klaster.klaster')
-        ->where('berkas_klaster.status', 'approved')
-        ->orderBy('berkas_klaster.created_at', 'DESC')
-        ->get()
-        ->getResultArray();
+        ->where('berkas_klaster.status', 'approved');
+
+    // Tambahkan filter jika ada
+    if (!empty($desaFilter)) {
+        $builder->where('users.desa', $desaFilter);
+    }
+
+    if (!empty($klasterFilter)) {
+        $builder->where('klasters.title', $klasterFilter);
+    }
+
+    if (!empty($searchDesa)) {
+        $builder->like('users.desa', $searchDesa);
+    }
+
+    $berkas = $builder->orderBy('berkas_klaster.created_at', 'DESC')->get()->getResultArray();
 
     // Buat chart_data: jumlah laporan dan total_nilai per klaster
     $statistik = [];
@@ -33,25 +50,47 @@ class AdminBerkasController extends BaseController
             $statistik[$klaster] = [
                 'jumlah_laporan' => 0,
                 'total_nilai' => 0,
+                'jumlah_desa' => 0
             ];
         }
 
         $statistik[$klaster]['jumlah_laporan']++;
         $statistik[$klaster]['total_nilai'] += (float) $item['total_nilai'];
+        $statistik[$klaster]['jumlah_desa'] = count(array_unique(array_column($berkas, 'desa')));
     }
 
-    // Optional: urutkan berdasarkan nama klaster
-    ksort($statistik);
+    // Ambil semua desa unik
+    $list_desa = $db->table('users')
+        ->select('desa')
+        ->distinct()
+        ->where('desa IS NOT NULL')
+        ->orderBy('desa')
+        ->get()
+        ->getResultArray();
 
-    // Siapkan data ke view
+    // Ambil semua klaster unik
+    $list_klaster = $db->table('klasters')
+        ->select('title')
+        ->distinct()
+        ->orderBy('title')
+        ->get()
+        ->getResultArray();
+
+    // Siapkan data untuk dikirim ke view
     $data = [
         'title' => 'Laporan Berkas Disetujui',
         'berkas' => $berkas,
-        'chart_data' => json_encode($statistik), // akan dipakai di JS Chart.js
+        'chart_data' => json_encode($statistik),
+        'list_desa' => array_column($list_desa, 'desa'),
+        'list_klaster' => array_column($list_klaster, 'title'),
+        'desa_filter' => $desaFilter,
+        'klaster_filter' => $klasterFilter,
+        'search_desa' => $searchDesa
     ];
 
     return view('pages/admin/berkas', $data);
 }
+
 
 
 

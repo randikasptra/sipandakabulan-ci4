@@ -79,17 +79,7 @@
                         <h2 class="text-lg font-bold text-gray-800"><?= esc($user['username'] ?? 'Tanpa Nama') ?></h2>
                       </div>
                     </div>
-                    <div class="flex items-center gap-1">
-                      <?php if ($user['status_approve'] === 'approved'): ?>
-                        <span class="status-badge bg-green-100 text-green-800">
-                          <i class="ph ph-check-circle mr-1"></i> Approved
-                        </span>
-                      <?php else: ?>
-                        <span class="status-badge bg-yellow-100 text-yellow-800">
-                          <i class="ph ph-clock mr-1"></i> Pending
-                        </span>
-                      <?php endif; ?>
-                    </div>
+                    
                   </div>
 
                   <div class="space-y-3 mb-4">

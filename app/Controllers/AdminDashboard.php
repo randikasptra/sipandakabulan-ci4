@@ -161,24 +161,27 @@ class AdminDashboard extends BaseController
         return view('pages/admin/users', $data);
     }
 
-    public function storeUser()
-    {
-        $userModel = new UserModel();
+   public function storeUser()
+{
+    $userModel = new UserModel();
 
-        $data = [
-            'username' => $this->request->getPost('username'),
-            'email' => $this->request->getPost('email'),
-            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'role' => $this->request->getPost('role'),
-            'desa' => $this->request->getPost('desa'),
-            'status_input' => 'belum',
-            'status_approve' => 'pending',
-        ];
+    $data = [
+        'username' => $this->request->getPost('username'),
+        'email' => $this->request->getPost('email'),
+        'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+        'role' => $this->request->getPost('role'),
+        'desa' => $this->request->getPost('desa'),
+       
+    ];
 
+    try {
         $userModel->save($data);
-
         return redirect()->to('/dashboard/users')->with('success', 'User berhasil ditambahkan.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal menambahkan user. Silakan coba lagi.');
     }
+}
+
 
     public function editUser($id)
     {

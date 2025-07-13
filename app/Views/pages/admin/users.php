@@ -303,82 +303,56 @@
     </div>
 
     <!-- Modal Detail Pengguna -->
-    <div id="detailModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
-            <div class="flex justify-between items-center p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-900">
-                    <i class="fas fa-user-circle text-primary-600 mr-2"></i>
-                    Detail Pengguna
-                </h3>
-                <button onclick="toggleModal('detailModal')" class="text-gray-400 hover:text-gray-500">
-                    <i class="fas fa-times"></i>
-                </button>
+   <div id="detailModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h3 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-user-circle text-primary-600 mr-2"></i>
+                Detail Pengguna
+            </h3>
+            <button onclick="toggleModal('detailModal')" class="text-gray-400 hover:text-gray-500">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div>
+                <p class="text-sm text-gray-500">Username:</p>
+                <p id="detailUsername" class="text-lg font-semibold text-gray-900"></p>
             </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <p class="text-sm text-gray-500">Username:</p>
-                    <p id="detailUsername" class="text-lg font-semibold text-gray-900"></p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Email:</p>
-                    <p id="detailEmail" class="text-base text-gray-800"></p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Role:</p>
-                    <p id="detailRole" class="text-base text-gray-800"></p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Desa:</p>
-                    <p id="detailDesa" class="text-base text-gray-800"></p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Status:</p>
-                    <p id="detailStatus" class="text-base font-semibold text-white inline-block px-3 py-1 rounded-full">
-                    </p>
-                </div>
+            <div>
+                <p class="text-sm text-gray-500">Email:</p>
+                <p id="detailEmail" class="text-base text-gray-800"></p>
             </div>
-            <div class="p-4 border-t flex justify-end">
-                <button onclick="toggleModal('detailModal')"
-                    class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg">Tutup</button>
+            <div>
+                <p class="text-sm text-gray-500">Role:</p>
+                <p id="detailRole" class="text-base text-gray-800"></p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Desa:</p>
+                <p id="detailDesa" class="text-base text-gray-800"></p>
             </div>
         </div>
+        <div class="p-4 border-t flex justify-end">
+            <button onclick="toggleModal('detailModal')"
+                class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg">Tutup</button>
+        </div>
     </div>
+</div>
 
-    <script>
-        function showDetail(username, email, role, desa, status) {
-            document.getElementById('detailUsername').textContent = username;
-            document.getElementById('detailEmail').textContent = email;
-            document.getElementById('detailRole').textContent = role;
-            document.getElementById('detailDesa').textContent = desa || '-';
+  <script>
+    function showDetail(username, email, role, desa) {
+        document.getElementById('detailUsername').textContent = username;
+        document.getElementById('detailEmail').textContent = email;
+        document.getElementById('detailRole').textContent = role;
+        document.getElementById('detailDesa').textContent = desa || '-';
 
-            const statusText = document.getElementById('detailStatus');
-            statusText.textContent = status || '-';
+        document.getElementById('detailModal').classList.remove('hidden');
+    }
 
-            // Reset class warna status
-            statusText.classList.remove('bg-yellow-500', 'bg-green-600', 'bg-red-500');
-
-            // Warna status berdasarkan value
-            switch (status?.toLowerCase()) {
-                case 'approved':
-                    statusText.classList.add('bg-green-600');
-                    break;
-                case 'pending':
-                    statusText.classList.add('bg-yellow-500');
-                    break;
-                case 'rejected':
-                    statusText.classList.add('bg-red-500');
-                    break;
-                default:
-                    statusText.classList.add('bg-gray-500');
-            }
-
-            document.getElementById('detailModal').classList.remove('hidden');
-        }
-
-        function toggleModal(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-    </script>
+    function toggleModal(id) {
+        document.getElementById(id).classList.toggle('hidden');
+    }
+</script>
 
     <script>
         function togglePasswordVisibility(id) {
@@ -442,6 +416,28 @@
         filterRole.addEventListener('change', filterTable);
     </script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (session()->getFlashdata('success')): ?>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '<?= session()->getFlashdata('success') ?>',
+        confirmButtonColor: '#2563eb'
+    });
+</script>
+<?php elseif (session()->getFlashdata('error')): ?>
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: '<?= session()->getFlashdata('error') ?>',
+        confirmButtonColor: '#dc2626'
+    });
+</script>
+<?php endif; ?>
+
     <script>
     document.getElementById('searchInput').addEventListener('input', function () {
         const keyword = this.value.toLowerCase();
@@ -457,6 +453,46 @@
         });
     });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (session()->getFlashdata('success')): ?>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '<?= session()->getFlashdata('success') ?>',
+        confirmButtonColor: '#2563eb'
+    });
+</script>
+<?php elseif (session()->getFlashdata('error')): ?>
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: '<?= session()->getFlashdata('error') ?>',
+        confirmButtonColor: '#dc2626'
+    });
+</script>
+<?php endif; ?>
+
+
+<script>
+function togglePasswordVisibility(id) {
+    const input = document.getElementById(id);
+    const icon = input.nextElementSibling.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
+
 
 </body>
 
