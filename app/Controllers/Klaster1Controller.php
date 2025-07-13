@@ -234,7 +234,7 @@ class Klaster1Controller extends BaseController
                 if (file_exists($filePath)) {
                     unlink($filePath);
                 }
-            }
+            } 
         }
 
         $this->klaster1Model->delete($existing['id']);
