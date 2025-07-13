@@ -62,61 +62,67 @@ class Klaster2Controller extends BaseController
     }
 
     public function submit()
-    {
-        $userId = session()->get('id');
-        $tahun = date('Y');
-        $bulan = date('F');
+{
+    $userId = session()->get('id');
+    $tahun = date('Y');
+    $bulan = date('F');
 
-        $existing = $this->klaster2Model
-            ->where('user_id', $userId)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->first();
+    $existing = $this->klaster2Model
+        ->where('user_id', $userId)
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
 
-        if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
-            return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
-        }
+    if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
+        return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
+    }
 
-        $fields = ['perkawinanAnak', 'pencegahanPernikahan', 'lembagaKonsultasi'];
-        $totalNilai = 0;
-        $data = [
-            'user_id' => $userId,
-            'tahun' => $tahun,
-            'bulan' => $bulan,
-            'status' => 'pending'
-        ];
+    $fields = ['perkawinanAnak', 'pencegahanPernikahan', 'lembagaKonsultasi'];
+    $totalNilai = 0;
+    $data = [
+        'user_id' => $userId,
+        'tahun' => $tahun,
+        'bulan' => $bulan,
+        'status' => 'pending'
+    ];
 
-        foreach ($fields as $field) {
-            $value = (int) $this->request->getPost($field);
-            $data[$field] = $value;
-            $totalNilai += $value;
+    foreach ($fields as $field) {
+        $value = (int) $this->request->getPost($field);
+        $data[$field] = $value;
+        $totalNilai += $value;
 
-            $file = $this->request->getFile("{$field}_file");
+        $file = $this->request->getFile("{$field}_file");
 
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                if ($file->getSize() > 10 * 1024 * 1024) {
-                    return redirect()->back()->with('error', "Ukuran file {$field} melebihi 10MB.");
-                }
-                if ($file->getExtension() !== 'zip') {
-                    return redirect()->back()->with('error', "File {$field} harus berformat ZIP.");
-                }
-
-                $newName = $field . '_' . time() . '_' . $file->getClientName();
-                $file->move(ROOTPATH . 'public/uploads/klaster2/', $newName);
-                $data["{$field}_file"] = $newName;
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            if ($file->getSize() > 10 * 1024 * 1024) {
+                return redirect()->back()->with('error', "Ukuran file {$field} melebihi 10MB.");
             }
+
+            if ($file->getExtension() !== 'zip') {
+                return redirect()->back()->with('error', "File {$field} harus berformat ZIP.");
+            }
+
+            $newName = $field . '_' . time() . '_' . $file->getClientName();
+            $file->move(ROOTPATH . 'public/uploads/klaster2/', $newName);
+            $data["{$field}_file"] = $newName;
         }
+    }
 
-        $data['total_nilai'] = $totalNilai;
+    $data['total_nilai'] = $totalNilai;
 
+    try {
         if ($existing && $existing['status'] === 'rejected') {
             $this->klaster2Model->update($existing['id'], $data);
         } else {
             $this->klaster2Model->insert($data);
         }
 
-        return redirect()->to('/klaster2/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+        return redirect()->to('/klaster2/form')->with('success', 'Data berhasil dikirim. Menunggu persetujuan admin.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
     }
+}
+
 
     public function form()
     {
