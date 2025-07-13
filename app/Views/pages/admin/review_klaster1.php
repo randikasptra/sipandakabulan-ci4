@@ -157,26 +157,53 @@
                         </form>
                     <?php else: ?>
                         <!-- Jika belum rejected, tampilkan tombol Approve / Reject -->
-                        <form method="post" action="<?= base_url('dashboard/admin/klaster1/approve') ?>" class="mt-8">
-                            <?= csrf_field() ?>
-                            <input type="hidden" name="user_id" value="<?= $user_id ?>">
-                            <input type="hidden" name="klaster" value="klaster1">
-                            <input type="hidden" name="tahun" value="<?= esc($klaster1['tahun']) ?>">
-                            <input type="hidden" name="bulan" value="<?= esc($klaster1['bulan']) ?>">
-                            <input type="hidden" name="total_nilai" value="<?= esc($klaster1['total_nilai']) ?>">
-                            <input type="hidden" name="catatan" value="">
+                        <!-- ✅ Jika status approved: tampilkan info saja -->
+<?php if ($klaster1['status'] === 'approved'): ?>
+    <div class="bg-green-100 text-green-800 px-4 py-3 rounded mb-6">
+        <i class="fas fa-check-circle mr-2"></i> Data ini telah <strong>diverifikasi</strong> dan disetujui.
+    </div>
+<?php endif; ?>
 
-                            <div class="flex flex-col sm:flex-row gap-3">
-                                <button type="submit" name="status" value="approved"
-                                    class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
-                                    <i class="fas fa-check-circle"></i> Approve
-                                </button>
-                                <button type="submit" name="status" value="rejected"
-                                    class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
-                                    <i class="fas fa-times-circle"></i> Reject
-                                </button>
-                            </div>
-                        </form>
+<!-- ✅ Jika status pending: tampilkan tombol approve/reject -->
+<?php if ($klaster1['status'] === 'pending'): ?>
+    <form method="post" action="<?= base_url('dashboard/admin/klaster1/approve') ?>" class="mt-8">
+        <?= csrf_field() ?>
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <input type="hidden" name="klaster" value="klaster1">
+        <input type="hidden" name="tahun" value="<?= esc($klaster1['tahun']) ?>">
+        <input type="hidden" name="bulan" value="<?= esc($klaster1['bulan']) ?>">
+        <input type="hidden" name="total_nilai" value="<?= esc($klaster1['total_nilai']) ?>">
+        <input type="hidden" name="catatan" value="">
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <button type="submit" name="status" value="approved"
+                class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                <i class="fas fa-check-circle"></i> Approve
+            </button>
+            <button type="submit" name="status" value="rejected"
+                class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
+                <i class="fas fa-times-circle"></i> Reject
+            </button>
+        </div>
+    </form>
+<?php endif; ?>
+
+<!-- ✅ Jika status rejected: tampilkan tombol hapus -->
+<?php if ($klaster1['status'] === 'rejected'): ?>
+    <form action="<?= base_url('dashboard/admin/klaster1/delete') ?>" method="post" class="mt-8">
+        <?= csrf_field() ?>
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <input type="hidden" name="tahun" value="<?= esc($klaster1['tahun']) ?>">
+        <input type="hidden" name="bulan" value="<?= esc($klaster1['bulan']) ?>">
+
+        <button type="submit"
+            onclick="return confirm('Yakin ingin menghapus data Klaster 1 ini? Data akan hilang permanen.')"
+            class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+            <i class="fas fa-trash"></i> Hapus Form
+        </button>
+    </form>
+<?php endif; ?>
+
                     <?php endif; ?>
 
                 </div>

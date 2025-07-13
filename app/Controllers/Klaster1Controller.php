@@ -62,57 +62,58 @@ class Klaster1Controller extends BaseController
         return view('pages/operator/klaster1', $data);
     }
 
-    public function submit()
-    {
-        $userId = session()->get('id');
-        $tahun = date('Y');
-        $bulan = date('F');
+   public function submit()
+{
+    $userId = session()->get('id');
+    $tahun = date('Y');
+    $bulan = date('F');
 
-        $existing = $this->klaster1Model
-            ->where('user_id', $userId)
-            ->where('tahun', $tahun)
-            ->where('bulan', $bulan)
-            ->first();
+    $existing = $this->klaster1Model
+        ->where('user_id', $userId)
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
 
-        if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
-            return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
-        }
+    if ($existing && in_array($existing['status'], ['pending', 'approved'])) {
+        return redirect()->back()->with('error', 'Form sudah dikirim atau disetujui. Tidak dapat mengisi ulang.');
+    }
 
-        $data = [
-            'user_id' => $userId,
-            'tahun' => $tahun,
-            'bulan' => $bulan,
-            'AnakAktaKelahiran' => (int) $this->request->getPost('AnakAktaKelahiran'),
-            'anggaran' => (int) $this->request->getPost('anggaran'),
-            'status' => 'pending',
-        ];
+    $data = [
+        'user_id' => $userId,
+        'tahun' => $tahun,
+        'bulan' => $bulan,
+        'AnakAktaKelahiran' => (int) $this->request->getPost('AnakAktaKelahiran'),
+        'anggaran' => (int) $this->request->getPost('anggaran'),
+        'status' => 'pending',
+    ];
 
-        $data['total_nilai'] = $data['AnakAktaKelahiran'] + $data['anggaran'];
+    $data['total_nilai'] = $data['AnakAktaKelahiran'] + $data['anggaran'];
 
-        $fields = ['AnakAktaKelahiran', 'anggaran'];
-        foreach ($fields as $field) {
-            $file = $this->request->getFile("{$field}_file");
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                if ($file->getSize() > 10 * 1024 * 1024) {
-                    return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 10MB.');
-                }
-                if ($file->getExtension() !== 'zip') {
-                    return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
-                }
-
-                $newName = $field . '_' . time() . '_' . $file->getClientName();
-                $file->move(ROOTPATH . 'public/uploads/klaster1/', $newName);
-                $data[$field . '_file'] = $newName;
+    $fields = ['AnakAktaKelahiran', 'anggaran'];
+    foreach ($fields as $field) {
+        $file = $this->request->getFile("{$field}_file");
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            if ($file->getSize() > 10 * 1024 * 1024) {
+                return redirect()->back()->with('error', 'Ukuran file terlalu besar. Maksimum 10MB.');
             }
-        }
+            if ($file->getExtension() !== 'zip') {
+                return redirect()->back()->with('error', 'File ' . $field . ' harus berformat ZIP.');
+            }
 
+            $newName = $field . '_' . time() . '_' . $file->getClientName();
+            $file->move(ROOTPATH . 'public/uploads/klaster1/', $newName);
+            $data[$field . '_file'] = $newName;
+        }
+    }
+
+    try {
         if ($existing && $existing['status'] === 'rejected') {
             $this->klaster1Model->update($existing['id'], $data);
         } else {
             $this->klaster1Model->insert($data);
         }
 
-        $userModel = new UserModel();
+        $userModel = new \App\Models\UserModel();
         $user = $userModel->find($userId);
         if ($user) {
             session()->set([
@@ -122,8 +123,14 @@ class Klaster1Controller extends BaseController
             ]);
         }
 
-        return redirect()->to('/klaster1/form')->with('success', 'Data berhasil disimpan dan menunggu persetujuan admin.');
+        // ✅ Set flashdata SweetAlert
+        return redirect()->to('/klaster1/form')->with('success', 'Data berhasil dikirim. Menunggu persetujuan admin.');
+
+    } catch (\Exception $e) {
+        // ❌ Jika error terjadi
+        return redirect()->back()->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
     }
+}
 
     public function form()
     {

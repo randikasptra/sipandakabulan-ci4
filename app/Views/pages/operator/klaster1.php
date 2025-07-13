@@ -9,6 +9,10 @@
     <title>Form Klaster - 1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -340,8 +344,28 @@
 });
     </script>
 
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
+<?php if (session()->getFlashdata('success')): ?>
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '<?= session()->getFlashdata('success') ?>',
+        confirmButtonColor: '#2563eb'
+    });
+</script>
+<?php elseif (session()->getFlashdata('error')): ?>
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal!',
+        text: '<?= session()->getFlashdata('error') ?>',
+        confirmButtonColor: '#dc2626'
+    });
+</script>
+<?php endif; ?>
 
 
 </body>
