@@ -4,81 +4,137 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Models\KelembagaanModel;
+use App\Models\BerkasKlasterModel;
+use App\Models\Klaster1Model;
+use App\Models\Klaster2Model;
+use App\Models\Klaster3Model;
+use App\Models\Klaster4Model;
+use App\Models\Klaster5Model;
 
 class AdminDashboard extends BaseController
 {
-    public function index()
-    {
-        if (!session()->get('logged_in')) {
-            return redirect()->to('/login')->with('error', 'Silakan login untuk mengakses dashboard.');
-        }
-        $userModel = new \App\Models\UserModel();
-        $berkasModel = new \App\Models\BerkasKlasterModel();
-
-        // Klaster models
-        $klaster1 = new \App\Models\Klaster1Model();
-        $klaster2 = new \App\Models\Klaster2Model();
-        $klaster3 = new \App\Models\Klaster3Model();
-        $klaster4 = new \App\Models\Klaster4Model();
-        $klaster5 = new \App\Models\Klaster5Model();
-
-        $desaList = $userModel->where('role', 'operator')->findAll();
-
-        foreach ($desaList as &$desa) {
-            $userId = $desa['id'];
-            $desa['status_input'] = $desa['status_input'] ?? 'belum';
-            $desa['status_approve'] = $desa['status_approve'] ?? 'pending';
-            $desa['input_by'] = $desa['username'] ?? '-';
-
-            // Ambil waktu input terakhir
-            $timestamps = [];
-            foreach ([$klaster1, $klaster2, $klaster3, $klaster4, $klaster5] as $klasterModel) {
-                $entry = $klasterModel->where('user_id', $userId)->orderBy('created_at', 'desc')->first();
-                if ($entry && isset($entry['created_at'])) {
-                    $timestamps[] = $entry['created_at'];
-                }
-            }
-            $desa['created_at'] = !empty($timestamps) ? max($timestamps) : null;
-
-            // Klaster terisi
-            $klasterTerisi = [];
-            if ($klaster1->where('user_id', $userId)->first())
-                $klasterTerisi[] = 'Klaster 1';
-            if ($klaster2->where('user_id', $userId)->first())
-                $klasterTerisi[] = 'Klaster 2';
-            if ($klaster3->where('user_id', $userId)->first())
-                $klasterTerisi[] = 'Klaster 3';
-            if ($klaster4->where('user_id', $userId)->first())
-                $klasterTerisi[] = 'Klaster 4';
-            if ($klaster5->where('user_id', $userId)->first())
-                $klasterTerisi[] = 'Klaster 5';
-
-            $desa['klaster_isi'] = !empty($klasterTerisi) ? implode(', ', $klasterTerisi) : '-';
-        }
-
-        // Hitung status dari berkas_klaster
-        $approved = $berkasModel->where('status', 'approved')->countAllResults(false);
-        $rejected = $berkasModel->where('status', 'rejected')->countAllResults(false);
-
-        // ✅ Hitung “perlu approve” dari semua klaster yang statusnya "pending"
-        $perluApproveCount = $klaster1->where('status', 'pending')->countAllResults(false)
-            + $klaster2->where('status', 'pending')->countAllResults(false)
-            + $klaster3->where('status', 'pending')->countAllResults(false)
-            + $klaster4->where('status', 'pending')->countAllResults(false)
-            + $klaster5->where('status', 'pending')->countAllResults(false);
-
-        $data = [
-            'totalDesa' => count($desaList),
-            'sudahInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'sudah')),
-            'belumInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'belum')),
-            'perluApprove' => $perluApproveCount,
-            'totalApproved' => $approved,
-            'totalRejected' => $rejected,
-            'desaList' => $desaList,
-        ];
-
-        return view('pages/admin/dashboard', $data);
+ public function index()
+{
+    if (!session()->get('logged_in')) {
+        return redirect()->to('/login')->with('error', 'Silakan login untuk mengakses dashboard.');
     }
+
+    $userModel      = new UserModel();
+    $kelembagaan    = new KelembagaanModel();
+    $klaster1       = new Klaster1Model();
+    $klaster2       = new Klaster2Model();
+    $klaster3       = new Klaster3Model();
+    $klaster4       = new Klaster4Model();
+    $klaster5       = new Klaster5Model();
+
+    $desaList = $userModel->where('role', 'operator')->findAll();
+
+    foreach ($desaList as &$desa) {
+        $userId = $desa['id'];
+        $desa['status_input'] = $desa['status_input'] ?? 'belum';
+        $desa['status_approve'] = $desa['status_approve'] ?? 'pending';
+        $desa['input_by'] = $desa['username'] ?? '-';
+
+        $timestamps = [];
+        foreach ([$klaster1, $klaster2, $klaster3, $klaster4, $klaster5] as $klasterModel) {
+            $entry = $klasterModel->where('user_id', $userId)->orderBy('created_at', 'desc')->first();
+            if ($entry && isset($entry['created_at'])) {
+                $timestamps[] = $entry['created_at'];
+            }
+        }
+        $desa['created_at'] = !empty($timestamps) ? max($timestamps) : null;
+
+        $klasterTerisi = [];
+        if ($klaster1->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 1';
+        if ($klaster2->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 2';
+        if ($klaster3->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 3';
+        if ($klaster4->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 4';
+        if ($klaster5->where('user_id', $userId)->first()) $klasterTerisi[] = 'Klaster 5';
+
+        $desa['klaster_isi'] = !empty($klasterTerisi) ? implode(', ', $klasterTerisi) : '-';
+    }
+
+    // Hitung total input (semua tabel ada isinya)
+    $totalInput =
+        $kelembagaan->countAll() +
+        $klaster1->countAll() +
+        $klaster2->countAll() +
+        $klaster3->countAll() +
+        $klaster4->countAll() +
+        $klaster5->countAll();
+
+    // Approved
+    $totalApproved =
+        $kelembagaan->where('status', 'approved')->countAllResults() +
+        $klaster1->where('status', 'approved')->countAllResults() +
+        $klaster2->where('status', 'approved')->countAllResults() +
+        $klaster3->where('status', 'approved')->countAllResults() +
+        $klaster4->where('status', 'approved')->countAllResults() +
+        $klaster5->where('status', 'approved')->countAllResults();
+
+    // Rejected
+    $totalRejected =
+        $kelembagaan->where('status', 'rejected')->countAllResults() +
+        $klaster1->where('status', 'rejected')->countAllResults() +
+        $klaster2->where('status', 'rejected')->countAllResults() +
+        $klaster3->where('status', 'rejected')->countAllResults() +
+        $klaster4->where('status', 'rejected')->countAllResults() +
+        $klaster5->where('status', 'rejected')->countAllResults();
+
+    // Perlu Approve
+    $perluApproveCount =
+        $klaster1->where('status', 'pending')->countAllResults() +
+        $klaster2->where('status', 'pending')->countAllResults() +
+        $klaster3->where('status', 'pending')->countAllResults() +
+        $klaster4->where('status', 'pending')->countAllResults() +
+        $klaster5->where('status', 'pending')->countAllResults();
+
+    // Ambil 5 data terbaru dari semua tabel
+    $combined = [];
+    $tables = [
+        ['model' => $kelembagaan, 'label' => 'Kelembagaan'],
+        ['model' => $klaster1, 'label' => 'Klaster 1'],
+        ['model' => $klaster2, 'label' => 'Klaster 2'],
+        ['model' => $klaster3, 'label' => 'Klaster 3'],
+        ['model' => $klaster4, 'label' => 'Klaster 4'],
+        ['model' => $klaster5, 'label' => 'Klaster 5'],
+    ];
+
+    foreach ($tables as $tbl) {
+        $rows = $tbl['model']->orderBy('created_at', 'desc')->findAll(5);
+        foreach ($rows as $r) {
+            $combined[] = [
+                'nama_klaster' => $tbl['label'],
+                'user_id' => $r['user_id'],
+                'tahun' => $r['tahun'] ?? '-',
+                'bulan' => $r['bulan'] ?? '-',
+                'status' => $r['status'] ?? '-',
+                'created_at' => $r['created_at'] ?? '-',
+            ];
+        }
+    }
+
+    usort($combined, fn($a, $b) => strtotime($b['created_at']) <=> strtotime($a['created_at']));
+    $latestCombined = array_slice($combined, 0, 5);
+
+    foreach ($latestCombined as &$item) {
+        $user = $userModel->find($item['user_id']);
+        $item['nama_desa'] = $user['desa'] ?? 'Unknown';
+    }
+
+    $data = [
+        'totalDesa' => count($desaList),
+        'sudahInput' => $totalInput,
+        'belumInput' => count(array_filter($desaList, fn($d) => $d['status_input'] === 'belum')),
+        'totalApproved' => $totalApproved,
+        'totalRejected' => $totalRejected,
+        'perluApprove' => $perluApproveCount,
+        'desaList' => $desaList,
+        'latestCombined' => $latestCombined,
+    ];
+
+    return view('pages/admin/dashboard', $data);
+}
 
 
 

@@ -41,7 +41,7 @@
                         <p class="text-3xl font-bold"><?= esc($totalDesa) ?></p>
                     </div>
                     <div class="bg-white p-5 rounded-lg shadow text-center">
-                        <p class="text-sm text-gray-500">Sudah Input</p>
+                        <p class="text-sm text-gray-500">Total Input</p>
                         <p class="text-3xl font-bold text-green-600"><?= esc($sudahInput) ?></p>
                     </div>
 
@@ -61,75 +61,60 @@
 
 
                 <!-- Tabel Status Desa -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Status Pengisian Desa</h3>
-                    <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
-                        <table class="min-w-full table-auto">
-                            <thead class="bg-blue-800 text-white">
-                                <tr>
-                                    <th class="px-4 py-2 text-left">No</th>
-                                    <th class="px-4 py-2 text-left">Nama Desa</th>
-                                    <th class="px-4 py-2 text-left">Status Input</th>
-                                    <th class="px-4 py-2 text-left">Status Approve</th>
-                                    <th class="px-4 py-2 text-left">Terakhir Diinput Oleh</th>
-                                    <th class="px-4 py-2 text-left">Waktu Input</th>
-                                    <th class="px-4 py-2 text-left">Klaster Terisi</th>
-                                    <th class="px-4 py-2 text-left">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm text-gray-700">
-                                <?php if (!empty($desaList) && is_array($desaList)): ?>
-                                    <?php $no = 1; ?>
-                                    <?php foreach ($desaList as $desa): ?>
-                                        <tr
-                                            class="<?= $no % 2 === 0 ? 'bg-gray-50' : 'bg-white' ?> hover:bg-blue-50 transition">
-                                            <td class="px-4 py-3 font-medium"><?= $no++ ?></td>
-                                            <td class="px-4 py-3"><?= esc($desa['desa']) ?></td>
-                                            <td class="px-4 py-3">
-                                                <span
-                                                    class="px-2 py-1 rounded-full text-xs font-semibold
-                        <?= $desa['status_input'] === 'sudah' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600' ?>">
-                                                    <?= $desa['status_input'] === 'sudah' ? 'Sudah Input' : 'Belum Input' ?>
-                                                </span>
-                                            </td>
-                                            <td class="px-4 py-3">
-                                                <?php
-                                                $status = $desa['status_approve'];
-                                                $statusLabel = [
-                                                    'approved' => ['label' => 'Disetujui', 'color' => 'bg-green-100 text-green-700'],
-                                                    'pending' => ['label' => 'Menunggu Approve', 'color' => 'bg-yellow-100 text-yellow-700'],
-                                                    'rejected' => ['label' => 'Ditolak', 'color' => 'bg-red-100 text-red-600']
-                                                ];
-                                                ?>
-                                                <span
-                                                    class="px-2 py-1 rounded-full text-xs font-semibold <?= $statusLabel[$status]['color'] ?>">
-                                                    <?= $statusLabel[$status]['label'] ?>
-                                                </span>
-                                            </td>
-                                            <td class="px-4 py-3"><?= esc($desa['input_by'] ?? '-') ?></td>
-                                            <td class="px-4 py-3">
-                                                <?= !empty($desa['created_at']) ? date('d M Y, H:i', strtotime($desa['created_at'])) : '<span class="text-gray-400 italic">Belum ada</span>' ?>
-                                            </td>
-                                            <td class="px-4 py-3">
-                                                <?= $desa['klaster_isi'] !== '-' ? esc($desa['klaster_isi']) : '<span class="text-gray-400 italic">Belum ada</span>' ?>
-                                            </td>
-                                            <td class="px-4 py-3">
-                                                <a href="<?= base_url('dashboard/admin/approve/' . $desa['id']) ?>"
-                                                    class="text-blue-600 hover:underline text-sm">Lihat Detail</a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="8" class="text-center py-6 text-gray-500 italic">Data desa belum
-                                            tersedia</td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
+                <!-- Tabel Data Terbaru Gabungan -->
+<div class="mt-10">
+    <h3 class="text-lg font-bold mb-4 text-blue-800">5 Data Terbaru dari Semua Klaster</h3>
+    <div class="bg-white p-4 rounded-lg shadow overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead class="bg-blue-700 text-white">
+                <tr>
+                    <th class="px-4 py-2 text-left">No</th>
+                    <th class="px-4 py-2 text-left">Nama Desa</th>
+                    <th class="px-4 py-2 text-left">Nama Klaster</th>
+                    <th class="px-4 py-2 text-left">Tahun</th>
+                    <th class="px-4 py-2 text-left">Bulan</th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                    <th class="px-4 py-2 text-left">Waktu Input</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($latestCombined)): ?>
+                    <?php $no = 1; ?>
+                    <?php foreach ($latestCombined as $row): ?>
+                        <tr class="<?= $no % 2 === 0 ? 'bg-gray-50' : 'bg-white' ?>">
+                            <td class="px-4 py-2"><?= $no++ ?></td>
+                            <td class="px-4 py-2"><?= esc($row['nama_desa']) ?></td>
+                            <td class="px-4 py-2"><?= esc($row['nama_klaster']) ?></td>
+                            <td class="px-4 py-2"><?= esc($row['tahun']) ?></td>
+                            <td class="px-4 py-2"><?= esc($row['bulan']) ?></td>
+                            <td class="px-4 py-2">
+                                <?php
+                                $warna = match ($row['status']) {
+                                    'approved' => 'bg-green-100 text-green-700',
+                                    'pending' => 'bg-yellow-100 text-yellow-700',
+                                    'rejected' => 'bg-red-100 text-red-600',
+                                    default => 'bg-gray-100 text-gray-600',
+                                };
+                                ?>
+                                <span class="px-2 py-1 rounded-full text-xs font-semibold <?= $warna ?>">
+                                    <?= ucfirst($row['status']) ?>
+                                </span>
+                            </td>
+                            <td class="px-4 py-2">
+                                <?= date('d M Y, H:i', strtotime($row['created_at'])) ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="7" class="px-4 py-4 text-center text-gray-500 italic">Belum ada data terbaru</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                        </table>
-                    </div>
-                </div>
 
             </main>
         </div>
