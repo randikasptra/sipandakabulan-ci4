@@ -220,6 +220,42 @@ class Kelembagaan extends BaseController
 
     }
 
+    public function deleteApprove()
+{
+    $userId = $this->request->getPost('user_id');
+    $tahun = date('Y');
+    $bulan = date('F');
+
+    $existing = $this->kelembagaanModel
+        ->where('user_id', $userId)
+        ->where('status', 'approved')
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
+        
+
+    if (!$existing) {
+        return redirect()->back()->with('error', 'Data dengan status approved tidak ditemukan.');
+    }
+
+    $fields = ['peraturan_file', 'anggaran_file', 'forum_anak_file', 'data_terpilah_file', 'dunia_usaha_file'];
+    foreach ($fields as $fileField) {
+        if (!empty($existing[$fileField])) {
+            $filePath = ROOTPATH . 'public/uploads/kelembagaan/' . $existing[$fileField];
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+    }
+
+    $this->kelembagaanModel->delete($existing['id']);
+
+    return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Data Klaster1 berhasil dihapus.');
+
+    
+}
+
+
     public function batal()
     {
         $userId = session()->get('id');

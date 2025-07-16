@@ -99,6 +99,13 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800 antialiased">
+
+<?php if (!empty($success)) : ?>
+    <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+        <?= $success ?>
+    </div>
+<?php endif; ?>
+
     <div class="flex min-h-screen lg:ml-72">
 
         <!-- Sidebar Admin -->
@@ -124,6 +131,9 @@
                         </div>
                         
                     </div>
+                    <!-- Tombol Hapus Semua -->
+
+
 
                     <?php
                     $klasterData = [
@@ -152,6 +162,16 @@
 
    
     </div>
+   <!-- Tombol Hapus Semua -->
+<div class="flex justify-end gap-2 mt-4">
+    <form action="<?= site_url('dashboard/admin/hapus_semua_pengajuan') ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus semua pengajuan yang belum disetujui?')">
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+            <i class="fas fa-trash-alt mr-1"></i> Hapus Semua Pending
+        </button>
+    </form>
+    
+</div>
+
 </div>
 
 <!-- Main Grid Layout -->
@@ -199,6 +219,7 @@
                     <div class="bg-blue-100 p-2 rounded-lg flex-shrink-0 ml-3">
                         <i class="fas fa-file-alt text-blue-600"></i>
                     </div>
+                    
                 </div>
 
                 <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">

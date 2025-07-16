@@ -513,6 +513,64 @@ public function deleteKlaster1()
         return view('pages/admin/approve', $data);
     }
 
+
+  public function hapusSemuaPengajuan()
+{
+    $db = \Config\Database::connect();
+
+    // Hapus semua data 'pending' dari masing-masing tabel
+    $tables = ['kelembagaan', 'klaster1', 'klaster2', 'klaster3', 'klaster4', 'klaster5'];
+
+    foreach ($tables as $table) {
+        $db->table($table)->where('status', 'pending')->delete();
+    }
+
+    // Setelah dihapus, ambil ulang data untuk halaman approve
+    $data = [
+        'title' => 'Pending Approvals',
+        'kelembagaan' => $db->table('kelembagaan')->where('status', 'pending')->get()->getResult(),
+        'klaster1' => $db->table('klaster1')->where('status', 'pending')->get()->getResult(),
+        'klaster2' => $db->table('klaster2')->where('status', 'pending')->get()->getResult(),
+        'klaster3' => $db->table('klaster3')->where('status', 'pending')->get()->getResult(),
+        'klaster4' => $db->table('klaster4')->where('status', 'pending')->get()->getResult(),
+        'klaster5' => $db->table('klaster5')->where('status', 'pending')->get()->getResult(),
+        'success' => 'Semua data pending berhasil dihapus.'
+    ];
+
+    return view('pages/admin/approve', $data);
+}
+
+
+public function hapusSemuaApprove()
+{
+    $db = \Config\Database::connect();
+    $tables = ['kelembagaan', 'klaster1', 'klaster2', 'klaster3', 'klaster4', 'klaster5'];
+
+    foreach ($tables as $table) {
+        try {
+            $db->table($table)->where('LOWER(status)', 'approve')->delete();
+        } catch (\Exception $e) {
+            log_message('error', "Gagal hapus di $table: " . $e->getMessage());
+        }
+    }
+
+    $data = [
+        'title' => 'Pending Approvals',
+        'kelembagaan' => $db->table('kelembagaan')->where('status', 'approve')->get()->getResult(),
+        'klaster1' => $db->table('klaster1')->where('status', 'approve')->get()->getResult(),
+        'klaster2' => $db->table('klaster2')->where('status', 'approve')->get()->getResult(),
+        'klaster3' => $db->table('klaster3')->where('status', 'approve')->get()->getResult(),
+        'klaster4' => $db->table('klaster4')->where('status', 'approve')->get()->getResult(),
+        'klaster5' => $db->table('klaster5')->where('status', 'approve')->get()->getResult(),
+        'success' => 'Semua data yang sudah di-approve berhasil dihapus.'
+    ];
+
+    return view('pages/admin/approve', $data);
+}
+
+
+
+
     public function setujui($id)
     {
         $userModel = new \App\Models\UserModel();

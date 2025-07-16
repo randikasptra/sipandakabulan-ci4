@@ -160,6 +160,15 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
     <div class="bg-green-100 text-green-800 px-4 py-3 rounded mb-6">
         <i class="fas fa-check-circle mr-2"></i> Data ini telah <strong>diverifikasi</strong> dan disetujui.
     </div>
+    <form action="<?= base_url('dashboard/admin/delete-approve') ?>" method="post" class="mt-4">
+        <?= csrf_field() ?>
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <button type="submit"
+            onclick="return confirm('Yakin ingin menghapus data kelembagaan ini yang sudah di-approve?')"
+            class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+            <i class="fas fa-trash"></i> Hapus Form
+        </button>
+    </form>
 <?php endif; ?>
 
 <!-- ✅ Status pending: tampilkan tombol Approve/Reject -->
