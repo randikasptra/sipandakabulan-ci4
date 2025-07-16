@@ -206,7 +206,10 @@ public function index()
             }
         }
 
-        return redirect()->back()->with('success', 'Status berhasil disimpan ke laporan berkas.');
+       $userId = $this->request->getPost('user_id');
+        return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status berhasil disimpan ke laporan berkas.');
+
+
     }
 
 }

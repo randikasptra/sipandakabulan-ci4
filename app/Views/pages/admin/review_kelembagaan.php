@@ -142,85 +142,71 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
                                 </p>
                             </div>
 
-                            <!-- Status -->
-                            <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
-                                <p class="text-sm text-gray-500 mb-1">Status</p>
-                                <p class="text-lg font-medium 
-                <?= $kelembagaan['status'] === 'pending' ? 'text-yellow-600' :
-                    ($kelembagaan['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
-                                    <?= ucfirst($kelembagaan['status']) ?>
-                                </p>
+                                    <!-- Status -->
+                                    <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
+                                        <p class="text-sm text-gray-500 mb-1">Status</p>
+                                        <p class="text-lg font-medium 
+                        <?= $kelembagaan['status'] === 'pending' ? 'text-yellow-600' :
+                            ($kelembagaan['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                            <?= ucfirst($kelembagaan['status']) ?>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
 
-    <!-- ✅ Status approved: tampilkan info saja -->
-<?php if ($kelembagaan['status'] === 'approved'): ?>
-    <div class="bg-green-100 text-green-800 px-4 py-3 rounded mb-6">
-        <i class="fas fa-check-circle mr-2"></i> Data ini telah <strong>diverifikasi</strong> dan disetujui.
-    </div>
-    <form action="<?= base_url('dashboard/admin/delete-approve') ?>" method="post" class="mt-4">
-        <?= csrf_field() ?>
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <button type="submit"
-            onclick="return confirm('Yakin ingin menghapus data kelembagaan ini yang sudah di-approve?')"
-            class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
-            <i class="fas fa-trash"></i> Hapus Form
-        </button>
-    </form>
-<?php endif; ?>
+                            <?php if ($kelembagaan['status'] === 'approved'): ?>
+                                <div class="bg-green-100 text-green-800 px-4 py-3 rounded mb-6">
+                                    <i class="fas fa-check-circle mr-2"></i> Data ini telah <strong>diverifikasi</strong> dan disetujui.
+                                </div>
+                                <form action="<?= base_url('dashboard/admin/delete-approve') ?>" method="post" class="mt-4">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                                    <button type="submit"
+                                        onclick="return confirm('Yakin ingin menghapus data kelembagaan ini yang sudah di-approve?')"
+                                        class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+                                        <i class="fas fa-trash"></i> Hapus Form
+                                    </button>
+                                </form>
+                            <?php endif; ?>
 
-<!-- ✅ Status pending: tampilkan tombol Approve/Reject -->
-<?php if ($kelembagaan['status'] === 'pending'): ?>
-    <form method="post" action="<?= base_url('dashboard/admin/admin-berkas/store') ?>" class="mt-8">
-        <?= csrf_field() ?>
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <input type="hidden" name="klaster" value="kelembagaan">
-        <input type="hidden" name="tahun" value="<?= esc($kelembagaan['tahun']) ?>">
-        <input type="hidden" name="bulan" value="<?= esc($kelembagaan['bulan']) ?>">
-        <input type="hidden" name="total_nilai" value="<?= esc($kelembagaan['total_nilai']) ?>">
-        <input type="hidden" name="catatan" value="">
+                            <?php if ($kelembagaan['status'] === 'pending'): ?>
+                                <form method="post" action="<?= base_url('dashboard/admin/admin-berkas/store') ?>" class="mt-8">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                                    <input type="hidden" name="klaster" value="kelembagaan">
+                                    <input type="hidden" name="tahun" value="<?= esc($kelembagaan['tahun']) ?>">
+                                    <input type="hidden" name="bulan" value="<?= esc($kelembagaan['bulan']) ?>">
+                                    <input type="hidden" name="total_nilai" value="<?= esc($kelembagaan['total_nilai']) ?>">
+                                    <input type="hidden" name="catatan" value="">
 
-        <div class="flex flex-col sm:flex-row gap-3">
-            <button type="submit" name="status" value="approved"
-                class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
-                <i class="fas fa-check-circle"></i> Approve
-            </button>
-            <button type="submit" name="status" value="rejected"
-                class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
-                <i class="fas fa-times-circle"></i> Reject
-            </button>
-        </div>
-    </form>
-<?php endif; ?>
-
-<!-- ✅ Status rejected: tampilkan tombol hapus -->
-<?php if ($kelembagaan['status'] === 'rejected'): ?>
-    <form action="<?= base_url('dashboard/admin/delete_kelembagaan') ?>" method="post" class="mt-8">
-        <?= csrf_field() ?>
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <button type="submit"
-            onclick="return confirm('Yakin ingin menghapus data kelembagaan ini? Data akan hilang permanen.')"
-            class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
-            <i class="fas fa-trash"></i> Hapus Form
-        </button>
-    </form>
-<?php endif; ?>
+                                    <div class="flex flex-col sm:flex-row gap-3">
+                                        <button type="submit" name="status" value="approved"
+                                            class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                                            <i class="fas fa-check-circle"></i> Approve
+                                        </button>
+                                        <button type="submit" name="status" value="rejected"
+                                            class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
+                                            <i class="fas fa-times-circle"></i> Reject
+                                        </button>
+                                    </div>
+                                </form>
+                            <?php endif; ?>
 
 
-<?php if ($kelembagaan['status'] === 'rejected'): ?>
-    <!-- Form Hapus -->
-    <form action="<?= base_url('dashboard/admin/delete_kelembagaan') ?>" method="post" class="mt-8">
-        <?= csrf_field() ?>
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <button type="submit"
-            onclick="return confirm('Yakin ingin menghapus data kelembagaan ini? Data akan hilang permanen.')"
-            class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
-            <i class="fas fa-trash"></i> Hapus Form
-        </button>
-    </form>
-<?php endif; ?>
+
+                            <?php if ($kelembagaan['status'] === 'rejected'): ?>
+                                <!-- Form Hapus -->
+                                <form action="<?= base_url('dashboard/admin/delete_kelembagaan') ?>" method="post" class="mt-8">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                                    <button type="submit"
+                                        onclick="return confirm('Yakin ingin menghapus data kelembagaan ini? Data akan hilang permanen.')"
+                                        class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+                                        <i class="fas fa-trash"></i> Hapus Form
+                                    </button>
+                                </form>
+                            <?php endif; ?>
 
 
 

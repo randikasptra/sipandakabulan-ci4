@@ -275,45 +275,45 @@ class AdminDashboard extends BaseController
         ]);
     }
 
-public function deleteKelembagaan()
-{
-    $userId = $this->request->getPost('user_id');
+    public function deleteKelembagaan()
+    {
+        $userId = $this->request->getPost('user_id');
 
-    if (!$userId) {
-        return redirect()->back()->with('error', 'User ID tidak valid.');
-    }
+        if (!$userId) {
+            return redirect()->back()->with('error', 'User ID tidak valid.');
+        }
 
-    $kelembagaanModel = new \App\Models\KelembagaanModel();
+        $kelembagaanModel = new \App\Models\KelembagaanModel();
 
-    // Ambil data rejected terbaru
-    $data = $kelembagaanModel
-        ->where('user_id', $userId)
-        ->where('status', 'rejected')
-        ->orderBy('id', 'desc')
-        ->first();
+        // Ambil data rejected terbaru
+        $data = $kelembagaanModel
+            ->where('user_id', $userId)
+            ->where('status', 'rejected')
+            ->orderBy('id', 'desc')
+            ->first();
 
-    if (!$data) {
-        return redirect()->back()->with('error', 'Data tidak ditemukan atau tidak berstatus rejected.');
-    }
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan atau tidak berstatus rejected.');
+        }
 
-    // Hapus semua file terkait jika ada
-    $fields = ['peraturan_file', 'anggaran_file', 'forum_anak_file', 'data_terpilah_file', 'dunia_usaha_file'];
-    foreach ($fields as $field) {
-        if (!empty($data[$field])) {
-            $filePath = ROOTPATH . 'public/uploads/kelembagaan/' . $data[$field];
-            if (file_exists($filePath)) {
-                unlink($filePath);
+        // Hapus semua file terkait jika ada
+        $fields = ['peraturan_file', 'anggaran_file', 'forum_anak_file', 'data_terpilah_file', 'dunia_usaha_file'];
+        foreach ($fields as $field) {
+            if (!empty($data[$field])) {
+                $filePath = ROOTPATH . 'public/uploads/kelembagaan/' . $data[$field];
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
             }
         }
+
+        // Hapus data dari DB secara permanen
+        $kelembagaanModel->where('id', $data['id'])->delete(null, true);
+
+    
+    return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Data di Tolak.');
+
     }
-
-    // Hapus data dari DB secara permanen
-    $kelembagaanModel->where('id', $data['id'])->delete(null, true);
-
-    // Redirect ke halaman approve per user
-    return redirect()->to(base_url('dashboard/admin/approve/' . $userId))
-        ->with('success', 'Data kelembagaan berhasil dihapus permanen.');
-}
 
 public function deleteKlaster1()
 {
