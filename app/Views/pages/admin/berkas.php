@@ -111,9 +111,9 @@ $indikatorList = [
                 <th class="px-4 py-2 border-b text-left">No</th>
                 <th class="px-4 py-2 border-b text-left">Nama Desa</th>
                 <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
-                <th class="px-4 py-2 border-b text-left">Aksi</th>
-                <th class="px-4 py-2 border-b text-left">Nilai Total</th>
                 <th class="px-4 py-2 border-b text-left">Status</th>
+                <th class="px-4 py-2 border-b text-left">Nilai Total</th>
+                <th class="px-4 py-2 border-b text-left">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -125,14 +125,14 @@ $indikatorList = [
                     <td class="px-4 py-2"><?= esc($b['desa']) ?></td>
                     <td class="px-4 py-2"><?= esc($b['nama_klaster']) ?></td>
                     <td class="px-4 py-2">
+                        <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
+                    </td>
+                    <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
+                    <td class="px-4 py-2">
                         <a href="<?= base_url("dashboard/admin/laporan/detail/{$klaster}/{$b['user_id']}") ?>"
                            class="text-blue-600 hover:text-blue-800 text-sm underline">
                             <i class="fas fa-eye"></i> Lihat Detail
                         </a>
-                    </td>
-                    <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
-                    <td class="px-4 py-2">
-                        <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
                     </td>
                 </tr>
             <?php endforeach ?>

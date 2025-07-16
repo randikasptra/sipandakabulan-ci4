@@ -215,7 +215,9 @@ class Kelembagaan extends BaseController
             }
         }
 
-        return redirect()->back()->with('success', 'Status berkas berhasil diperbarui.');
+        // return redirect()->back()->with('success', 'Status berkas berhasil diperbarui.');
+        return redirect()->to('/kelembagaan/form')->with('success', 'Status berkas berhasil diperbarui.');
+
     }
 
     public function batal()
