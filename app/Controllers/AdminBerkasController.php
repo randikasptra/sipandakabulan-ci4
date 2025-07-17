@@ -152,22 +152,89 @@ class AdminBerkasController extends BaseController
         return redirect()->back()->with('success', 'Status berkas berhasil diperbarui.');
     }
 
-     public function delete()
-    {
-        $id = $this->request->getPost('id');
+ public function delete()
+{
+    $id = $this->request->getPost('id');
 
-        if (!$id) {
-            return redirect()->back()->with('error', 'ID tidak ditemukan.');
-        }
-
-        $berkasModel = new BerkasKlasterModel();
-
-        if ($berkasModel->delete($id)) {
-            return redirect()->back()->with('success', 'Data berhasil dihapus.');
-        } else {
-            return redirect()->back()->with('error', 'Gagal menghapus data.');
-        }
+    if (!$id) {
+        return redirect()->back()->with('error', 'ID tidak ditemukan.');
     }
+
+    $berkasModel = new \App\Models\BerkasKlasterModel();
+    $berkas = $berkasModel->find($id);
+
+    if (!$berkas) {
+        return redirect()->back()->with('error', 'Data berkas tidak ditemukan.');
+    }
+
+    $userId = $berkas['user_id'];
+    $bulan = $berkas['bulan'];
+    $tahun = $berkas['tahun'];
+    $klaster = $berkas['klaster'];
+
+    // Inisialisasi semua model klaster
+    $kelembagaanModel = new \App\Models\KelembagaanModel();
+    $klaster1Model = new \App\Models\Klaster1Model();
+    $klaster2Model = new \App\Models\Klaster2Model();
+    $klaster3Model = new \App\Models\Klaster3Model();
+    $klaster4Model = new \App\Models\Klaster4Model();
+    $klaster5Model = new \App\Models\Klaster5Model();
+
+    // Hapus data berdasarkan klaster
+    switch ($klaster) {
+        case 1:
+            $kelembagaanModel
+                ->where('user_id', $userId)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->delete();
+            break;
+        case 2:
+            $klaster1Model
+                ->where('user_id', $userId)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->delete();
+            break;
+        case 3:
+            $klaster2Model
+                ->where('user_id', $userId)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->delete();
+            break;
+        case 4:
+            $klaster3Model
+                ->where('user_id', $userId)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->delete();
+            break;
+        case 5:
+            $klaster4Model
+                ->where('user_id', $userId)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->delete();
+            break;
+        case 6:
+            $klaster5Model
+                ->where('user_id', $userId)
+                ->where('bulan', $bulan)
+                ->where('tahun', $tahun)
+                ->delete();
+            break;
+    }
+
+    // Terakhir: hapus berkas utamanya
+    if ($berkasModel->delete($id)) {
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
+    } else {
+        return redirect()->back()->with('error', 'Gagal menghapus data.');
+    }
+}
+
+
 
 
 

@@ -159,9 +159,11 @@ $indikatorList = [
                                 }
 
                             ?>
-                            <form action="<?= base_url('dashboard/admin/download/' . $slug_klaster . '/' . $b['user_id']); ?>" method="get" style="display:inline;">
-                                <button type="submit" class="btn btn-success">Download PDF</button>
-                            </form>
+                          <form action="<?= base_url('dashboard/admin/download/' . $slug_klaster . '/' . $b['user_id']); ?>" method="get" style="display:inline;">
+    <button type="submit" class="text-green-600 hover:text-green-800 text-sm underline" title="Download PDF">
+        <i class="fas fa-download"></i>
+    </button>
+</form>
 
 
                                                             
