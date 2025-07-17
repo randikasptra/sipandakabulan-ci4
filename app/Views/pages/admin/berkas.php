@@ -136,23 +136,28 @@ $indikatorList = [
                 <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
             </td>
             <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
-             <td class="px-4 py-2 space-x-2">
 
                     <!-- Tombol Download -->
-                    <a href="<?= base_url("dashboard/admin/laporan/download/{$klaster}/{$b['user_id']}") ?>"
-                       class="inline-block text-green-600 hover:text-green-800 text-sm underline">
-                        <i class="fas fa-download"></i>
-                    </a>
+                    <td class="px-4 py-2 space-x-2">
 
-                    <form action="<?= base_url('dashboard/admin/berkas/delete') ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="inline">
-                        <input type="hidden" name="id" value="<?= $b['id'] ?>">
-                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm underline">
-                            <i class="fas fa-trash"></i> 
-                        </button>
-                    </form>
+                        <!-- Download PDF -->
+                        <form action="<?= base_url('dashboard/admin/download/kelembagaan/' . $b['user_id']); ?>" method="get" style="display:inline;">
+                            <button type="submit" class="btn btn-success">Download PDF</button>
+                        </form>
+                        
+
+                        <!-- Hapus Data -->
+                        <form action="<?= base_url('dashboard/admin/berkas/delete'); ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus data ini?');" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $b['id']; ?>">
+                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm underline">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+
+                    </td>
 
 
-                </td>
+
 
         </tr>
                <?php endforeach ?>

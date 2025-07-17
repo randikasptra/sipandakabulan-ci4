@@ -109,6 +109,10 @@ $routes->group('dashboard', function ($routes) {
     $routes->get('klaster3/(:num)', 'Klaster3Controller::klaster3/$1');
     $routes->get('klaster4/(:num)', 'Klaster4Controller::klaster4/$1');
     $routes->get('klaster5/(:num)', 'Klaster5Controller::klaster5/$1');
+
+    // $routes->get('download/kelembagaan/(:num)', 'DownloadLaporanPDFController::downloadPDF/$1');
+    // $routes->get('download/kelembagaan/(:num)', 'DownloadLaporanPDFController::kelembagaan/$1');
+
 });
 
 $routes->get('dashboard/admin/download_file', 'AdminDashboard::downloadFile');
@@ -118,7 +122,6 @@ $routes->post('update-password/(:num)', 'Dashboard::updatePassword/$1');
 
 
 
-$routes->get('download/kelembagaan/(:num)', 'DownloadController::kelembagaan/$1');
 
 // Form untuk operator (submit & form view)
 $routes->get('/kelembagaan/form', 'Kelembagaan::form');
@@ -146,3 +149,11 @@ $routes->post('/submit-klaster5', 'Klaster5Controller::submit');
 
 // Download general
 $routes->get('download', 'DownloadController::generateExcel');
+
+
+// -----------------------------
+// Route untuk Download PDF
+// -----------------------------
+
+$routes->get('dashboard/admin/download/kelembagaan/(:num)', 'DownloadLaporanPDFController::kelembagaan/$1');
+
