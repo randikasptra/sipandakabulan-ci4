@@ -7,6 +7,7 @@
     <title><?= esc($title ?? 'Kelola User') ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -148,101 +149,101 @@
 
                     <!-- Tab Navigation -->
            <div class="mb-6 border-b border-gray-200">
-    <!-- Filter Tabs & Status -->
-    <div class="flex flex-wrap gap-3 overflow-x-auto pb-4">
-        <!-- Tab Filter by Klaster -->
-        <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300" data-tab="all">
-            Semua Klaster
-        </button>
-        <?php foreach (array_keys($klasterData) as $klaster): ?>
-            <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200" data-tab="<?= strtolower(str_replace(' ', '-', $klaster)) ?>">
-                <?= esc($klaster) ?>
-            </button>
-        <?php endforeach; ?>
-
-   
-    </div>
-   <!-- Tombol Hapus Semua -->
-<div class="flex justify-end gap-2 mt-4">
-    <form action="<?= site_url('dashboard/admin/hapus_semua_pengajuan') ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus semua pengajuan yang belum disetujui?')">
-        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-            <i class="fas fa-trash-alt mr-1"></i> Hapus Semua Pending
-        </button>
-    </form>
-    
-</div>
-
-</div>
-
-<!-- Main Grid Layout -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    <?php foreach ($klasterData as $klaster => $items): ?>
-        <?php foreach ($items as $item): ?>
-            <div class="card bg-white rounded-xl shadow-card p-5 border border-gray-100 hover:shadow-card-hover transition-all duration-300 klaster-item"
-                data-klaster="<?= strtolower(str_replace(' ', '-', $klaster)) ?>"
-                data-status="<?= strtolower($item['status'] ?? '') ?>">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1 min-w-0">
-                        <h3 class="font-semibold text-gray-800 truncate mb-1">
-                            <?= $klaster === 'Kelembagaan'
-                                ? esc($item['nama_lembaga'] ?? 'Lembaga Baru')
-                                : esc($klaster) ?>
-                        </h3>
-                        <p class="text-sm text-gray-500 mb-2 truncate">
-                            <?= $klaster === 'Kelembagaan'
-                                ? 'Lembaga Registration'
-                                : 'Pengguna: ' . esc($item['username'] ?? 'User') ?>
-                        </p>
-
-                        <!-- Badge Info -->
-                        <div class="flex flex-wrap items-center gap-2 text-xs">
-                            <span class="badge bg-gray-100 text-gray-600">
-                                Tahun: <?= esc($item['tahun'] ?? '-') ?>
-                            </span>
-                            <span class="badge bg-gray-100 text-gray-600">
-                                Bulan: <?= esc($item['bulan'] ?? '-') ?>
-                            </span>
-                            <span class="badge <?= 
-                                ($item['status'] ?? '') === 'approved' ? 'bg-green-100 text-green-700' :
-                                (($item['status'] ?? '') === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700')
-                            ?>">
-                                Status: <?= ucfirst(esc($item['status'] ?? '-')) ?>
-                            </span>
-                            <span class="badge bg-blue-50 text-blue-600">
-                                <?= date('d M Y', strtotime($item['created_at'] ?? 'now')) ?>
-                            </span>
-                            <span class="badge bg-gray-100 text-gray-600">
+                    <!-- Filter Tabs & Status -->
+                    <div class="flex flex-wrap gap-3 overflow-x-auto pb-4">
+                        <!-- Tab Filter by Klaster -->
+                        <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300" data-tab="all">
+                            Semua Klaster
+                        </button>
+                        <?php foreach (array_keys($klasterData) as $klaster): ?>
+                            <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200" data-tab="<?= strtolower(str_replace(' ', '-', $klaster)) ?>">
                                 <?= esc($klaster) ?>
-                            </span>
-                        </div>
+                            </button>
+                        <?php endforeach; ?>
+
+                
                     </div>
-                    <div class="bg-blue-100 p-2 rounded-lg flex-shrink-0 ml-3">
-                        <i class="fas fa-file-alt text-blue-600"></i>
-                    </div>
+                <!-- Tombol Hapus Semua -->
+                <div class="flex justify-end gap-2 mt-4">
+                    <form action="<?= site_url('dashboard/admin/hapus_semua_pengajuan') ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus semua pengajuan yang belum disetujui?')">
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                            <i class="fas fa-trash-alt mr-1"></i> Hapus Semua Pending
+                        </button>
+                    </form>
                     
                 </div>
 
-                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-                    <?php $slug = strtolower(str_replace(' ', '_', $klaster)); ?>
-                    <a href="<?= site_url('dashboard/admin/review_' . $slug . '/' . $item['user_id']) ?>"
-                        class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium">
-                        <i class="fas fa-eye mr-2"></i>
-                        Review
-                    </a>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    <?php endforeach; ?>
-</div>
 
-<!-- Empty State -->
-<div id="empty-state" class="hidden text-center py-12">
-    <div class="mx-auto w-24 h-24 text-gray-300 mb-4">
-        <i class="fas fa-inbox text-5xl"></i>
-    </div>
-    <h3 class="text-lg font-medium text-gray-500">Tidak ada data ditemukan</h3>
-    <p class="mt-1 text-sm text-gray-400">Coba ubah filter klaster atau status</p>
-</div>
+                <!-- Main Grid Layout -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <?php foreach ($klasterData as $klaster => $items): ?>
+                        <?php foreach ($items as $item): ?>
+                            <div class="card bg-white rounded-xl shadow-card p-5 border border-gray-100 hover:shadow-card-hover transition-all duration-300 klaster-item"
+                                data-klaster="<?= strtolower(str_replace(' ', '-', $klaster)) ?>"
+                                data-status="<?= strtolower($item['status'] ?? '') ?>">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="font-semibold text-gray-800 truncate mb-1">
+                                            <?= $klaster === 'Kelembagaan'
+                                                ? esc($item['nama_lembaga'] ?? 'Lembaga Baru')
+                                                : esc($klaster) ?>
+                                        </h3>
+                                        <p class="text-sm text-gray-500 mb-2 truncate">
+                                            <?= $klaster === 'Kelembagaan'
+                                                ? 'Lembaga Registration'
+                                                : 'Pengguna: ' . esc($item['username'] ?? 'User') ?>
+                                        </p>
+
+                                        <!-- Badge Info -->
+                                        <div class="flex flex-wrap items-center gap-2 text-xs">
+                                            <span class="badge bg-gray-100 text-gray-600">
+                                                Tahun: <?= esc($item['tahun'] ?? '-') ?>
+                                            </span>
+                                            <span class="badge bg-gray-100 text-gray-600">
+                                                Bulan: <?= esc($item['bulan'] ?? '-') ?>
+                                            </span>
+                                            <span class="badge <?= 
+                                                ($item['status'] ?? '') === 'approved' ? 'bg-green-100 text-green-700' :
+                                                (($item['status'] ?? '') === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700')
+                                            ?>">
+                                                Status: <?= ucfirst(esc($item['status'] ?? '-')) ?>
+                                            </span>
+                                            <span class="badge bg-blue-50 text-blue-600">
+                                                <?= date('d M Y', strtotime($item['created_at'] ?? 'now')) ?>
+                                            </span>
+                                            <span class="badge bg-gray-100 text-gray-600">
+                                                <?= esc($klaster) ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-blue-100 p-2 rounded-lg flex-shrink-0 ml-3">
+                                        <i class="fas fa-file-alt text-blue-600"></i>
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+                                    <?php $slug = strtolower(str_replace(' ', '_', $klaster)); ?>
+                                    <a href="<?= site_url('dashboard/admin/review_' . $slug . '/' . $item['user_id']) ?>"
+                                        class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium">
+                                        <i class="fas fa-eye mr-2"></i>
+                                        Review
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden text-center py-12">
+                    <div class="mx-auto w-24 h-24 text-gray-300 mb-4">
+                        <i class="fas fa-inbox text-5xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-500">Tidak ada data ditemukan</h3>
+                    <p class="mt-1 text-sm text-gray-400">Coba ubah filter klaster atau status</p>
+                </div>
 
 <script>
     // State global
@@ -312,6 +313,36 @@
         document.querySelector('.status-filter[data-status="all"]')?.click();
     });
 </script>
+
+
+<!-- Tambahkan di bagian paling bawah sebelum </body> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    <?php if (session()->getFlashdata('success')): ?>
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: '<?= session()->getFlashdata('success') ?>',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+        });
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('rejected')): ?>
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'warning',
+            title: '<?= session()->getFlashdata('rejected') ?>',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+        });
+    <?php endif; ?>
+</script>
+
 
 </body>
 

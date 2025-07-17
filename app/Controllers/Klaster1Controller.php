@@ -216,7 +216,10 @@ class Klaster1Controller extends BaseController
 
         // return redirect()->back()->with('success', 'Status Klaster 1 berhasil diperbarui.');
         $userId = $this->request->getPost('user_id');
-return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status Klaster 1 berhasil diperbarui.');
+          if ($status === 'rejected') {
+            return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status berhasil di Tolak.');
+        }
+        return redirect()->to('dashboard/berkas')->with('success', 'Berkas di Setujui.');
 
     }
 
@@ -295,4 +298,45 @@ return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'St
 
         return redirect()->to('/klaster1/form')->with('success', 'Pengiriman data dibatalkan. Silakan isi ulang formulir.');
     }
+
+
+   public function deleteApproveKlaster1()
+{
+    $userId = $this->request->getPost('user_id');
+    $tahun = date('Y');
+    $bulan = date('F');
+
+    $klaster1Model = new \App\Models\Klaster1Model();
+
+    // Cari data klaster1 yang approved di bulan & tahun ini
+    $existing = $klaster1Model
+        ->where('user_id', $userId)
+        ->where('status', 'approved')
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
+
+    if (!$existing) {
+        return redirect()->back()->with('error', 'Data Klaster 1 dengan status approved tidak ditemukan.');
+    }
+
+    // File yang akan dicek dan dihapus
+    $fields = ['AnakAktaKelahiran_file', 'anggaran_file'];
+    foreach ($fields as $fileField) {
+        if (!empty($existing[$fileField])) {
+            $filePath = ROOTPATH . 'public/uploads/klaster1/' . $existing[$fileField];
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+    }
+
+    // Hapus dari database
+    $klaster1Model->delete($existing['id']);
+
+    return redirect()->to('dashboard/admin/approve/' . $userId)
+        ->with('success', 'Data Klaster 1 berhasil dihapus.');
+}
+
+
 }
