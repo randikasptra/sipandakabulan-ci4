@@ -214,7 +214,10 @@ class Klaster1Controller extends BaseController
             ->set(['status' => $status])
             ->update();
 
-        return redirect()->back()->with('success', 'Status Klaster 1 berhasil diperbarui.');
+        // return redirect()->back()->with('success', 'Status Klaster 1 berhasil diperbarui.');
+        $userId = $this->request->getPost('user_id');
+return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status Klaster 1 berhasil diperbarui.');
+
     }
 
     public function delete()

@@ -206,8 +206,17 @@ public function index()
             }
         }
 
-       $userId = $this->request->getPost('user_id');
-        return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status berhasil disimpan ke laporan berkas.');
+
+        $userId = $this->request->getPost('user_id');
+        $status = $this->request->getPost('status');
+
+        if ($status === 'rejected') {
+            return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status berhasil di Tolak.');
+        }
+        return redirect()->to('dashboard/berkas')->with('success', 'Berkas di Setujui.');
+
+
+
 
 
     }
