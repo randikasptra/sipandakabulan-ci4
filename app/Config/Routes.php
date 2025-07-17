@@ -72,6 +72,8 @@ $routes->group('dashboard', function ($routes) {
         $routes->post('delete-approve-klaster1', 'Klaster1Controller::deleteApproveKlaster1');
         $routes->post('delete-approve-klaster2', 'Klaster2Controller::deleteApprove');
         $routes->post('delete-approve-klaster3', 'Klaster3Controller::deleteApprove');
+        $routes->post('delete-approve-klaster4', 'Klaster4Controller::deleteApprove');
+        $routes->post('delete-approve-klaster5', 'Klaster5Controller::deleteApprove');
     });
 
     $routes->get('berkas', 'AdminBerkasController::index');
