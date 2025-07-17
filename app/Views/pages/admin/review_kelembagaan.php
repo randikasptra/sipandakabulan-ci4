@@ -162,11 +162,7 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
                                 <form action="<?= base_url('dashboard/admin/delete-approve') ?>" method="post" class="mt-4">
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="user_id" value="<?= $user_id ?>">
-                                    <button type="submit"
-                                        onclick="return confirm('Yakin ingin menghapus data kelembagaan ini yang sudah di-approve?')"
-                                        class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
-                                        <i class="fas fa-trash"></i> Hapus Form
-                                    </button>
+                                   
                                 </form>
                             <?php endif; ?>
 
@@ -183,11 +179,11 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
                                     <div class="flex flex-col sm:flex-row gap-3">
                                         <button type="submit" name="status" value="approved"
                                             class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
-                                            <i class="fas fa-check-circle"></i> Approve
+                                            <i class="fas fa-check-circle"></i> Terima
                                         </button>
                                         <button type="submit" name="status" value="rejected"
                                             class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
-                                            <i class="fas fa-times-circle"></i> Reject
+                                            <i class="fas fa-times-circle"></i> Tolak
                                         </button>
                                     </div>
                                 </form>

@@ -271,7 +271,7 @@
             <button type="submit"
                 class="px-8 py-3 bg-gradient-to-r from-primary-700 to-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center justify-center gap-2">
                 <i class="ph ph-paper-plane-tilt"></i>
-                Submit Data
+                Kirim Data
             </button>
             <button type="reset"
                 class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-300 flex items-center justify-center gap-2">

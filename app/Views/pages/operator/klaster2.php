@@ -103,16 +103,7 @@
 </div>
 
 <!-- Flashdata -->
-<?php if (session()->getFlashdata('success')): ?>
-    <div class="mx-6 mb-4 p-4 bg-green-100 text-green-800 rounded-lg">
-        <?= session()->getFlashdata('success') ?>
-    </div>
-<?php endif; ?>
-<?php if (session()->getFlashdata('error')): ?>
-    <div class="mx-6 mb-4 p-4 bg-red-100 text-red-800 rounded-lg">
-        <?= session()->getFlashdata('error') ?>
-    </div>
-<?php endif; ?>
+<!--  -->
 
 <!-- Form Container -->
 <div class="max-w-5xl mx-auto px-6 py-10 bg-white rounded-2xl form-container mb-16">
@@ -262,7 +253,7 @@
                 <button type="submit"
                         class="px-8 py-3 bg-gradient-to-r from-primary-700 to-primary-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center justify-center gap-2">
                     <i class="ph ph-paper-plane-tilt"></i>
-                    Submit Data
+                    Kirim Data
                 </button>
                 <button type="reset"
                         class="px-8 py-3 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition duration-300 flex items-center justify-center gap-2">
