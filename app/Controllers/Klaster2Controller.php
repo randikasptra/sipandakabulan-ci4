@@ -203,7 +203,12 @@ class Klaster2Controller extends BaseController
             ->set(['status' => $status])
             ->update();
 
-        return redirect()->back()->with('success', 'Status Klaster 2 berhasil diperbarui dan disimpan ke laporan.');
+      $userId = $this->request->getPost('user_id');
+          if ($status === 'rejected') {
+            return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status berhasil di Tolak.');
+        }
+        return redirect()->to('dashboard/berkas')->with('success', 'Berkas di Setujui.');
+
     }
 
     public function batal()

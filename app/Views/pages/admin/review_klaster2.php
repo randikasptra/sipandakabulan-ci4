@@ -140,46 +140,87 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                             </div>
 
                             <!-- Status -->
-                            <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
+                             <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>
-                                <p class="text-lg font-medium 
-                <?= $klaster2['status'] === 'pending' ? 'text-yellow-600' :
-                    ($klaster2['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+                                <p class="text-lg font-medium <?= $klaster2['status'] === 'pending' ? 'text-yellow-600' : ($klaster2['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
                                     <?= ucfirst($klaster2['status']) ?>
                                 </p>
                             </div>
                         </div>
                     </div>
 
+                     <?php if ($klaster2['status'] === 'rejected'): ?>
+                        <!-- Jika Rejected, tampilkan hanya tombol hapus -->
+                        <form action="<?= base_url('dashboard/admin/klaster2/delete') ?>" method="post" class="mt-8">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                            <input type="hidden" name="tahun" value="<?= esc($klaster2['tahun']) ?>">
+                            <input type="hidden" name="bulan" value="<?= esc($klaster2['bulan']) ?>">
 
-                    <form method="post" action="<?= base_url('dashboard/admin/klaster2/approve') ?>" class="mt-8">
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <button type="submit" name="status" value="approved"
-                                class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
-                                <i class="fas fa-check-circle"></i> Approve
+                            <button type="submit"
+                                onclick="return confirm('Yakin ingin menghapus data Klaster 1 ini? Data akan hilang permanen.')"
+                                class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+                                <i class="fas fa-trash"></i> Hapus Form
                             </button>
-                            <button type="submit" name="status" value="rejected"
-                                class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
-                                <i class="fas fa-times-circle"></i> Reject
-                            </button>
+                        </form>
+                    <?php else: ?>
+                                               
+                        <?php if ($klaster2['status'] === 'approved'): ?>
+                            <div class="bg-green-100 text-green-800 px-4 py-3 rounded mb-6">
+                                <i class="fas fa-check-circle mr-2"></i> Data ini telah <strong>diverifikasi</strong> dan disetujui.
+                            </div>
+                             <form action="<?= base_url('dashboard/admin/delete-approve-klaster2') ?>" method="post" class="mt-4">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                                    <button type="submit"
+                                        onclick="return confirm('Yakin ingin menghapus data kelembagaan ini yang sudah di-approve?')"
+                                        class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+                                        <i class="fas fa-trash"></i> Hapus Form
+                                    </button>
+                                </form>
+                        <?php endif; ?>
 
-                            
-                        </div>
-                    </form>
-                    <?php if ($klaster2['status'] === 'rejected'): ?>
-    <form action="<?= base_url('dashboard/admin/klaster2/delete') ?>" method="post" class="mt-8">
-        <?= csrf_field() ?>
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <button type="submit"
-            onclick="return confirm('Yakin ingin menghapus data Klaster 2 ini? Data akan hilang permanen.')"
-            class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
-            <i class="fas fa-trash"></i> Hapus Form
-        </button>
-    </form>
-<?php endif; ?>
+                        
+                        <?php if ($klaster2['status'] === 'pending'): ?>
+                            <form method="post" action="<?= base_url('dashboard/admin/klaster2/approve') ?>" class="mt-8">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                                <input type="hidden" name="klaster" value="klaster2">
+                                <input type="hidden" name="tahun" value="<?= esc($klaster2['tahun']) ?>">
+                                <input type="hidden" name="bulan" value="<?= esc($klaster2['bulan']) ?>">
+                                <input type="hidden" name="total_nilai" value="<?= esc($klaster2['total_nilai']) ?>">
+                                <input type="hidden" name="catatan" value="">
 
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <button type="submit" name="status" value="approved"
+                                        class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                                        <i class="fas fa-check-circle"></i> Approve
+                                    </button>
+                                    <button type="submit" name="status" value="rejected"
+                                        class="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-medium">
+                                        <i class="fas fa-times-circle"></i> Reject
+                                    </button>
+                                </div>
+                            </form>
+                        <?php endif; ?>
+
+                        <!-- ✅ Jika status rejected: tampilkan tombol hapus -->
+                        <?php if ($klaster2['status'] === 'rejected'): ?>
+                            <form action="<?= base_url('dashboard/admin/klaster2/delete') ?>" method="post" class="mt-8">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                                <input type="hidden" name="tahun" value="<?= esc($klaster2['tahun']) ?>">
+                                <input type="hidden" name="bulan" value="<?= esc($klaster2['bulan']) ?>">
+
+                                <button type="submit"
+                                    onclick="return confirm('Yakin ingin menghapus data Klaster 1 ini? Data akan hilang permanen.')"
+                                    class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
+                                    <i class="fas fa-trash"></i> Hapus Form
+                                </button>
+                            </form>
+                        <?php endif; ?>
+
+                    <?php endif; ?>
                 </div>
             </main>
         </div>

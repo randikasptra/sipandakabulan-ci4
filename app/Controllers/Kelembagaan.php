@@ -249,10 +249,10 @@ class Kelembagaan extends BaseController
             }
         }
 
-        $this->kelembagaanModel->delete($existing['id']);
+     $this->$kelembagaanModel->delete($existing['id']);
+
 
         $userId = $this->request->getPost('user_id');
-        // return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Data Klaster1 berhasil dihapus.');
         return redirect()->back('dashboard/admin/approve/' . $userId)->with('success', 'Status berhasil disimpan ke laporan berkas.');
         
     }
