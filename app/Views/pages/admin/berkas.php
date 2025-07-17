@@ -140,27 +140,28 @@ $indikatorList = [
                                     <!-- Tombol Download -->
                                     <td class="px-4 py-2 space-x-2">
 
-                               <?php
-    // Ambil nama klaster dari title untuk mapping slug
-    $slug_klaster = 'kelembagaan'; // fallback default
+                                                        <?php
+                                // Ambil nama klaster dari title untuk mapping slug
+                                $slug_klaster = 'kelembagaan'; // fallback default
 
-    $klaster_title = strtolower($b['nama_klaster']); // ini yang benar, bukan $b['klaster']
+                                $klaster_title = strtolower($b['nama_klaster']); // ini yang benar, bukan $b['klaster']
 
-    if (strpos($klaster_title, 'klaster i') !== false) {
-        $slug_klaster = 'klaster1';
-    } elseif (strpos($klaster_title, 'klaster ii') !== false) {
-        $slug_klaster = 'klaster2';
-    } elseif (strpos($klaster_title, 'klaster iii') !== false) {
-        $slug_klaster = 'klaster3';
-    } elseif (strpos($klaster_title, 'klaster iv') !== false) {
-        $slug_klaster = 'klaster4';
-    } elseif (strpos($klaster_title, 'klaster v') !== false) {
-        $slug_klaster = 'klaster5';
-    }
-?>
-<form action="<?= base_url('dashboard/admin/download/' . $slug_klaster . '/' . $b['user_id']); ?>" method="get" style="display:inline;">
-    <button type="submit" class="btn btn-success">Download PDF</button>
-</form>
+                                if (strpos($klaster_title, 'klaster v') !== false) {
+                                    $slug_klaster = 'klaster5';
+                                } elseif (strpos($klaster_title, 'klaster iv') !== false) {
+                                    $slug_klaster = 'klaster4';
+                                } elseif (strpos($klaster_title, 'klaster iii') !== false) {
+                                    $slug_klaster = 'klaster3';
+                                } elseif (strpos($klaster_title, 'klaster ii') !== false) {
+                                    $slug_klaster = 'klaster2';
+                                } elseif (strpos($klaster_title, 'klaster i') !== false) {
+                                    $slug_klaster = 'klaster1';
+                                }
+
+                            ?>
+                            <form action="<?= base_url('dashboard/admin/download/' . $slug_klaster . '/' . $b['user_id']); ?>" method="get" style="display:inline;">
+                                <button type="submit" class="btn btn-success">Download PDF</button>
+                            </form>
 
 
                                                             
