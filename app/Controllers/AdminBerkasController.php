@@ -153,6 +153,24 @@ public function index()
         return redirect()->back()->with('success', 'Status berkas berhasil diperbarui.');
     }
 
+     public function delete()
+    {
+        $id = $this->request->getPost('id');
+
+        if (!$id) {
+            return redirect()->back()->with('error', 'ID tidak ditemukan.');
+        }
+
+        $berkasModel = new BerkasKlasterModel();
+
+        if ($berkasModel->delete($id)) {
+            return redirect()->back()->with('success', 'Data berhasil dihapus.');
+        } else {
+            return redirect()->back()->with('error', 'Gagal menghapus data.');
+        }
+    }
+
+
 
 
     public function store()
@@ -214,9 +232,6 @@ public function index()
             return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status berhasil di Tolak.');
         }
         return redirect()->to('dashboard/berkas')->with('success', 'Berkas di Setujui.');
-
-
-
 
 
     }

@@ -46,6 +46,8 @@ $routes->group('dashboard', function ($routes) {
 
         $routes->get('laporan/detail/(:segment)/(:num)', 'Admin\LaporanDetailController::detail/$1/$2');
 
+        $routes->post('berkas/delete', 'AdminBerkasController::delete');
+
 
 
         // Review Klaster 1 - 5

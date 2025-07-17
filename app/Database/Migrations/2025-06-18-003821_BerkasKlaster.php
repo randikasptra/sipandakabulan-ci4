@@ -12,8 +12,8 @@ class BerkasKlaster extends Migration
             'id'          => ['type' => 'INT', 'auto_increment' => true],
             'user_id'     => ['type' => 'INT', 'unsigned' => true], // refer to users
             'klaster'     => ['type' => 'INT', 'unsigned' => true], // refer to klaster table if available
-            'nama_berkas' => ['type' => 'VARCHAR', 'constraint' => 255],
-            'file_path'   => ['type' => 'VARCHAR', 'constraint' => 255],
+            // 'nama_berkas' => ['type' => 'VARCHAR', 'constraint' => 255],
+            // 'file_path'   => ['type' => 'VARCHAR', 'constraint' => 255],
 
             'tahun'       => ['type' => 'YEAR'],
             'bulan'       => ['type' => 'VARCHAR', 'constraint' => 20], // ex: 'Januari', 'Februari'

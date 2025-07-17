@@ -39,107 +39,127 @@ $indikatorList = [
 </head>
 
 <body class="bg-gray-50 text-gray-800">
-    <div class="flex min-h-screen ml-72">
-        <?= $this->include('layouts/sidenav_admin') ?>
+            <div class="flex min-h-screen ml-72">
+                <?= $this->include('layouts/sidenav_admin') ?>
 
-        <div class="flex-1 flex flex-col overflow-hidden mt-24">
-            <?= $this->include('layouts/header_admin') ?>
+                <div class="flex-1 flex flex-col overflow-hidden mt-24">
+                    <?= $this->include('layouts/header_admin') ?>
 
-            <main class="flex-1 overflow-y-auto p-6">
-                <h1 class="text-2xl font-bold text-gray-800 mb-6">Laporan Berkas Disetujui</h1>
+                    <main class="flex-1 overflow-y-auto p-6">
+                        <h1 class="text-2xl font-bold text-gray-800 mb-6">Laporan Berkas Disetujui</h1>
 
-                <?php if (session()->getFlashdata('success')): ?>
-                    <div class="bg-green-100 text-green-700 p-3 rounded mb-4"><?= session()->getFlashdata('success') ?></div>
-                <?php elseif (session()->getFlashdata('error')): ?>
-                    <div class="bg-red-100 text-red-700 p-3 rounded mb-4"><?= session()->getFlashdata('error') ?></div>
-                <?php endif; ?>
+                        <?php if (session()->getFlashdata('success')): ?>
+                            <div class="bg-green-100 text-green-700 p-3 rounded mb-4"><?= session()->getFlashdata('success') ?></div>
+                        <?php elseif (session()->getFlashdata('error')): ?>
+                            <div class="bg-red-100 text-red-700 p-3 rounded mb-4"><?= session()->getFlashdata('error') ?></div>
+                        <?php endif; ?>
 
-                <!-- Filter dan Search -->
-                <form method="get" class="flex flex-wrap gap-4 mb-6">
-                    <div>
-                        <label for="desa" class="block text-sm font-medium text-gray-700 mb-1">Filter Desa</label>
-                        <select name="desa" id="desa" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500">
-                            <option value="">Semua Desa</option>
-                            <?php foreach ($list_desa as $d): ?>
-                                <option value="<?= esc($d) ?>" <?= ($d == $desa_filter) ? 'selected' : '' ?>><?= esc($d) ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
+                        <!-- Filter dan Search -->
+                        <form method="get" class="flex flex-wrap gap-4 mb-6">
+                            <div>
+                                <label for="desa" class="block text-sm font-medium text-gray-700 mb-1">Filter Desa</label>
+                                <select name="desa" id="desa" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500">
+                                    <option value="">Semua Desa</option>
+                                    <?php foreach ($list_desa as $d): ?>
+                                        <option value="<?= esc($d) ?>" <?= ($d == $desa_filter) ? 'selected' : '' ?>><?= esc($d) ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
 
-                    <div>
-                        <label for="klaster" class="block text-sm font-medium text-gray-700 mb-1">Filter Klaster</label>
-                        <select name="klaster" id="klaster" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500">
-                            <option value="">Semua Klaster</option>
-                            <?php foreach ($list_klaster as $k): ?>
-                                <option value="<?= esc($k) ?>" <?= ($k == $klaster_filter) ? 'selected' : '' ?>><?= esc($k) ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
+                            <div>
+                                <label for="klaster" class="block text-sm font-medium text-gray-700 mb-1">Filter Klaster</label>
+                                <select name="klaster" id="klaster" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500">
+                                    <option value="">Semua Klaster</option>
+                                    <?php foreach ($list_klaster as $k): ?>
+                                        <option value="<?= esc($k) ?>" <?= ($k == $klaster_filter) ? 'selected' : '' ?>><?= esc($k) ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
 
-                    <div>
-                        <label for="search_desa" class="block text-sm font-medium text-gray-700 mb-1">Cari Nama Desa</label>
-                        <input type="text" name="search_desa" id="search_desa" placeholder="Cari desa..."
-                            value="<?= esc($_GET['search_desa'] ?? '') ?>"
-                            class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500">
-                    </div>
+                            <div>
+                                <label for="search_desa" class="block text-sm font-medium text-gray-700 mb-1">Cari Nama Desa</label>
+                                <input type="text" name="search_desa" id="search_desa" placeholder="Cari desa..."
+                                    value="<?= esc($_GET['search_desa'] ?? '') ?>"
+                                    class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500">
+                            </div>
 
-                    <div class="flex items-end">
-                        <button type="submit"
-                            class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm shadow inline-flex items-center gap-2 mt-1.5">
-                            <i class="fas fa-magnifying-glass"></i> Cari
+                            <div class="flex items-end">
+                                <button type="submit"
+                                    class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm shadow inline-flex items-center gap-2 mt-1.5">
+                                    <i class="fas fa-magnifying-glass"></i> Cari
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Ringkasan -->
+                        <div class="flex gap-6 mb-4 text-sm text-gray-700">
+                            <div><strong>Total Berkas:</strong> <?= count($berkas) ?></div>
+                            <div><strong>Rata-rata Nilai:</strong> <?= number_format(array_sum(array_column($berkas, 'total_nilai')) / (count($berkas) ?: 1), 2) ?></div>
+                        </div>
+
+                        <!-- Chart -->
+                        <div class="bg-white p-4 rounded shadow mb-6">
+                            <h2 class="text-lg font-semibold mb-2 text-gray-700">Distribusi Jumlah Laporan per Klaster</h2>
+                            <canvas id="klasterChart" height="100"></canvas>
+                        </div>
+
+                        <!-- Tabel -->
+                    <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
+                <thead class="bg-gray-100 text-gray-700">
+    <tr>
+        <th class="px-4 py-2 border-b text-left">No</th>
+        <th class="px-4 py-2 border-b text-left">Nama Desa</th>
+        <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
+        <th class="px-4 py-2 border-b text-left">Bulan</th>
+        <th class="px-4 py-2 border-b text-left">Tahun</th>
+        <th class="px-4 py-2 border-b text-left">Status</th>
+        <th class="px-4 py-2 border-b text-left">Nilai Total</th>
+        <th class="px-4 py-2 border-b text-left">Aksi</th>
+    </tr>
+</thead>
+
+                <tbody>
+    <?php $no = 1; foreach ($berkas as $b): 
+        $klaster = strtolower(str_replace(' ', '', $b['nama_klaster']));
+        $timestamp = strtotime($b['created_at']);
+        $bulan = date('F', $timestamp);
+        $tahun = date('Y', $timestamp);
+    ?>
+        <tr class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2"><?= $no++ ?></td>
+            <td class="px-4 py-2"><?= esc($b['desa']) ?></td>
+            <td class="px-4 py-2"><?= esc($b['nama_klaster']) ?></td>
+            <td class="px-4 py-2"><?= esc($bulan) ?></td>
+            <td class="px-4 py-2"><?= esc($tahun) ?></td>
+            <td class="px-4 py-2">
+                <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
+            </td>
+            <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
+             <td class="px-4 py-2 space-x-2">
+
+                    <!-- Tombol Download -->
+                    <a href="<?= base_url("dashboard/admin/laporan/download/{$klaster}/{$b['user_id']}") ?>"
+                       class="inline-block text-green-600 hover:text-green-800 text-sm underline">
+                        <i class="fas fa-download"></i>
+                    </a>
+
+                    <form action="<?= base_url('dashboard/admin/berkas/delete') ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="inline">
+                        <input type="hidden" name="id" value="<?= $b['id'] ?>">
+                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm underline">
+                            <i class="fas fa-trash"></i> 
                         </button>
-                    </div>
-                </form>
+                    </form>
 
-                <!-- Ringkasan -->
-                <div class="flex gap-6 mb-4 text-sm text-gray-700">
-                    <div><strong>Total Berkas:</strong> <?= count($berkas) ?></div>
-                    <div><strong>Rata-rata Nilai:</strong> <?= number_format(array_sum(array_column($berkas, 'total_nilai')) / (count($berkas) ?: 1), 2) ?></div>
-                </div>
 
-                <!-- Chart -->
-                <div class="bg-white p-4 rounded shadow mb-6">
-                    <h2 class="text-lg font-semibold mb-2 text-gray-700">Distribusi Jumlah Laporan per Klaster</h2>
-                    <canvas id="klasterChart" height="100"></canvas>
-                </div>
+                </td>
 
-                <!-- Tabel -->
-               <div class="overflow-x-auto">
-    <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
-        <thead class="bg-gray-100 text-gray-700">
-            <tr>
-                <th class="px-4 py-2 border-b text-left">No</th>
-                <th class="px-4 py-2 border-b text-left">Nama Desa</th>
-                <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
-                <th class="px-4 py-2 border-b text-left">Status</th>
-                <th class="px-4 py-2 border-b text-left">Nilai Total</th>
-                <th class="px-4 py-2 border-b text-left">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php $no = 1; foreach ($berkas as $b): 
-                $klaster = strtolower(str_replace(' ', '', $b['nama_klaster'])); // contoh: Klaster 1 -> klaster1
-            ?>
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2"><?= $no++ ?></td>
-                    <td class="px-4 py-2"><?= esc($b['desa']) ?></td>
-                    <td class="px-4 py-2"><?= esc($b['nama_klaster']) ?></td>
-                    <td class="px-4 py-2">
-                        <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
-                    </td>
-                    <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
-                    <td class="px-4 py-2">
-                        <a href="<?= base_url("dashboard/admin/laporan/detail/{$klaster}/{$b['user_id']}") ?>"
-                           class="text-blue-600 hover:text-blue-800 text-sm underline">
-                            <i class="fas fa-eye"></i> Lihat Detail
-                        </a>
-                    </td>
-                </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
-</div>
+        </tr>
+               <?php endforeach ?>
+            </tbody>
 
+            </table>
+        </div>
             </main>
         </div>
     </div>
