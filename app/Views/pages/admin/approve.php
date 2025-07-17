@@ -100,81 +100,84 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800 antialiased">
-
 <?php if (!empty($success)) : ?>
     <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
         <?= $success ?>
     </div>
 <?php endif; ?>
 
-    <div class="flex min-h-screen lg:ml-72">
+<div class="flex min-h-screen lg:ml-72">
 
-        <!-- Sidebar Admin -->
-        <?= $this->include('layouts/sidenav_admin') ?>
+    <!-- Sidebar Admin -->
+    <?= $this->include('layouts/sidenav_admin') ?>
 
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden mt-24">
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden mt-24">
 
-            <!-- Header Admin -->
-            <?= $this->include('layouts/header_admin') ?>
+        <!-- Header Admin -->
+        <?= $this->include('layouts/header_admin') ?>
 
-            <!-- Main Content Area -->
-            <main class="flex-1 overflow-y-auto p-6 md:p-8">
-                <div class="max-w-7xl mx-auto">
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-6 md:p-8">
+            <div class="max-w-7xl mx-auto">
 
-                    <!-- Page Header with Filter -->
-                    <div
-                        class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:items-center md:justify-between mb-8">
-                        <div>
-                            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Pending Approvals</h1>
-                            <p class="mt-1 text-sm md:text-base text-gray-600">Review and approve pending submissions
-                            </p>
-                        </div>
-                        
+                <!-- Page Header -->
+                <div class="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between mb-8">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">List Data Yang Masuk</h1>
+                        <p class="mt-1 text-sm md:text-base text-gray-600">
+                            Review dan setujui pengajuan yang masih menunggu persetujuan
+                        </p>
                     </div>
-                    <!-- Tombol Hapus Semua -->
+                </div>
 
+                <?php
+                $klasterData = [
+                    'Kelembagaan' => $kelembagaan ?? [],
+                    'Klaster 1' => $klaster1 ?? [],
+                    'Klaster 2' => $klaster2 ?? [],
+                    'Klaster 3' => $klaster3 ?? [],
+                    'Klaster 4' => $klaster4 ?? [],
+                    'Klaster 5' => $klaster5 ?? [],
+                ];
+                ?>
 
-
-                    <?php
-                    $klasterData = [
-                        'Kelembagaan' => $kelembagaan ?? [],
-                        'Klaster 1' => $klaster1 ?? [],
-                        'Klaster 2' => $klaster2 ?? [],
-                        'Klaster 3' => $klaster3 ?? [],
-                        'Klaster 4' => $klaster4 ?? [],
-                        'Klaster 5' => $klaster5 ?? [],
-                    ];
-                    ?>
-
-                    <!-- Tab Navigation -->
-           <div class="mb-6 border-b border-gray-200">
-                    <!-- Filter Tabs & Status -->
+                <!-- Tabs Klaster -->
+                <div class="mb-6 border-b border-gray-200">
                     <div class="flex flex-wrap gap-3 overflow-x-auto pb-4">
-                        <!-- Tab Filter by Klaster -->
-                        <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300" data-tab="all">
-                            Semua Klaster
-                        </button>
+                        <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300" data-tab="all">Semua Klaster</button>
                         <?php foreach (array_keys($klasterData) as $klaster): ?>
-                            <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200" data-tab="<?= strtolower(str_replace(' ', '-', $klaster)) ?>">
+                            <button class="tab-button px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                data-tab="<?= strtolower(str_replace(' ', '-', $klaster)) ?>">
                                 <?= esc($klaster) ?>
                             </button>
                         <?php endforeach; ?>
-
-                
                     </div>
-                <!-- Tombol Hapus Semua -->
-              
-
                 </div>
 
-                <!-- Main Grid Layout -->
+                <!-- Grid Data -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <?php foreach ($klasterData as $klaster => $items): ?>
                         <?php foreach ($items as $item): ?>
+                            <?php
+                            $status = strtolower($item['status'] ?? '-');
+                            $statusLabel = match ($status) {
+                                'pending' => 'Menunggu',
+                                'approved' => 'Disetujui',
+                                'rejected' => 'Ditolak',
+                                default => ucfirst($status),
+                            };
+                            $statusClass = match ($status) {
+                                'pending' => 'bg-yellow-100 text-yellow-700',
+                                'approved' => 'bg-green-100 text-green-700',
+                                'rejected' => 'bg-red-100 text-red-700',
+                                default => 'bg-gray-100 text-gray-600',
+                            };
+                            ?>
                             <div class="card bg-white rounded-xl shadow-card p-5 border border-gray-100 hover:shadow-card-hover transition-all duration-300 klaster-item"
                                 data-klaster="<?= strtolower(str_replace(' ', '-', $klaster)) ?>"
-                                data-status="<?= strtolower($item['status'] ?? '') ?>">
+                                data-status="<?= esc($status) ?>">
+
                                 <div class="flex items-start justify-between">
                                     <div class="flex-1 min-w-0">
                                         <h3 class="font-semibold text-gray-800 truncate mb-1">
@@ -184,44 +187,32 @@
                                         </h3>
                                         <p class="text-sm text-gray-500 mb-2 truncate">
                                             <?= $klaster === 'Kelembagaan'
-                                                ? 'Lembaga Registration'
+                                                ? 'Lembaga Registrasi'
                                                 : 'Pengguna: ' . esc($item['username'] ?? 'User') ?>
                                         </p>
 
                                         <!-- Badge Info -->
                                         <div class="flex flex-wrap items-center gap-2 text-xs">
-                                            <span class="badge bg-gray-100 text-gray-600">
-                                                Tahun: <?= esc($item['tahun'] ?? '-') ?>
-                                            </span>
-                                            <span class="badge bg-gray-100 text-gray-600">
-                                                Bulan: <?= esc($item['bulan'] ?? '-') ?>
-                                            </span>
-                                            <span class="badge <?= 
-                                                ($item['status'] ?? '') === 'approved' ? 'bg-green-100 text-green-700' :
-                                                (($item['status'] ?? '') === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700')
-                                            ?>">
-                                                Status: <?= ucfirst(esc($item['status'] ?? '-')) ?>
-                                            </span>
+                                            <span class="badge bg-gray-100 text-gray-600">Tahun: <?= esc($item['tahun'] ?? '-') ?></span>
+                                            <span class="badge bg-gray-100 text-gray-600">Bulan: <?= esc($item['bulan'] ?? '-') ?></span>
+                                            <span class="badge <?= $statusClass ?>">Status: <?= $statusLabel ?></span>
                                             <span class="badge bg-blue-50 text-blue-600">
                                                 <?= date('d M Y', strtotime($item['created_at'] ?? 'now')) ?>
                                             </span>
-                                            <span class="badge bg-gray-100 text-gray-600">
-                                                <?= esc($klaster) ?>
-                                            </span>
+                                            <span class="badge bg-gray-100 text-gray-600"><?= esc($klaster) ?></span>
                                         </div>
                                     </div>
+
                                     <div class="bg-blue-100 p-2 rounded-lg flex-shrink-0 ml-3">
                                         <i class="fas fa-file-alt text-blue-600"></i>
                                     </div>
-                                    
                                 </div>
 
                                 <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
                                     <?php $slug = strtolower(str_replace(' ', '_', $klaster)); ?>
                                     <a href="<?= site_url('dashboard/admin/review_' . $slug . '/' . $item['user_id']) ?>"
                                         class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium">
-                                        <i class="fas fa-eye mr-2"></i>
-                                        Review
+                                        <i class="fas fa-eye mr-2"></i> Lihat
                                     </a>
                                 </div>
                             </div>
@@ -237,6 +228,11 @@
                     <h3 class="text-lg font-medium text-gray-500">Tidak ada data ditemukan</h3>
                     <p class="mt-1 text-sm text-gray-400">Coba ubah filter klaster atau status</p>
                 </div>
+
+            </div>
+        </main>
+    </div>
+</div>
 
 <script>
     // State global
