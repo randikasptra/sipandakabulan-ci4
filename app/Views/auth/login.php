@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login SIPANDAKABULAN</title>
+    <title>Masuk SIPANDAKABULAN</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Ganti icon tab jadi logo KKLA -->
@@ -82,7 +82,7 @@
     
     <h2 class="text-3xl font-bold text-center text-gray-800 mb-8 font-sans tracking-tight relative">
         <span class="relative z-10">
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">LOGIN</span> 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Masuk</span> 
             <span class="text-blue-500">SIPANDAKABULAN</span>
         </span>
         <div class="w-24 h-1.5 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full mx-auto mt-3"></div>
@@ -206,13 +206,13 @@
         </label>
     </div>
 
-    <!-- Login Button -->
+    <!-- Masuk Button -->
     <button type="submit"
         class="glow-button w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd" />
         </svg>
-        Login
+        Masuk
     </button>
 </form>
     </div>

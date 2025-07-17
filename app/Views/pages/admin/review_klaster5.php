@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 
@@ -167,11 +169,7 @@
                              <form action="<?= base_url('dashboard/admin/delete-approve-klaster5') ?>" method="post" class="mt-4">
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="user_id" value="<?= $user_id ?>">
-                                    <button type="submit"
-                                        onclick="return confirm('Yakin ingin menghapus data kelembagaan ini yang sudah di-approve?')"
-                                        class="flex items-center justify-center gap-2 bg-gray-200 text-red-700 px-6 py-3 rounded-lg hover:bg-red-100 transition-colors font-medium w-full sm:w-auto">
-                                        <i class="fas fa-trash"></i> Hapus Form
-                                    </button>
+                                    
                                 </form>
                         <?php endif; ?>
 

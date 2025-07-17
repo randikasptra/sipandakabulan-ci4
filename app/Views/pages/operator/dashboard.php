@@ -82,14 +82,16 @@
                 $nilaiMax = $klaster['nilai_maksimal'] ?? 100;
                 $progres = $nilaiMax > 0 ? round(($nilaiEm / $nilaiMax) * 100) : 0;
             ?>
-          <?= view('components/card_klaster', [
-    'slug' => $klaster['slug'],
-    'id' => $klaster['id'],
-    'klaster_title' => $klaster['title'],
-    'nilaiEm' => $nilaiEm,
-    'nilaiMaksimal' => $nilaiMax,
-    'progres' => $progres,
-]) ?>
+         <?= view('components/card_klaster', [
+            'slug' => $klaster['slug'], 
+            'id' => $klaster['id'],
+            'klaster_title' => $klaster['title'],
+            'nilaiEm' => $klaster['nilai_em'],
+            'nilaiMaksimal' => $klaster['nilai_maksimal'],
+            'progres' => ($klaster['nilai_maksimal'] > 0) ? round(($klaster['nilai_em'] / $klaster['nilai_maksimal']) * 100) : 0,
+            'status' => $klaster['status'] ?? 'pending'
+        ]) ?>
+
 
 
         <?php endforeach; ?>

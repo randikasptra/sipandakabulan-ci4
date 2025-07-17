@@ -13,103 +13,115 @@ class Dashboard extends BaseController
         $this->announcementModel = new AnnouncementModel();
     }
 
-        public function index($role = null)
-        {
-            helper('Klaster');
-            $session = session();
+    public function index($role = null)
+{
+    helper('Klaster');
+    $session = session();
 
-            if (!$session->get('logged_in')) {
-                return redirect()->to('/login');
-            }
+    if (!$session->get('logged_in')) {
+        return redirect()->to('/login');
+    }
 
-            if ($role && $session->get('role') !== $role) {
-                return redirect()->to('/login')->with('errors', ['Akses tidak diizinkan']);
-            }
+    if ($role && $session->get('role') !== $role) {
+        return redirect()->to('/login')->with('errors', ['Akses tidak diizinkan']);
+    }
 
-            $userId = $session->get('id');
-            $tahun = date('Y');
-            $bulan = date('F');
+    $userId = $session->get('id');
+    $tahun = date('Y');
+    $bulan = date('F');
 
-            // Ambil data kelembagaan
-            $kelembagaanModel = new KelembagaanModel();
-            $kelembagaan = $kelembagaanModel
-                ->where('user_id', $userId)
-                ->where('tahun', $tahun)
-                ->where('bulan', $bulan)
-                ->first();
+    // Ambil data kelembagaan
+    $kelembagaanModel = new KelembagaanModel();
+    $kelembagaan = $kelembagaanModel
+        ->where('user_id', $userId)
+        ->where('tahun', $tahun)
+        ->where('bulan', $bulan)
+        ->first();
 
-            $nilaiEm = $kelembagaan['total_nilai'] ?? 0;
-            $nilaiMaksimal = 220;
-            $progres = ($nilaiMaksimal > 0) ? round(($nilaiEm / $nilaiMaksimal) * 100) : 0;
+    $nilaiEm = $kelembagaan['total_nilai'] ?? 0;
+    $nilaiMaksimal = 220;
+    $progres = ($nilaiMaksimal > 0) ? round(($nilaiEm / $nilaiMaksimal) * 100) : 0;
 
-            // Ambil semua klaster
-            $klasterModel = new KlasterFormModel();
-            $klasters = $klasterModel->findAll();
+    // Ambil semua klaster
+    $klasterModel = new KlasterFormModel();
+    $klasters = $klasterModel->findAll();
 
-            // Inject nilai dari masing-masing model
-            foreach ($klasters as &$klaster) {
-                $slug = $klaster['slug'];
-                $klaster['nilai_em'] = 0;
+    // Inject nilai dan status
+    foreach ($klasters as &$klaster) {
+        $slug = $klaster['slug'];
+        $klaster['nilai_em'] = 0;
+        $klaster['nilai_maksimal'] = 100;
+        $klaster['status'] = 'pending'; // default fallback
+
+        switch ($slug) {
+            case 'kelembagaan':
+                $klaster['nilai_em'] = $kelembagaan['total_nilai'] ?? 0;
+                $klaster['nilai_maksimal'] = 220;
+                $klaster['status'] = $kelembagaan['status'] ?? 'pending';
+                break;
+
+            case 'klaster1':
+                $model = new Klaster1Model();
+                $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
+                $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
+                $klaster['nilai_maksimal'] = 120;
+                $klaster['status'] = $data['status'] ?? 'pending';
+                break;
+
+            case 'klaster2':
+                $model = new Klaster2Model();
+                $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
+                $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
                 $klaster['nilai_maksimal'] = 100;
+                $klaster['status'] = $data['status'] ?? 'pending';
+                break;
 
-                switch ($slug) {
-                    case 'kelembagaan':
-                        $klaster['nilai_em'] = $kelembagaan['total_nilai'] ?? 0;
-                        $klaster['nilai_maksimal'] = 220;
-                        break;
-                    case 'klaster1':
-                        $model = new Klaster1Model();
-                        $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
-                        $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
-                        $klaster['nilai_maksimal'] = 120;
-                        break;
-                    case 'klaster2':
-                        $model = new Klaster2Model();
-                        $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
-                        $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
-                        $klaster['nilai_maksimal'] = 100;
-                        break;
-                    case 'klaster3':
-                        $model = new Klaster3Model();
-                        $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
-                        $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
-                        $klaster['nilai_maksimal'] = 180;
-                        break;
-                    case 'klaster4':
-                        $model = new Klaster4Model();
-                        $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
-                        $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
-                        $klaster['nilai_maksimal'] = 270;
-                        break;
-                    case 'klaster5':
-                        $model = new Klaster5Model();
-                        $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
-                        $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
-                        $klaster['nilai_maksimal'] = 130;
-                        break;
-                }
-            }
+            case 'klaster3':
+                $model = new Klaster3Model();
+                $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
+                $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
+                $klaster['nilai_maksimal'] = 180;
+                $klaster['status'] = $data['status'] ?? 'pending';
+                break;
 
-            $data = [
-                'title' => 'Dashboard SIPANDAKABULAN',    
-                'user_email' => $session->get('email'),
-                'user_role' => $session->get('role'),
-                'username' => $session->get('username'),
-                'klasters' => $klasters,
-                'nilaiEm' => $nilaiEm,
-                'nilaiMaksimal' => $nilaiMaksimal,
-                'progres' => $progres,
-                'user_id' => $userId, // Buat kebutuhan card
-            ];
+            case 'klaster4':
+                $model = new Klaster4Model();
+                $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
+                $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
+                $klaster['nilai_maksimal'] = 270;
+                $klaster['status'] = $data['status'] ?? 'pending';
+                break;
 
-            if ($role === 'operator') {
-                return view('pages/operator/dashboard', $data);
-            } elseif ($role === 'admin') {
-                return view('pages/admin/dashboard', $data);
-            } else {
-                return redirect()->to('/login');
-            }
+            case 'klaster5':
+                $model = new Klaster5Model();
+                $data = $model->where('user_id', $userId)->where('tahun', $tahun)->where('bulan', $bulan)->first();
+                $klaster['nilai_em'] = $data['total_nilai'] ?? 0;
+                $klaster['nilai_maksimal'] = 130;
+                $klaster['status'] = $data['status'] ?? 'pending';
+                break;
         }
+    }
+
+    $data = [
+        'title' => 'Dashboard SIPANDAKABULAN',
+        'user_email' => $session->get('email'),
+        'user_role' => $session->get('role'),
+        'username' => $session->get('username'),
+        'klasters' => $klasters,
+        'nilaiEm' => $nilaiEm,
+        'nilaiMaksimal' => $nilaiMaksimal,
+        'progres' => $progres,
+        'user_id' => $userId,
+    ];
+
+    if ($role === 'operator') {
+        return view('pages/operator/dashboard', $data);
+    } elseif ($role === 'admin') {
+        return view('pages/admin/dashboard', $data);
+    } else {
+        return redirect()->to('/login');
+    }
+}
 
 
     public function pengumuman_user()

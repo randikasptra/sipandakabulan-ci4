@@ -67,7 +67,7 @@
             clip-rule="evenodd" />
         </svg>
       </div>
-      <span class="text-blue-100 group-hover:text-white">Approve Data</span>
+      <span class="text-blue-100 group-hover:text-white">Setujui Data</span>
     </a>
 
     <!-- Pengumuman -->
@@ -128,7 +128,7 @@
                 clip-rule="evenodd" />
             </svg>
           </div>
-          <span class="text-blue-100 group-hover:text-red-300">Logout</span>
+          <span class="text-blue-100 group-hover:text-red-300">Keluar</span>
         </button>
       </form>
     </div>
