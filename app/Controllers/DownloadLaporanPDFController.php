@@ -2,42 +2,66 @@
 
 namespace App\Controllers;
 
-use App\Models\KelembagaanModel;
+use App\Controllers\BaseController;
 use Dompdf\Dompdf;
 
 class DownloadLaporanPDFController extends BaseController
 {
-    public function kelembagaan($user_id)
-{
-    $kelembagaanModel = new \App\Models\KelembagaanModel();
-    $db = \Config\Database::connect();
+    public function download($jenis_klaster, $id)
+    {
+        $db = \Config\Database::connect();
 
-    // ambil data lengkap
-    $data = $db->table('kelembagaan')
-        ->select('kelembagaan.*, users.desa, berkas_klaster.klaster, berkas_klaster.bulan, berkas_klaster.tahun, berkas_klaster.total_nilai')
-        ->join('users', 'users.id = kelembagaan.user_id')
-        ->join('berkas_klaster', 'berkas_klaster.user_id = kelembagaan.user_id AND berkas_klaster.tahun = kelembagaan.tahun AND berkas_klaster.bulan = kelembagaan.bulan')
-        ->where('kelembagaan.user_id', $user_id)
-        ->orderBy('kelembagaan.id', 'DESC')
-        ->get()
-        ->getRowArray();
+        // Mapping nama view dan nama tabel
+        $viewMap = [
+            'kelembagaan' => 'pdf/kelembagaan_pdf',
+            'klaster1'     => 'pdf/klaster1_pdf',
+            'klaster2'     => 'pdf/klaster2_pdf',
+            'klaster3'     => 'pdf/klaster3_pdf',
+            'klaster4'     => 'pdf/klaster4_pdf',
+            'klaster5'     => 'pdf/klaster5_pdf',
+        ];
 
-    if (!$data) {
-        return redirect()->back()->with('error', 'Data kelembagaan tidak ditemukan.');
+        $tableMap = [
+            'kelembagaan' => 'kelembagaan',
+            'klaster1'     => 'klaster1',
+            'klaster2'     => 'klaster2',
+            'klaster3'     => 'klaster3',
+            'klaster4'     => 'klaster4',
+            'klaster5'     => 'klaster5',
+        ];
+
+        // Cek jika jenis klaster valid
+        if (!isset($viewMap[$jenis_klaster]) || !isset($tableMap[$jenis_klaster])) {
+            return redirect()->back()->with('error', 'Jenis klaster tidak valid.');
+        }
+
+        $table = $tableMap[$jenis_klaster];
+        $view  = $viewMap[$jenis_klaster];
+
+        // Ambil data umum
+        $data = $db->table($table)
+            ->select("{$table}.*, users.desa, berkas_klaster.klaster, berkas_klaster.bulan, berkas_klaster.tahun, berkas_klaster.total_nilai")
+            ->join('users', "users.id = {$table}.user_id")
+            ->join('berkas_klaster', "berkas_klaster.user_id = {$table}.user_id AND berkas_klaster.tahun = {$table}.tahun AND berkas_klaster.bulan = {$table}.bulan")
+            ->where("{$table}.user_id", $id)
+            ->orderBy("{$table}.id", 'DESC')
+            ->get()
+            ->getRowArray();
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+
+        $data['klaster'] = ucfirst($jenis_klaster);
+
+        // Buat PDF
+        $dompdf = new Dompdf();
+        $html = view($view, ['data' => $data]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        return $dompdf->stream("Laporan_" . ucfirst($jenis_klaster) . ".pdf", ['Attachment' => false]);
     }
-
-    // Konversi klaster ID ke nama klaster (jika perlu)
-    $data['klaster'] = 'Kelembagaan'; // bisa diganti dinamis jika ada tabel klasters
-
-    // Load DomPDF
-    $dompdf = new \Dompdf\Dompdf();
-    $html = view('pdf/kelembagaan_pdf', ['data' => $data]);
-
-    $dompdf->loadHtml($html);
-    $dompdf->setPaper('A4', 'portrait');
-    $dompdf->render();
-
-    return $dompdf->stream('Laporan_Kelembagaan.pdf', ['Attachment' => false]);
-}
-
 }

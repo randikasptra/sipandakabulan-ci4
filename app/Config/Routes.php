@@ -155,5 +155,7 @@ $routes->get('download', 'DownloadController::generateExcel');
 // Route untuk Download PDF
 // -----------------------------
 
-$routes->get('dashboard/admin/download/kelembagaan/(:num)', 'DownloadLaporanPDFController::kelembagaan/$1');
+// $routes->get('dashboard/admin/download/kelembagaan/(:num)', 'DownloadLaporanPDFController::kelembagaan/$1');
+$routes->get('dashboard/admin/download/(:segment)/(:num)', 'DownloadLaporanPDFController::download/$1/$2');
+
 
