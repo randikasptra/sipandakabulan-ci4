@@ -164,14 +164,7 @@
                 
                     </div>
                 <!-- Tombol Hapus Semua -->
-                <div class="flex justify-end gap-2 mt-4">
-                    <form action="<?= site_url('dashboard/admin/hapus_semua_pengajuan') ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus semua pengajuan yang belum disetujui?')">
-                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                            <i class="fas fa-trash-alt mr-1"></i> Hapus Semua Pending
-                        </button>
-                    </form>
-                    
-                </div>
+              
 
                 </div>
 
