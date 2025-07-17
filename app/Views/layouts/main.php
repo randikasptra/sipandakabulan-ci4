@@ -21,12 +21,10 @@
 
 <body class="bg-gray-50 min-h-screen relative">
 
-    <!-- 🔃 Loading Screen -->
     <div id="loading-screen" class="fixed inset-0 bg-white z-[9999] flex items-center justify-center transition-opacity duration-500">
         <div class="loader ease-linear rounded-full border-8 border-t-8 border-blue-500 h-20 w-20 animate-spin"></div>
     </div>
 
-    <!-- Konten Utama -->
     <div x-data="{ open: false, dropdownOpen: false, showPasswordModal: false }" id="main-content" class="relative z-10">
         <!-- Header + Navbar -->
         <?= $this->include('layouts/header') ?>
