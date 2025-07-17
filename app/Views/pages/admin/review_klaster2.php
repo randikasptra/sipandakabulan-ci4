@@ -149,7 +149,7 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                         </div>
                     </div>
 
-                     <?php if ($klaster2['status'] === 'rejected'): ?>
+                    <?php if ($klaster2['status'] === 'rejected'): ?>
                         <!-- Jika Rejected, tampilkan hanya tombol hapus -->
                         <form action="<?= base_url('dashboard/admin/klaster2/delete') ?>" method="post" class="mt-8">
                             <?= csrf_field() ?>

@@ -198,7 +198,12 @@ class Klaster3Controller extends BaseController
             ->set(['status' => $status])
             ->update();
 
-        return redirect()->back()->with('success', 'Status Klaster 3 berhasil diperbarui.');
+       $userId = $this->request->getPost('user_id');
+          if ($status === 'rejected') {
+            return redirect()->to('dashboard/admin/approve/' . $userId)->with('success', 'Status berhasil di Tolak.');
+        }
+        return redirect()->to('dashboard/berkas')->with('success', 'Berkas di Setujui.');
+
     }
 
     public function batal()
