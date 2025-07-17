@@ -88,7 +88,7 @@
     </div>
 
     <!-- Judul -->
-    <h2>LAPORAN KLASTER IV: KESEHATAN</h2>
+    <h2>LAPORAN KLASTER IV : Pendidikan, Waktu Luang, Budaya</h2>
 
     <!-- Info Umum -->
     <div class="info">

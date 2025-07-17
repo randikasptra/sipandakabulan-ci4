@@ -81,7 +81,7 @@
     </div>
 
     <!-- Judul -->
-    <h2>LAPORAN KLASTER III: KESEHATAN</h2>
+    <h2>LAPORAN KLASTER III: Kesehatan Dasar dan Kesejahteraan</h2>
 
     <!-- Info Umum -->
     <div class="info">

@@ -54,12 +54,23 @@
             vertical-align: top;
         }
 
-        .section {
-            margin-bottom: 20px;
-        }
-
         .clear {
             clear: both;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -109,21 +120,29 @@
         </table>
     </div>
 
-    <!-- Detail Penilaian -->
-    <div class="section">
-        <strong>1. Apakah ada Perkawinan Anak (Total Nilai 25)</strong><br>
-        Nilai: <?= $data['perkawinanAnak'] ?? '-' ?>
-    </div>
-
-    <div class="section">
-        <strong>2. Upaya yang dilakukan untuk Pencegahan Pernikahan Anak (Total Nilai 45)</strong><br>
-        Nilai: <?= $data['pencegahanPernikahan'] ?? '-' ?>
-    </div>
-
-    <div class="section">
-        <strong>3. Tersedia Lembaga Konsultasi bagi Keluarga dalam Pengasuhan dan Perawatan Anak (Total Nilai 30)</strong><br>
-        Nilai: <?= $data['lembagaKonsultasi'] ?? '-' ?>
-    </div>
+    <!-- Tabel Penilaian -->
+    <table>
+        <tr>
+            <th>No</th>
+            <th>Pertanyaan</th>
+            <th>Nilai</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Apakah ada Perkawinan Anak (Total Nilai 25)</td>
+            <td><?= esc($data['perkawinanAnak'] ?? '-') ?></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Upaya yang dilakukan untuk Pencegahan Pernikahan Anak (Total Nilai 45)</td>
+            <td><?= esc($data['pencegahanPernikahan'] ?? '-') ?></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Tersedia Lembaga Konsultasi bagi Keluarga dalam Pengasuhan dan Perawatan Anak (Total Nilai 30)</td>
+            <td><?= esc($data['lembagaKonsultasi'] ?? '-') ?></td>
+        </tr>
+    </table>
 
 </body>
 </html>

@@ -54,12 +54,23 @@
             vertical-align: top;
         }
 
-        .section {
-            margin-bottom: 20px;
-        }
-
         .clear {
             clear: both;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -67,7 +78,6 @@
 
     <!-- Kop Surat -->
     <div class="kop">
-        <!-- <img src="<?= FCPATH . 'assets/img/LogoKABTASIKMALAYA.png' ?>" alt="Logo Kabupaten Tasikmalaya"> -->
         <img src="assets/img/LogoKABTASIKMALAYA.png" alt="">
         <div class="text">
             <h1>PEMERINTAH DAERAH KABUPATEN TASIKMALAYA</h1>
@@ -110,31 +120,39 @@
         </table>
     </div>
 
-    <!-- Detail Penilaian -->
-    <div class="section">
-        <strong>1. Adanya Peraturan yang mencakup lima klaster (Total Nilai 60)</strong><br>
-        Nilai: <?= $data['peraturan_value'] ?? '-' ?>
-    </div>
-
-    <div class="section">
-        <strong>2. Adanya Anggaran yang Responsif Anak (Total Nilai 50)</strong><br>
-        Nilai: <?= $data['anggaran_value'] ?? '-' ?>
-    </div>
-
-    <div class="section">
-        <strong>3. Ada Forum Anak Desa (Total Nilai 40)</strong><br>
-        Nilai: <?= $data['forum_anak_value'] ?? '-' ?>
-    </div>
-
-    <div class="section">
-        <strong>4. Ada Data Terpilah mencakup 5 Klaster (Total Nilai 50)</strong><br>
-        Nilai: <?= $data['data_terpilah_value'] ?? '-' ?>
-    </div>
-
-    <div class="section">
-        <strong>5. Adakah dunia usaha di lingkungan desa yang memiliki keterlibatan dalam pemenuhan hak anak (Total Nilai 20)</strong><br>
-        Nilai: <?= $data['dunia_usaha_value'] ?? '-' ?>
-    </div>
+    <!-- Tabel Penilaian -->
+    <table>
+        <tr>
+            <th>No</th>
+            <th>Pertanyaan</th>
+            <th>Nilai</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Adanya Peraturan yang mencakup lima klaster (Total Nilai 60)</td>
+            <td><?= esc($data['peraturan_value']) ?></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Adanya Anggaran yang Responsif Anak (Total Nilai 50)</td>
+            <td><?= esc($data['anggaran_value']) ?></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Ada Forum Anak Desa (Total Nilai 40)</td>
+            <td><?= esc($data['forum_anak_value']) ?></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Ada Data Terpilah mencakup 5 Klaster (Total Nilai 50)</td>
+            <td><?= esc($data['data_terpilah_value']) ?></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Adakah dunia usaha di lingkungan desa yang memiliki keterlibatan dalam pemenuhan hak anak (Total Nilai 20)</td>
+            <td><?= esc($data['dunia_usaha_value']) ?></td>
+        </tr>
+    </table>
 
 </body>
 </html>

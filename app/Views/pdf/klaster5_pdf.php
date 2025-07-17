@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Klaster 1</title>
+    <title>Laporan Klaster V</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -92,7 +92,7 @@
     </div>
 
     <!-- Judul -->
-    <h2>LAPORAN KLASTER I: HAK SIPIL DAN KEBEBASAN</h2>
+    <h2>LAPORAN KLASTER V: PERLINDUNGAN KHUSUS ANAK</h2>
 
     <!-- Info Umum -->
     <div class="info">
@@ -103,7 +103,7 @@
             </tr>
             <tr>
                 <td><strong>Nama Klaster</strong></td>
-                <td>: <?= $data['klaster'] ?? 'Klaster I: Hak Sipil dan Kebebasan' ?></td>
+                <td>: <?= $data['klaster'] ?? 'Klaster V: Perlindungan Khusus Anak' ?></td>
             </tr>
             <tr>
                 <td><strong>Bulan</strong></td>
@@ -125,17 +125,27 @@
         <tr>
             <th>No</th>
             <th>Pertanyaan</th>
-            <th>Nilai</th>
+            <th>Jawaban</th>
         </tr>
         <tr>
             <td>1</td>
-            <td>Semua Anak Memiliki Akta Kelahiran (Total Nilai 50)</td>
-            <td><?= esc($data['AnakAktaKelahiran'] ?? '-') ?></td>
+            <td>Laporan Kekerasan Terhadap Anak Yang dilayani dan diselesaikan (Jumlah Total 40)</td>
+            <td><?= esc($data['laporanKekerasanAnak']) ?></td>
         </tr>
         <tr>
             <td>2</td>
-            <td>Adanya Anggaran untuk Pemenuhan Hak Sipil Anak (Total Nilai 50)</td>
-            <td><?= esc($data['anggaran'] ?? '-') ?></td>
+            <td>Apakah Ada mekanisme penanggulangan bencana (Jumlah Total 20)</td>
+            <td><?= esc($data['mekanismePenanggulanganBencana']) ?></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Adakah program pencegahan kekerasan pada anak yang dilaksanakan (Jumlah Total 30)</td>
+            <td><?= esc($data['programPencegahanKekerasan']) ?></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Apakah Ada Program Pencegahan pekerja anak (Jumlah Total 40)</td>
+            <td><?= esc($data['programPencegahanPekerjaanAnak']) ?></td>
         </tr>
     </table>
 
