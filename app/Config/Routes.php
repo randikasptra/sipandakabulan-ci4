@@ -79,6 +79,7 @@ $routes->group('dashboard', function ($routes) {
     });
 
     $routes->get('berkas', 'AdminBerkasController::index');
+    $routes->get('berkas/export', 'AdminBerkasController::export');
     $routes->post('berkas/update-status', 'AdminBerkasController::updateStatus');
     $routes->get('pengumuman/delete/(:num)', 'PengumumanController::delete/$1');
     $routes->get('users', 'AdminDashboard::users');

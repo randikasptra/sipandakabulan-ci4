@@ -89,7 +89,18 @@ $indikatorList = [
                                     <i class="fas fa-magnifying-glass"></i> Cari
                                 </button>
                             </div>
+
+                                                        <!-- Tombol Export Excel -->
+                            <div class="flex items-end">
+                                <a href="<?= site_url('dashboard/berkas/export?' . http_build_query($_GET)) ?>"
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm shadow inline-flex items-center gap-2 mt-1.5">
+                                    <i class="fas fa-file-excel"></i> Export Excel
+                                </a>
+                            </div>
+
                         </form>
+
+                        
 
                         <!-- Ringkasan -->
                         <div class="flex gap-6 mb-4 text-sm text-gray-700">
@@ -104,87 +115,87 @@ $indikatorList = [
                         </div>
 
                         <!-- Tabel -->
-                    <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
-                <thead class="bg-gray-100 text-gray-700">
-                    <tr>
-                        <th class="px-4 py-2 border-b text-left">No</th>
-                        <th class="px-4 py-2 border-b text-left">Nama Desa</th>
-                        <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
-                        <th class="px-4 py-2 border-b text-left">Bulan</th>
-                        <th class="px-4 py-2 border-b text-left">Tahun</th>
-                        <th class="px-4 py-2 border-b text-left">Status</th>
-                        <th class="px-4 py-2 border-b text-left">Nilai Total</th>
-                        <th class="px-4 py-2 border-b text-left">Aksi</th>
-                    </tr>
-                </thead>
+                                <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
+                            <thead class="bg-gray-100 text-gray-700">
+                                <tr>
+                                    <th class="px-4 py-2 border-b text-left">No</th>
+                                    <th class="px-4 py-2 border-b text-left">Nama Desa</th>
+                                    <th class="px-4 py-2 border-b text-left">Nama Klaster</th>
+                                    <th class="px-4 py-2 border-b text-left">Bulan</th>
+                                    <th class="px-4 py-2 border-b text-left">Tahun</th>
+                                    <th class="px-4 py-2 border-b text-left">Status</th>
+                                    <th class="px-4 py-2 border-b text-left">Nilai Total</th>
+                                    <th class="px-4 py-2 border-b text-left">Aksi</th>
+                                </tr>
+                            </thead>
 
-                <tbody>
-                    <?php $no = 1; foreach ($berkas as $b): 
-                        $klaster = strtolower(str_replace(' ', '', $b['nama_klaster']));
-                        $timestamp = strtotime($b['created_at']);
-                        $bulan = date('F', $timestamp);
-                        $tahun = date('Y', $timestamp);
-                    ?>
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="px-4 py-2"><?= $no++ ?></td>
-                            <td class="px-4 py-2"><?= esc($b['desa']) ?></td>
-                            <td class="px-4 py-2"><?= esc($b['nama_klaster']) ?></td>
-                            <td class="px-4 py-2"><?= esc($bulan) ?></td>
-                            <td class="px-4 py-2"><?= esc($tahun) ?></td>
-                            <td class="px-4 py-2">
-                                <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
-                            </td>
-                            <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
+                            <tbody>
+                                <?php $no = 1; foreach ($berkas as $b): 
+                                    $klaster = strtolower(str_replace(' ', '', $b['nama_klaster']));
+                                    $timestamp = strtotime($b['created_at']);
+                                    $bulan = date('F', $timestamp);
+                                    $tahun = date('Y', $timestamp);
+                                ?>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2"><?= $no++ ?></td>
+                                        <td class="px-4 py-2"><?= esc($b['desa']) ?></td>
+                                        <td class="px-4 py-2"><?= esc($b['nama_klaster']) ?></td>
+                                        <td class="px-4 py-2"><?= esc($bulan) ?></td>
+                                        <td class="px-4 py-2"><?= esc($tahun) ?></td>
+                                        <td class="px-4 py-2">
+                                            <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-semibold">Terverifikasi</span>
+                                        </td>
+                                        <td class="px-4 py-2"><?= esc($b['total_nilai']) ?></td>
 
-                                    <!-- Tombol Download -->
-                                    <td class="px-4 py-2 space-x-2">
+                                                <!-- Tombol Download -->
+                                                <td class="px-4 py-2 space-x-2">
 
-                                                        <?php
-                                // Ambil nama klaster dari title untuk mapping slug
-                                $slug_klaster = 'kelembagaan'; // fallback default
+                                                                    <?php
+                                            // Ambil nama klaster dari title untuk mapping slug
+                                            $slug_klaster = 'kelembagaan'; // fallback default
 
-                                $klaster_title = strtolower($b['nama_klaster']); // ini yang benar, bukan $b['klaster']
+                                            $klaster_title = strtolower($b['nama_klaster']); // ini yang benar, bukan $b['klaster']
 
-                                if (strpos($klaster_title, 'klaster v') !== false) {
-                                    $slug_klaster = 'klaster5';
-                                } elseif (strpos($klaster_title, 'klaster iv') !== false) {
-                                    $slug_klaster = 'klaster4';
-                                } elseif (strpos($klaster_title, 'klaster iii') !== false) {
-                                    $slug_klaster = 'klaster3';
-                                } elseif (strpos($klaster_title, 'klaster ii') !== false) {
-                                    $slug_klaster = 'klaster2';
-                                } elseif (strpos($klaster_title, 'klaster i') !== false) {
-                                    $slug_klaster = 'klaster1';
-                                }
+                                            if (strpos($klaster_title, 'klaster v') !== false) {
+                                                $slug_klaster = 'klaster5';
+                                            } elseif (strpos($klaster_title, 'klaster iv') !== false) {
+                                                $slug_klaster = 'klaster4';
+                                            } elseif (strpos($klaster_title, 'klaster iii') !== false) {
+                                                $slug_klaster = 'klaster3';
+                                            } elseif (strpos($klaster_title, 'klaster ii') !== false) {
+                                                $slug_klaster = 'klaster2';
+                                            } elseif (strpos($klaster_title, 'klaster i') !== false) {
+                                                $slug_klaster = 'klaster1';
+                                            }
 
-                            ?>
-                          <form action="<?= base_url('dashboard/admin/download/' . $slug_klaster . '/' . $b['user_id']); ?>" method="get" style="display:inline;">
-    <button type="submit" class="text-green-600 hover:text-green-800 text-sm underline" title="Download PDF">
-        <i class="fas fa-download"></i>
-    </button>
-</form>
+                                        ?>
+                                                                    <form action="<?= base_url('dashboard/admin/download/' . $slug_klaster . '/' . $b['user_id']); ?>" method="get" style="display:inline;">
+                                                <button type="submit" class="text-green-600 hover:text-green-800 text-sm underline" title="Download PDF">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                            </form>
 
 
-                                                            
-                                        
+                                                                        
+                                                    
 
-                                        <!-- Hapus Data -->
-                                        <form action="<?= base_url('dashboard/admin/berkas/delete'); ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus data ini?');" style="display:inline;">
-                                            <input type="hidden" name="id" value="<?= $b['id']; ?>">
-                                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm underline">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
+                                                    <!-- Hapus Data -->
+                                                    <form action="<?= base_url('dashboard/admin/berkas/delete'); ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus data ini?');" style="display:inline;">
+                                                        <input type="hidden" name="id" value="<?= $b['id']; ?>">
+                                                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm underline">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
 
-                                    </td>
-                        </tr>
-                            <?php endforeach ?>
-            </tbody>
+                                                </td>
+                                    </tr>
+                                        <?php endforeach ?>
+                            </tbody>
 
-            </table>
-        </div>
-            </main>
+                            </table>
+                            </div>
+                 </main>
         </div>
     </div>
 

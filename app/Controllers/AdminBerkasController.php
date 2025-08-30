@@ -6,6 +6,8 @@ use App\Controllers\BaseController;
 use App\Models\BerkasKlasterModel;
 use App\Models\KlasterFormModel;
 use CodeIgniter\Database\BaseBuilder;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class AdminBerkasController extends BaseController
 {
@@ -91,6 +93,76 @@ class AdminBerkasController extends BaseController
         return view('pages/admin/berkas', $data);
     }
 
+public function export()
+{
+    $db = \Config\Database::connect();
+
+    // Ambil input filter
+    $desaFilter = $this->request->getGet('desa');
+    $klasterFilter = $this->request->getGet('klaster');
+    $searchDesa = $this->request->getGet('search_desa');
+
+    // Query awal untuk ambil berkas yang disetujui
+    $builder = $db->table('berkas_klaster')
+        ->select('berkas_klaster.*, users.name as nama_user, users.desa, klasters.title as nama_klaster')
+        ->join('users', 'users.id = berkas_klaster.user_id')
+        ->join('klasters', 'klasters.id = berkas_klaster.klaster')
+        ->where('berkas_klaster.status', 'approved');
+
+    // Tambahkan filter
+    if (!empty($desaFilter)) {
+        $builder->where('users.desa', $desaFilter);
+    }
+    if (!empty($klasterFilter)) {
+        $builder->where('klasters.title', $klasterFilter);
+    }
+    if (!empty($searchDesa)) {
+        $builder->like('users.desa', $searchDesa);
+    }
+
+    $berkas = $builder->orderBy('berkas_klaster.created_at', 'DESC')->get()->getResultArray();
+
+    // Buat file Excel
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Header kolom
+    $sheet->setCellValue('A1', 'Nama User');
+    $sheet->setCellValue('B1', 'Desa');
+    $sheet->setCellValue('C1', 'Klaster');
+    $sheet->setCellValue('D1', 'Total Nilai');
+    $sheet->setCellValue('E1', 'Tahun');
+    $sheet->setCellValue('F1', 'Bulan');
+    $sheet->setCellValue('G1', 'Tanggal Disetujui');
+
+    // Isi data
+    $row = 2;
+    foreach ($berkas as $item) {
+        $sheet->setCellValue('A' . $row, $item['nama_user']);
+        $sheet->setCellValue('B' . $row, $item['desa']);
+        $sheet->setCellValue('C' . $row, $item['nama_klaster']);
+        $sheet->setCellValue('D' . $row, $item['total_nilai']);
+        $sheet->setCellValue('E' . $row, $item['tahun']);
+        $sheet->setCellValue('F' . $row, $item['bulan']);
+        $sheet->setCellValue('G' . $row, $item['updated_at'] ?? $item['created_at']);
+        $row++;
+    }
+
+    // Styling sederhana (auto width)
+    foreach (range('A', 'G') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // Download Excel
+    $filename = "rekap_berkas_" . date('Ymd_His') . ".xlsx";
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header("Content-Disposition: attachment;filename=\"$filename\"");
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+    exit();
+}
 
 
 
