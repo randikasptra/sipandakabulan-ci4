@@ -7,25 +7,6 @@
   <title>Daftar Evaluasi Desa</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <style>
-    .card-hover {
-      transition: all 0.3s ease;
-      border-left: 4px solid transparent;
-    }
-
-    .card-hover:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-      border-left-color: #1d4ed8;
-    }
-
-    .status-badge {
-      padding: 0.25rem 0.5rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-  </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800">
@@ -57,75 +38,71 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <i class="ph ph-magnifying-glass text-gray-400"></i>
                 </div>
-                <div class="relative">
-                  <input type="text" id="searchInput" placeholder="Cari Nama Desa..."
-                    class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
-                </div>
+                <input type="text" id="searchInput" placeholder="Cari Nama Desa..."
+                  class="pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <?php if (!empty($users) && is_array($users)): ?>
-              <?php foreach ($users as $user): ?>
-                <div class="card-hover bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md"
-                  data-desa="<?= strtolower($user['desa'] ?? '') ?>">
-                  <div class="flex justify-between items-start mb-4">
-                    <div class="flex items-center gap-3">
-                      <div class="bg-blue-100 p-3 rounded-full">
-                        <i class="ph ph-user-circle text-xl text-blue-700"></i>
-                      </div>
-                      <div>
-                        <h2 class="text-lg font-bold text-gray-800"><?= esc($user['username'] ?? 'Tanpa Nama') ?></h2>
-                      </div>
-                    </div>
-                    
-                  </div>
+          <!-- Tabel -->
+          <div class="overflow-x-auto bg-white rounded-xl shadow">
+            <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-100">
+  <tr>
+    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nama Operator</th>
+    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Desa</th>
+    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Email</th>
+    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Progress</th>
+    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Tanggal</th>
+    <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Aksi</th>
+  </tr>
+</thead>
+<tbody class="bg-white divide-y divide-gray-200">
+  <?php foreach ($users as $user): ?>
+    <tr class="hover:bg-gray-50 transition" data-desa="<?= strtolower($user['desa'] ?? '') ?>">
+      <td class="px-6 py-4 font-medium text-gray-800 flex items-center gap-2">
+        <i class="ph ph-user-circle text-lg text-blue-600"></i>
+        <?= esc($user['username'] ?? 'Tanpa Nama') ?>
+      </td>
+      <td class="px-6 py-4 text-gray-700"><?= esc($user['desa'] ?? 'Belum Diisi') ?></td>
+      <td class="px-6 py-4 text-gray-700"><?= esc($user['email']) ?></td>
 
-                  <div class="space-y-3 mb-4">
-                    <div class="flex items-center gap-3 text-sm">
-                      <div class="bg-blue-50 p-2 rounded-lg">
-                        <i class="ph ph-map-pin text-blue-700"></i>
-                      </div>
-                      <div>
-                        <p class="text-gray-500">Desa</p>
-                        <p class="font-medium"><?= esc($user['desa'] ?? 'Belum Diisi') ?></p>
-                      </div>
-                    </div>
+      <!-- Kolom Progress -->
+     <td class="px-6 py-4">
+      <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+        <div class="bg-blue-600 h-2.5 rounded-full" style="width: <?= $user['progress_percent'] ?>%"></div>
+      </div>
+      <span class="text-xs text-gray-500"><?= $user['progress'] ?></span>
 
-                    <div class="flex items-center gap-3 text-sm">
-                      <div class="bg-blue-50 p-2 rounded-lg">
-                        <i class="ph ph-envelope text-blue-700"></i>
-                      </div>
-                      <div>
-                        <p class="text-gray-500">Email</p>
-                        <p class="font-medium"><?= esc($user['email']) ?></p>
-                      </div>
-                    </div>
-                  </div>
+      <?php if ($user['is_complete']): ?>
+        <span class="ml-2 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+          ✅ Selesai
+        </span>
+      <?php else: ?>
+        <span class="ml-2 px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
+          ⏳ Belum Selesai
+        </span>
+      <?php endif; ?>
+    </td>
 
-                  <div class="flex justify-between items-center pt-4 border-t border-gray-100">
-                    <div class="text-xs text-gray-500 flex items-center gap-1">
-                      <i class="ph ph-calendar-blank"></i>
-                      <?= date('d M Y', strtotime($user['created_at'] ?? 'now')) ?>
-                    </div>
-                    <a href="<?= site_url('dashboard/admin/approve/' . $user['id']) ?>"
-                      class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">
-                      <i class="ph ph-arrow-right"></i> Review
-                    </a>
-                  </div>
-                </div>
-              <?php endforeach; ?>
-            <?php else: ?>
-              <div class="col-span-full py-12 text-center">
-                <div class="mx-auto max-w-md">
-                  <i class="ph ph-folder-open text-5xl text-gray-300 mb-4"></i>
-                  <h3 class="text-lg font-medium text-gray-900">Tidak ada data pengguna</h3>
-                  <p class="mt-1 text-sm text-gray-500">Belum ada evaluasi dari operator desa yang tersedia.</p>
-                </div>
-              </div>
-            <?php endif; ?>
+
+      <td class="px-6 py-4 text-gray-500 text-sm">
+        <i class="ph ph-calendar-blank mr-1"></i>
+        <?= date('d M Y', strtotime($user['created_at'] ?? 'now')) ?>
+      </td>
+      <td class="px-6 py-4 text-right">
+        <a href="<?= site_url('dashboard/admin/approve/' . $user['id']) ?>"
+          class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">
+          <i class="ph ph-arrow-right"></i> Review
+        </a>
+      </td>
+    </tr>
+  <?php endforeach; ?>
+</tbody>
+
+            </table>
           </div>
+
         </div>
       </main>
     </div>
@@ -134,14 +111,14 @@
   <script>
     document.getElementById('searchInput').addEventListener('input', function () {
       const keyword = this.value.toLowerCase();
-      const cards = document.querySelectorAll('.card-hover');
+      const rows = document.querySelectorAll('tbody tr[data-desa]');
 
-      cards.forEach(card => {
-        const desa = card.dataset.desa?.toLowerCase() || '';
+      rows.forEach(row => {
+        const desa = row.dataset.desa?.toLowerCase() || '';
         if (desa.includes(keyword)) {
-          card.style.display = '';
+          row.style.display = '';
         } else {
-          card.style.display = 'none';
+          row.style.display = 'none';
         }
       });
     });

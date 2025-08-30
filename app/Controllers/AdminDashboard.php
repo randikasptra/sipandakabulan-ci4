@@ -623,13 +623,82 @@ public function hapusSemuaApprove()
     }
 
     public function approveList()
-    {
-        $userModel = new UserModel();
+{
+    $userModel = new \App\Models\UserModel();
+    $kelembagaanModel = new \App\Models\KelembagaanModel();
+    $klaster1Model = new \App\Models\Klaster1Model();
+    $klaster2Model = new \App\Models\Klaster2Model();
+    $klaster3Model = new \App\Models\Klaster3Model();
+    $klaster4Model = new \App\Models\Klaster4Model();
+    $klaster5Model = new \App\Models\Klaster5Model();
 
-        $data['users'] = $userModel->where('role', 'operator')->findAll();
+    // Ambil semua operator
+    $users = $userModel->where('role', 'operator')->findAll();
 
-        return view('pages/admin/approve_list', $data);
+    foreach ($users as &$user) {
+        $progress = 0;
+        $total = 6; // 5 klaster + kelembagaan
+        $statuses = [];
+
+        // Klaster 1
+        $k1 = $klaster1Model->where('user_id', $user['id'])->first();
+        if ($k1) {
+            $progress++;
+            $statuses[] = $k1['status'] ?? 'pending';
+        }
+
+        // Klaster 2
+        $k2 = $klaster2Model->where('user_id', $user['id'])->first();
+        if ($k2) {
+            $progress++;
+            $statuses[] = $k2['status'] ?? 'pending';
+        }
+
+        // Klaster 3
+        $k3 = $klaster3Model->where('user_id', $user['id'])->first();
+        if ($k3) {
+            $progress++;
+            $statuses[] = $k3['status'] ?? 'pending';
+        }
+
+        // Klaster 4
+        $k4 = $klaster4Model->where('user_id', $user['id'])->first();
+        if ($k4) {
+            $progress++;
+            $statuses[] = $k4['status'] ?? 'pending';
+        }
+
+        // Klaster 5
+        $k5 = $klaster5Model->where('user_id', $user['id'])->first();
+        if ($k5) {
+            $progress++;
+            $statuses[] = $k5['status'] ?? 'pending';
+        }
+
+        // Kelembagaan
+        $kel = $kelembagaanModel->where('user_id', $user['id'])->first();
+        if ($kel) {
+            $progress++;
+            $statuses[] = $kel['status'] ?? 'pending';
+        }
+
+        // Simpan progress
+        $user['progress'] = $progress . '/' . $total;
+        $user['progress_percent'] = ($progress / $total) * 100;
+
+        // Cek status: kalau semua approve = selesai
+        if (count($statuses) === $total && count(array_unique($statuses)) === 1 && $statuses[0] === 'approve') {
+            $user['is_complete'] = true;
+        } else {
+            $user['is_complete'] = false;
+        }
     }
+
+    $data['users'] = $users;
+    return view('pages/admin/approve_list', $data);
+}
+
+
 
 
     public function settings()
