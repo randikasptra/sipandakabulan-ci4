@@ -98,18 +98,23 @@ public function export()
     $db = \Config\Database::connect();
 
     // Ambil input filter
-    $desaFilter = $this->request->getGet('desa');
-    $klasterFilter = $this->request->getGet('klaster');
-    $searchDesa = $this->request->getGet('search_desa');
+    $desaFilter   = $this->request->getGet('desa');
+    $klasterFilter= $this->request->getGet('klaster');
+    $searchDesa   = $this->request->getGet('search_desa');
 
-    // Query awal untuk ambil berkas yang disetujui
+    // Query dasar (pastikan pakai kolom yang ada: username, desa)
     $builder = $db->table('berkas_klaster')
-        ->select('berkas_klaster.*, users.name as nama_user, users.desa, klasters.title as nama_klaster')
+        ->select('
+            berkas_klaster.*,
+            users.username AS nama_user,
+            users.desa,
+            klasters.title AS nama_klaster
+        ')
         ->join('users', 'users.id = berkas_klaster.user_id')
         ->join('klasters', 'klasters.id = berkas_klaster.klaster')
         ->where('berkas_klaster.status', 'approved');
 
-    // Tambahkan filter
+    // Filter
     if (!empty($desaFilter)) {
         $builder->where('users.desa', $desaFilter);
     }
@@ -122,11 +127,11 @@ public function export()
 
     $berkas = $builder->orderBy('berkas_klaster.created_at', 'DESC')->get()->getResultArray();
 
-    // Buat file Excel
+    // Bangun Excel
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
-    // Header kolom
+    // Header
     $sheet->setCellValue('A1', 'Nama User');
     $sheet->setCellValue('B1', 'Desa');
     $sheet->setCellValue('C1', 'Klaster');
@@ -135,28 +140,26 @@ public function export()
     $sheet->setCellValue('F1', 'Bulan');
     $sheet->setCellValue('G1', 'Tanggal Disetujui');
 
-    // Isi data
+    // Data
     $row = 2;
     foreach ($berkas as $item) {
-        $sheet->setCellValue('A' . $row, $item['nama_user']);
-        $sheet->setCellValue('B' . $row, $item['desa']);
-        $sheet->setCellValue('C' . $row, $item['nama_klaster']);
-        $sheet->setCellValue('D' . $row, $item['total_nilai']);
-        $sheet->setCellValue('E' . $row, $item['tahun']);
-        $sheet->setCellValue('F' . $row, $item['bulan']);
-        $sheet->setCellValue('G' . $row, $item['updated_at'] ?? $item['created_at']);
+        $sheet->setCellValue('A' . $row, $item['nama_user'] ?? '');
+        $sheet->setCellValue('B' . $row, $item['desa'] ?? '');
+        $sheet->setCellValue('C' . $row, $item['nama_klaster'] ?? '');
+        $sheet->setCellValue('D' . $row, $item['total_nilai'] ?? 0);
+        $sheet->setCellValue('E' . $row, $item['tahun'] ?? '');
+        $sheet->setCellValue('F' . $row, $item['bulan'] ?? '');
+        $sheet->setCellValue('G' . $row, $item['updated_at'] ?? $item['created_at'] ?? '');
         $row++;
     }
 
-    // Styling sederhana (auto width)
     foreach (range('A', 'G') as $col) {
         $sheet->getColumnDimension($col)->setAutoSize(true);
     }
 
-    // Download Excel
-    $filename = "rekap_berkas_" . date('Ymd_His') . ".xlsx";
+    $filename = 'rekap_berkas_' . date('Ymd_His') . '.xlsx';
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header("Content-Disposition: attachment;filename=\"$filename\"");
+    header('Content-Disposition: attachment; filename="'. $filename .'"');
     header('Cache-Control: max-age=0');
 
     $writer = new Xlsx($spreadsheet);
