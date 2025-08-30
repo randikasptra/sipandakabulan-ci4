@@ -47,58 +47,71 @@
           <!-- Tabel -->
           <div class="overflow-x-auto bg-white rounded-xl shadow">
             <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
+           <thead class="bg-gray-100">
   <tr>
     <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Nama Operator</th>
     <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Desa</th>
     <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Email</th>
     <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Progress</th>
-    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Tanggal</th>
     <th class="px-6 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">Aksi</th>
   </tr>
 </thead>
+
 <tbody class="bg-white divide-y divide-gray-200">
   <?php foreach ($users as $user): ?>
     <tr class="hover:bg-gray-50 transition" data-desa="<?= strtolower($user['desa'] ?? '') ?>">
+      
+      <!-- Nama Operator -->
       <td class="px-6 py-4 font-medium text-gray-800 flex items-center gap-2">
         <i class="ph ph-user-circle text-lg text-blue-600"></i>
         <?= esc($user['username'] ?? 'Tanpa Nama') ?>
       </td>
-      <td class="px-6 py-4 text-gray-700"><?= esc($user['desa'] ?? 'Belum Diisi') ?></td>
-      <td class="px-6 py-4 text-gray-700"><?= esc($user['email']) ?></td>
-
-      <!-- Kolom Progress -->
-     <td class="px-6 py-4">
-      <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
-        <div class="bg-blue-600 h-2.5 rounded-full" style="width: <?= $user['progress_percent'] ?>%"></div>
-      </div>
-      <span class="text-xs text-gray-500"><?= $user['progress'] ?></span>
-
-      <?php if ($user['is_complete']): ?>
-        <span class="ml-2 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-          ✅ Selesai
-        </span>
-      <?php else: ?>
-        <span class="ml-2 px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
-          ⏳ Belum Selesai
-        </span>
-      <?php endif; ?>
-    </td>
-
-
-      <td class="px-6 py-4 text-gray-500 text-sm">
-        <i class="ph ph-calendar-blank mr-1"></i>
-        <?= date('d M Y', strtotime($user['created_at'] ?? 'now')) ?>
+      
+      <!-- Desa -->
+      <td class="px-6 py-4 text-gray-700">
+        <?= esc($user['desa'] ?? 'Belum Diisi') ?>
       </td>
+      
+      <!-- Email -->
+      <td class="px-6 py-4 text-gray-700">
+        <?= esc($user['email']) ?>
+      </td>
+
+      <!-- Progress -->
+      <td class="px-6 py-4">
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+          <div 
+            class="<?= $user['is_complete'] ? 'bg-green-600' : 'bg-yellow-500' ?> h-2.5 rounded-full"
+            style="width: <?= $user['progress_percent'] ?>%">
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-xs">
+          <span class="text-gray-500"><?= $user['progress'] ?></span>
+          <?php if ($user['is_complete']): ?>
+            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-medium flex items-center gap-1">
+              <i class="fas fa-check-circle"></i> Selesai
+            </span>
+          <?php else: ?>
+            <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full font-medium flex items-center gap-1">
+              <i class="fas fa-hourglass-half"></i> Belum Selesai
+            </span>
+          <?php endif; ?>
+        </div>
+      </td>
+
+      <!-- Aksi -->
       <td class="px-6 py-4 text-right">
         <a href="<?= site_url('dashboard/admin/approve/' . $user['id']) ?>"
           class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">
           <i class="ph ph-arrow-right"></i> Review
         </a>
       </td>
+
     </tr>
   <?php endforeach; ?>
 </tbody>
+
+
 
             </table>
           </div>
