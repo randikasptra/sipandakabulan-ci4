@@ -93,7 +93,32 @@
                             </div>
                         </div>
                     </div>
+<?php
+// fungsi kecil buat ubah bulan Inggris ke Indonesia
+function formatTanggalIndo($datetime) {
+    $bulanIndo = [
+        'January' => 'Januari',
+        'February' => 'Februari',
+        'March' => 'Maret',
+        'April' => 'April',
+        'May' => 'Mei',
+        'June' => 'Juni',
+        'July' => 'Juli',
+        'August' => 'Agustus',
+        'September' => 'September',
+        'October' => 'Oktober',
+        'November' => 'November',
+        'December' => 'Desember'
+    ];
 
+    $tgl = date('d', strtotime($datetime));
+    $bln = date('F', strtotime($datetime)); // ambil nama bulan dalam bahasa Inggris
+    $thn = date('Y', strtotime($datetime));
+    $jam = date('H:i', strtotime($datetime));
+
+    return $tgl . ' ' . $bulanIndo[$bln] . ' ' . $thn . ', ' . $jam;
+}
+?>
                     <!-- Perlu Approve Card -->
                     <div class="bg-white p-5 rounded-lg shadow">
                         <div class="flex items-center">
@@ -135,7 +160,27 @@
                                             <td class="px-4 py-2"><?= esc($row['nama_desa']) ?></td>
                                             <td class="px-4 py-2"><?= esc($row['nama_klaster']) ?></td>
                                             <td class="px-4 py-2"><?= esc($row['tahun']) ?></td>
-                                            <td class="px-4 py-2"><?= esc($row['bulan']) ?></td>
+                                            <?php
+                                        $bulanIndo = [
+                                            'January' => 'Januari',
+                                            'February' => 'Februari',
+                                            'March' => 'Maret',
+                                            'April' => 'April',
+                                            'May' => 'Mei',
+                                            'June' => 'Juni',
+                                            'July' => 'Juli',
+                                            'August' => 'Agustus',
+                                            'September' => 'September',
+                                            'October' => 'Oktober',
+                                            'November' => 'November',
+                                            'December' => 'Desember'
+                                        ];
+                                        ?>
+
+                                        <td class="px-4 py-2">
+                                            <?= esc($bulanIndo[$row['bulan']] ?? $row['bulan']) ?>
+                                        </td>
+
                                             <td class="px-4 py-2">
                                                 <?php
                                                 $warna = match (strtolower($row['status'])) {
@@ -156,9 +201,9 @@
                                                     <?= $statusLabel ?>
                                                 </span>
                                             </td>
-                                            <td class="px-4 py-2">
-                                                <?= date('d M Y, H:i', strtotime($row['created_at'])) ?>
-                                            </td>
+                                           <td class="px-4 py-2">
+    <?= formatTanggalIndo($row['created_at']) ?>
+</td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
