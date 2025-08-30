@@ -103,7 +103,7 @@
       <td class="px-6 py-4 text-right">
         <a href="<?= site_url('dashboard/admin/approve/' . $user['id']) ?>"
           class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">
-          <i class="ph ph-arrow-right"></i> Review
+          <i class="ph ph-arrow-right"></i> Lihat
         </a>
       </td>
 
