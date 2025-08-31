@@ -1,11 +1,10 @@
 <?php
+// Konversi logo ke base64 sekali di atas
 $path = FCPATH . 'assets/img/LogoKABTASIKMALAYA.png';
 $type = pathinfo($path, PATHINFO_EXTENSION);
 $dataImg = file_get_contents($path);
 $logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode($dataImg);
 ?>
-<img src="<?= $logoBase64 ?>" alt="Logo" width="80">
-
 
 <!DOCTYPE html>
 <html>
