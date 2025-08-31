@@ -1,3 +1,12 @@
+<?php
+// Konversi logo ke base64 sekali di atas
+$path = FCPATH . 'assets/img/LogoKABTASIKMALAYA.png';
+$type = pathinfo($path, PATHINFO_EXTENSION);
+$dataImg = file_get_contents($path);
+$logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode($dataImg);
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -78,7 +87,9 @@
 
     <!-- Kop Surat -->
     <div class="kop">
-        <img src="assets/img/LogoKABTASIKMALAYA.png" alt="">
+
+        <img src="<?= $logoBase64 ?>" alt="Logo" width="80">
+
         <div class="text">
             <h1>PEMERINTAH DAERAH KABUPATEN TASIKMALAYA</h1>
             <h2>DINAS SOSIAL, PENGENDALIAN PENDUDUK,<br>
