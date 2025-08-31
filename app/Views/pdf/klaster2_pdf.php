@@ -86,7 +86,9 @@ $logoBase64 = 'data:image/' . $type . ';base64,' . base64_encode($dataImg);
 
     <!-- Kop Surat -->
     <div class="kop">
-        <img src="assets/img/LogoKABTASIKMALAYA.png" alt="">
+        <!-- <img src="assets/img/LogoKABTASIKMALAYA.png" alt=""> -->
+        <img src="<?= $logoBase64 ?>" alt="Logo" width="80">
+
         <div class="text">
             <h1>PEMERINTAH DAERAH KABUPATEN TASIKMALAYA</h1>
             <h2>DINAS SOSIAL, PENGENDALIAN PENDUDUK,<br>
