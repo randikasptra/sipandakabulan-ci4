@@ -127,7 +127,8 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
                                 <p class="text-xl font-semibold text-gray-800">
-                                    <?= esc($klaster2['tahun']) ?> / <?= esc($klaster2['bulan']) ?>
+                                    <?= esc($klaster2['tahun']) ?> / <?= bulanIndo($klaster2['bulan']) ?>
+
                                 </p>
                             </div>
 
@@ -161,6 +162,7 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                             <input type="hidden" name="user_id" value="<?= $user_id ?>">
                             <input type="hidden" name="tahun" value="<?= esc($klaster2['tahun']) ?>">
                             <input type="hidden" name="bulan" value="<?= esc($klaster2['bulan']) ?>">
+                            
 
                             <button type="submit"
                                 onclick="return confirm('Yakin ingin menghapus data Klaster 1 ini? Data akan hilang permanen.')"

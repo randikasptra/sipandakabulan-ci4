@@ -124,7 +124,8 @@
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
                                 <p class="text-xl font-semibold text-gray-800">
-                                    <?= esc($klaster5['tahun']) ?> / <?= esc($klaster5['bulan']) ?>
+                                    <?= esc($klaster5['tahun']) ?> / <?= bulanIndo($klaster5['bulan']) ?>
+
                                 </p>
                             </div>
 

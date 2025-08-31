@@ -130,7 +130,8 @@ $user_id = $kelembagaan['user_id'] ?? $id ?? null;
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-sm text-gray-500 mb-1">Tahun / Bulan</p>
                                 <p class="text-xl font-semibold text-gray-800">
-                                    <?= esc($kelembagaan['tahun']) ?> / <?= esc($kelembagaan['bulan']) ?>
+                                    <?= esc($kelembagaan['tahun']) ?> / <?= bulanIndo($kelembagaan['bulan']) ?>
+
                                 </p>
                             </div>
 
