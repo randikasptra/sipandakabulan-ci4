@@ -140,12 +140,17 @@ $user_id = $klaster2['user_id'] ?? $id ?? null;
                             </div>
 
                             <!-- Status -->
-                             <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
-                                <p class="text-sm text-gray-500 mb-1">Status</p>
-                                <p class="text-lg font-medium <?= $klaster2['status'] === 'pending' ? 'text-yellow-600' : ($klaster2['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
-                                    <?= ucfirst($klaster2['status']) ?>
-                                </p>
-                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
+    <p class="text-sm text-gray-500 mb-1">Status</p>
+    <p class="text-lg font-medium <?= $klaster2['status'] === 'pending' ? 'text-yellow-600' : ($klaster2['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
+        <?= $klaster2['status'] === 'pending' 
+            ? 'Menunggu' 
+            : ($klaster2['status'] === 'approved' 
+                ? 'Disetujui' 
+                : 'Ditolak') ?>
+    </p>
+</div>
+
                         </div>
                     </div>
 

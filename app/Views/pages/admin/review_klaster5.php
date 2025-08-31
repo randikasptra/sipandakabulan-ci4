@@ -140,9 +140,14 @@
                              <div class="bg-gray-50 p-4 rounded-lg md:col-span-2">
                                 <p class="text-sm text-gray-500 mb-1">Status</p>
                                 <p class="text-lg font-medium <?= $klaster5['status'] === 'pending' ? 'text-yellow-600' : ($klaster5['status'] === 'approved' ? 'text-green-600' : 'text-red-600') ?>">
-                                    <?= ucfirst($klaster5['status']) ?>
+                                    <?= $klaster5['status'] === 'pending' 
+                                        ? 'Menunggu' 
+                                        : ($klaster5['status'] === 'approved' 
+                                            ? 'Disetujui' 
+                                            : 'Ditolak') ?>
                                 </p>
                             </div>
+
                         </div>
                     </div>
 

@@ -90,13 +90,13 @@ $indikatorList = [
                                 </button>
                             </div>
 
-                                                        <!-- Tombol Export Excel -->
-                            <div class="flex items-end">
-                                <a href="<?= site_url('dashboard/berkas/export?' . http_build_query($_GET)) ?>"
-                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm shadow inline-flex items-center gap-2 mt-1.5">
-                                    <i class="fas fa-file-excel"></i> Export Excel
-                                </a>
-                            </div>
+                                                    <!-- Tombol Export Excel -->
+                        <div class="flex items-end">
+                            <a href="<?= site_url('dashboard/berkas/export?' . http_build_query($_GET)) ?>"
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm shadow inline-flex items-center gap-2 mt-1.5">
+                                <i class="fas fa-file-excel"></i> Export Excel
+                            </a>
+                        </div>
 
                         </form>
 
